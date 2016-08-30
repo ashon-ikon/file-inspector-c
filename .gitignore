@@ -1,0 +1,43 @@
+# Removing all binaries
+*.la
+*.a
+*.o
+
+# Exclude all configuration files generated dynamically
+config.*
+
+*Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache
+autoscan.log
+bin/*
+compile
+configure
+configure.scan
+depcomp
+install-sh
+libtool
+ltmain.sh
+m4/*
+missing
+.deps*
+src/.deps*
+src/Helper/.deps*
+src/*.dirstamp*
+src/Makefile
+src/Makefile.in
+stamp-h1
+src/*.Po
+
+# IDEs
+nbproject*
+.idea
+.idea*
+.autotools
+.cproject
+.project
+.settings*
+
+src/Helper/*.dirstamp
+*.dirstamp
