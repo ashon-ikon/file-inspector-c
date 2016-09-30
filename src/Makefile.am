@@ -1,2 +1,2 @@
 ## Handled in subdirs
-SUBDIRS= inspector
+SUBDIRS= lib inspector

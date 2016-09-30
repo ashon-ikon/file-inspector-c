@@ -1,4 +1,4 @@
 ##
 ##
 ##
-man_MANS = summary.8
+man_MANS = file-inspector.8
