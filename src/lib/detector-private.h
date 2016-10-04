@@ -35,7 +35,25 @@ extern "C" {
 
 #include "detector.h"
 
+    
+/**
+ * Returns an empty
+ * @return FiFileList
+ */
+static FiFileList *
+fi_file_list_new ();
 
+static FiFileList *
+fi_file_list_add (FiFileList * self, FiFileInfo * file_info);
+
+static FiReturnResponse
+resize_list_if_required(FiFileList * list, size_t size);
+
+static bool
+fi_file_list_free (FiFileList * self);
+
+static void
+fi_print_error(const char * err, ...);
 
 #ifdef __cplusplus
 }

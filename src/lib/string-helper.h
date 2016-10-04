@@ -1,6 +1,6 @@
-/*
- * File:   detector.h
- * Author: Yinka Ashon
+/* 
+ * File:   string-helper.h
+ * Author: yasonibare
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,63 +19,43 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- * Created on 27 September 2016, 3:47 PM
+ * 
+ * Created on 30 September 2016, 5:32 PM
  */
 
-
-#ifndef FINSPECTOR_FILE_DETECTOR_H
-#define FINSPECTOR_FILE_DETECTOR_H
-
-#include <stdint.h>
+#ifndef FINSPECTOR_STRING_HELPER_H
+#define FINSPECTOR_STRING_HELPER_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
- -----------------------------------
- File Info
+#include <stdarg.h>
+
+/**
+ * Duplicates given string.
+ * 
+ * result must be freed when done!
+ * 
+ * @param src
+ * @return char*
  */
+char *
+fi_strdup(const char * src);
 
+char *
+fi_strndup(const char * src, const size_t len);
 
-typedef enum {
-    FI_FILE_TYPE_UNKNOWN,
-    FI_FILE_TYPE_REGULAR,
-} FiFileType;
+char *
+fi_sstrdup(const char * frm, ...);
 
-typedef enum {
-    FI_SUCCESS          = 0,
-    FI_ERROR_OUT_OF_MEM = 1 << 1,
-    FI_ERROR_NULL_VALUE = 1 << 2
-} FiReturnResponse;
-
-typedef struct _FiFileInfo FiFileInfo;
-typedef struct _FiFileList FiFileList;
-
-struct _FiFileInfo {
-    char * filename;
-    char * file_path;
-    FiFileType file_type;
-    char * file_extension;
-};
-
-// File List structure
-// This holds the individual file information
-struct _FiFileList {
-    uint64_t length;
-    uint64_t capacity;
-    FiFileInfo ** pfile_info_list;
-};
-
-
-// Helper methods
-
+char *
+fi_vsstrdup(const char * frm, va_list ap);
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* FINSPECTOR_FILE_DETECTOR_H */
+#endif /* FINSPECTOR_STRING_HELPER_H */
 
