@@ -1,5 +1,11 @@
 /*
- * File:   detector.h
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   debug.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,65 +26,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * Created on 27 September 2016, 3:47 PM
+ * Created on 5 October 2016, 11:28 AM
  */
 
+#ifndef DEBUG_H
+#define DEBUG_H
 
-#ifndef FINSPECTOR_FILE_DETECTOR_H
-#define FINSPECTOR_FILE_DETECTOR_H
+#include <stdarg.h>
 
-#include <stdint.h>
+#include "lib-common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
- -----------------------------------
- File Info
- */
-
-
+    
 typedef enum {
-    FI_FILE_TYPE_UNKNOWN,
-    FI_FILE_TYPE_REGULAR,
-    FI_FILE_TYPE_DIRECTORY,
-    FI_FILE_TYPE_LINK,
-    FI_FILE_TYPE_OTHER,
-} FiFileType;
+    FI_DEBUG_LEVEL_INFO,
+    FI_DEBUG_LEVEL_CRITICAL,
+    FI_DEBUG_LEVEL_VERBOSE,
 
-
-typedef struct _FiFileInfo FiFileInfo;
-typedef struct _FiFileList FiFileList;
-
-struct _FiFileInfo {
-    char * filename;
-    char * file_path;
-    char * file_extension;
-    FiFileType file_type;
-};
-
-// File List structure
-// This holds the individual file information
-struct _FiFileList {
-    uint64_t length;
-    uint64_t capacity;
-    FiFileInfo ** pfile_info_list;
-};
-
-// ---------------------------------------
-// Helper methods
+} FiDebugLevel;
 /**
- * Returns a pre-populated FileList structure
- * @param src
- * @return 
+ * Handy method to print error messages
+ * @param err
+ * @param ...
  */
-FiFileList *
-fi_get_file_list_from_source_m(const char * src);
+void
+fi_print_error(const char * err, ...);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* FINSPECTOR_FILE_DETECTOR_H */
+#endif /* DEBUG_H */
 

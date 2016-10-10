@@ -26,11 +26,28 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <locale.h>
 #include "file-inspector.h"
+#include "src/lib/detector.h"
+#include "src/lib/file-list-array.h"
 
-
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
-	printf("Something really awesome!!\n");
+    // Set the default locale
+    setlocale(LC_CTYPE, "");
+    
+//    char* src = fi_strdup("/home/yasonibare/Workspace/C-C++/file-inspector-c/test");
+    char* src = fi_strdup("/home/yasonibare/Workspace/C-C++/file-inspector-c/test");
+    char* dest = strdup("/home/yasonibare/Downloads/dump");
+printf("Something really awesome!!\nsrc: %s,\ndes: %s\n", src, dest);
+    FiFileList* src_list = fi_get_file_list_from_source_m(src);
+    // Free resources...
+    fi_file_list_free(src_list);
+    free(src);
+    free(dest);
+    
     return 0;
 }

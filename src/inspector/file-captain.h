@@ -1,5 +1,5 @@
 /* 
- * File:   FileCaptain.h
+ * File:   file-captain.h
  * Author: yasonibare
  * 
  * Copyright (c) 2016 Yinka Asonibare
@@ -28,61 +28,24 @@
 #ifndef FINSPECTOR_FILE_CAPTAIN_H__
 #define FINSPECTOR_FILE_CAPTAIN_H__
 
-#include <algorithm>
-#include <ctime>
-#include <glibmm/ustring.h>
-#include <functional>
-#include <vector>
-#include <map>
+#include <glib-object.h>
 
+G_BEGIN_DECLS
 
-using Glib::ustring;
-
-namespace FInspector {
+/**
+ * File-Captain type definition
+ */
+#define INSPECTOR_TYPE_FILE_CAPTAIN inspector_file_captain_get_type()
+G_DECLARE_FINAL_TYPE (InspectorFileCaptain, inspector_file_captain, \
+                      INSPECTOR, FILE_CAPTAIN, GObject)
 
 
 /**
- * Types of File
+ * Method definition
  */
-enum FileType {
-    NO_USE,
-    REGULAR_FILE,
-    DIRECTORY,
-    SYM_LINK,
-    OTHER,
-    TYPES_COUNT
-};
-    
-/**
- * 
- */
-class FileCaptain {
-public:
-    FileCaptain();
-    FileCaptain(const FileCaptain& orig);
-    
-    bool checkSourceFolder(const ustring&);
-    bool checkDestFolder(const ustring&);
-    bool isDirectory(const ustring&);
-    bool isFile(const ustring&);
-    
-    struct Fileinfo {
-        Glib::ustring filename;
-        Glib::ustring path;
-        Glib::ustring re;
-        time_t lastModifed;
-        uintmax_t size;
-        FileType type;
-
-        bool operator<(const Fileinfo& rhs);
-    };
-    
-    virtual ~FileCaptain();
-private:
-
-};
-
-}
+InspectorFileCaptain * inspector_file_captain_new();
+        
+G_END_DECLS
 
 #endif /* FINSPECTOR_FILE_CAPTAIN_H__ */
 

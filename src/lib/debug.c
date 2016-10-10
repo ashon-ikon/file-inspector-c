@@ -1,7 +1,7 @@
-/** 
- * File:   detector-private.h
- * 
+/**
  * Author: Yinka Ashon
+ * 
+ * Handy module for printing error messages
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -21,38 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * 
-
- *
- * Created on 27 September 2016, 7:48 PM
+ * 
  */
 
-#ifndef FINSPECTOR_FILE_DETECTOR_PRIVATE_H
-#define FINSPECTOR_FILE_DETECTOR_PRIVATE_H
+#include <stdlib.h>         // malloc
+#include <stdio.h>
+#include <stdarg.h>         // vargs
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "debug.h"
+#include "string-helper.h"
 
-#include <dirent.h>
-    
-#include "detector.h"
-#include "lib-common.h"
 
-FiFileType
-fi_get_file_type(const unsigned char *type, const char* path, const char* filename);
 
 /**
- * Returns the FileInfo
- * @param dp
- * @return 
+ * Handy method to print error messages
+ * @param err
+ * @param ...
  */
-FiFileInfo *
-fi_get_file_info_from_dirent_m(const char * path, const struct dirent *dp);
+void
+fi_print_error(const char * err, ...)
+{
 
-
-#ifdef __cplusplus
+    va_list ap;
+    va_start(ap, err);
+    char * ae = fi_vsstrdup(err, ap);
+    va_end(ap);
+    
+    fprintf(stderr, "Error: %s\n", ae);    
+    // Free the memory
+    free(ae);
 }
-#endif
-
-#endif /* FINSPECTOR_FILE_DETECTOR_PRIVATE_H */
-

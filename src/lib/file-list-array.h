@@ -1,5 +1,5 @@
-/*
- * File:   detector.h
+/* 
+ * File:   file-list-array.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,65 +20,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * Created on 27 September 2016, 3:47 PM
+ * Created on 4 October 2016, 9:30 PM
  */
 
+#ifndef FILE_LIST_ARRAY_H
+#define FILE_LIST_ARRAY_H
 
-#ifndef FINSPECTOR_FILE_DETECTOR_H
-#define FINSPECTOR_FILE_DETECTOR_H
+#include <stdbool.h>
 
-#include <stdint.h>
+#include "lib-common.h"
+#include "detector-private.h"
+#include "file-list-array.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
- -----------------------------------
- File Info
- */
 
-
-typedef enum {
-    FI_FILE_TYPE_UNKNOWN,
-    FI_FILE_TYPE_REGULAR,
-    FI_FILE_TYPE_DIRECTORY,
-    FI_FILE_TYPE_LINK,
-    FI_FILE_TYPE_OTHER,
-} FiFileType;
-
-
-typedef struct _FiFileInfo FiFileInfo;
-typedef struct _FiFileList FiFileList;
-
-struct _FiFileInfo {
-    char * filename;
-    char * file_path;
-    char * file_extension;
-    FiFileType file_type;
-};
-
-// File List structure
-// This holds the individual file information
-struct _FiFileList {
-    uint64_t length;
-    uint64_t capacity;
-    FiFileInfo ** pfile_info_list;
-};
-
-// ---------------------------------------
-// Helper methods
 /**
- * Returns a pre-populated FileList structure
- * @param src
- * @return 
+ * Returns an empty
+ * @return FiFileList
  */
 FiFileList *
-fi_get_file_list_from_source_m(const char * src);
+fi_file_list_new ();
+
+FiFileList *
+fi_file_list_add (FiFileList * list, FiFileInfo * file_info);
+
+bool
+fi_file_list_free (FiFileList * list);
+
+FiFileInfo *
+fi_file_info_copy (FiFileInfo ** dest, const FiFileInfo * src);
+
+void
+fi_file_info_free(FiFileInfo *pinfo);
+
+FiReturnResponse
+resize_list_if_required(FiFileList * list, size_t size);
+
+void
+fi_file_info_print_content(const FiFileInfo* info);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* FINSPECTOR_FILE_DETECTOR_H */
+#endif /* FILE_LIST_ARRAY_H */
 
