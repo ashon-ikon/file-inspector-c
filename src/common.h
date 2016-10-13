@@ -27,7 +27,12 @@
 #ifndef FINSPECTOR_COMMON_H__
 #define FINSPECTOR_COMMON_H__
 
+#ifdef HAVE_CONFIG_H
 #include "../config.h"
+#endif
+
+
+#include "lib/string-helper.h"
 
 
 #endif /* FINSPECTOR_COMMON_H__ */

@@ -32,6 +32,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <bits/string2.h>
 
 #include "debug.h"
 #include "detector-private.h"
@@ -46,14 +47,52 @@ const char path_separator =
                             '/';
 #endif
 
+static char *
+fi_detector_full_filename_m(const char *path, const char *filename)
+{
+    char *full_filename = fi_sstrdup("%s%c%s",path, path_separator, filename);;
+    if (NULL == full_filename) {
+        fi_print_error("Failed to allocate memory for full filename path");
+        return NULL;
+    }
+
+    return full_filename;
+}
+
+static FiFileList *
+fi_file_list_read_mirror_dir_content(FiFileList* list,
+                                     const char * src,
+                                     bool recursive)
+{
+    DIR* dir;
+    struct dirent *dp;
+    dir = opendir(src);
+printf("Reading directory %s\n", src);
+    while ((dp = readdir(dir)) != NULL && dp->d_name != NULL) {
+        if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..")) {
+            FiFileInfo *p_info = fi_file_list_get_file_info_from_dirent_m(src, dp);
+            fi_file_list_add(list, p_info);
+            
+            if (recursive && p_info->file_type == FI_FILE_TYPE_DIRECTORY) {
+                // Add directory content recursively
+                char * full_filename = fi_detector_full_filename_m(src, dp->d_name);
+                fi_file_list_read_mirror_dir_content(list, full_filename, recursive);
+                free (full_filename);
+                
+            }
+            fi_file_info_free(p_info);
+        }
+    }
+    closedir(dir);
+
+    return list;
+}
 
 FiFileType
-fi_get_file_type(const unsigned char *type, const char* path, const char* filename)
+fi_file_list_get_file_type(const unsigned char *type, const char* path, const char* filename)
 {
     FiFileType t = FI_FILE_TYPE_UNKNOWN;
     struct stat sb;
-    size_t path_len = strlen(path),
-            fname_len = strlen(filename);
     char *f_name;
     
     // First we'll attempt using regular dirent.d_type
@@ -69,12 +108,9 @@ fi_get_file_type(const unsigned char *type, const char* path, const char* filena
         case DT_SOCK:
         case DT_UNKNOWN: /* Done intentionally */
         default:
-            f_name = malloc(path_len + 1 + fname_len + 1); // path + P_Sep + filename + '\0'
+            f_name = fi_detector_full_filename_m(path, filename);
             if (f_name) {
                 // Make the full path
-                strncpy(f_name, path, path_len);
-                strncat(f_name, &path_separator, 1); // Add separator
-                strncat(f_name, filename, fname_len); // Add filename
                 // Now let's attempt to the type via stat
                 if (stat(f_name, &sb) != -1) {
                     switch (sb.st_mode & S_IFMT) {
@@ -92,8 +128,7 @@ fi_get_file_type(const unsigned char *type, const char* path, const char* filena
                             break;
                     }
                 }
-                if (f_name)
-                    free(f_name); // Release the memory
+                free(f_name); // Release the memory
                 t = FI_FILE_TYPE_UNKNOWN;
             }
             break;
@@ -107,7 +142,7 @@ fi_get_file_type(const unsigned char *type, const char* path, const char* filena
  * @return 
  */
 FiFileInfo *
-fi_get_file_info_from_dirent_m(const char           *path,
+fi_file_list_get_file_info_from_dirent_m(const char           *path,
                              const struct dirent *dp)
 {
     FiFileInfo * pinfo = malloc (sizeof (* pinfo));
@@ -117,14 +152,12 @@ fi_get_file_info_from_dirent_m(const char           *path,
     }
 
     pinfo->filename     = strndup (dp->d_name, strlen(dp->d_name));
-    pinfo->file_path    = strdup (path);
-    unsigned char d_type = DT_UNKNOWN;
-    pinfo->file_type    = fi_get_file_type(&d_type, path, dp->d_name);
-//    pinfo->file_type    = fi_get_file_type(&dp->d_type, path, dp->d_name);
+    pinfo->file_path    = strndup (path, strlen(path));
+    pinfo->file_type    = fi_file_list_get_file_type(&dp->d_type, path, dp->d_name);
     // Attempt to get the file extension
     char* ext_str = strrchr(dp->d_name, '.');
     pinfo->file_extension = fi_strdup(! ext_str ? "UNKNONWN" : (ext_str + 1));
-    
+
     return pinfo;
 }
 
@@ -132,29 +165,22 @@ fi_get_file_info_from_dirent_m(const char           *path,
 /**
  * Returns a pre-populated FileList structure
  * @param src
+ * @param recursive
  * @return 
  */
 FiFileList *
-fi_get_file_list_from_source_m(const char * src)
+fi_file_list_get_list_from_source_m(const char * src, bool recursive)
 {
     if (! strlen(src))  {
         fi_print_error("Failed to allocate enough new memory");
         return NULL;
     }
     
-    DIR* dir;
-    struct dirent *dp;
-    dir = opendir(src);
     FiFileList* list = fi_file_list_new();
 
-    while ((dp = readdir(dir)) != NULL && dp->d_name != NULL) {
-        if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..")) {
-            FiFileInfo *p_info = fi_get_file_info_from_dirent_m(src, dp);
-            fi_file_list_add(list, p_info);
-            fi_file_info_free(p_info);
-        }
+    if (NULL != list) {
+        fi_file_list_read_mirror_dir_content(list, src, recursive);
     }
-    closedir(dir);
-    
+
     return list;
 }

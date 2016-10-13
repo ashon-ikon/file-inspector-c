@@ -39,11 +39,10 @@ main(int argc, char* argv[])
     // Set the default locale
     setlocale(LC_CTYPE, "");
     
-//    char* src = fi_strdup("/home/yasonibare/Workspace/C-C++/file-inspector-c/test");
     char* src = fi_strdup("/home/yasonibare/Workspace/C-C++/file-inspector-c/test");
     char* dest = strdup("/home/yasonibare/Downloads/dump");
-printf("Something really awesome!!\nsrc: %s,\ndes: %s\n", src, dest);
-    FiFileList* src_list = fi_get_file_list_from_source_m(src);
+
+    FiFileList* src_list = fi_file_list_get_list_from_source_m(src, true);
     // Free resources...
     fi_file_list_free(src_list);
     free(src);

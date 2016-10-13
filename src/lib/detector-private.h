@@ -39,7 +39,7 @@ extern "C" {
 #include "lib-common.h"
 
 FiFileType
-fi_get_file_type(const unsigned char *type, const char* path, const char* filename);
+fi_file_list_get_file_type(const unsigned char *type, const char* path, const char* filename);
 
 /**
  * Returns the FileInfo
@@ -47,7 +47,7 @@ fi_get_file_type(const unsigned char *type, const char* path, const char* filena
  * @return 
  */
 FiFileInfo *
-fi_get_file_info_from_dirent_m(const char * path, const struct dirent *dp);
+fi_file_list_get_file_info_from_dirent_m(const char * path, const struct dirent *dp);
 
 
 #ifdef __cplusplus

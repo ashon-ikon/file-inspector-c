@@ -28,6 +28,7 @@
 #define FINSPECTOR_FILE_DETECTOR_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -71,10 +72,11 @@ struct _FiFileList {
 /**
  * Returns a pre-populated FileList structure
  * @param src
+ * @param recursive
  * @return 
  */
 FiFileList *
-fi_get_file_list_from_source_m(const char * src);
+fi_file_list_get_list_from_source_m(const char * src, bool recursive);
 
 #ifdef __cplusplus
 }
