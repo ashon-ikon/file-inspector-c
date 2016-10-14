@@ -67,7 +67,7 @@ fi_file_list_read_mirror_dir_content(FiFileList* list,
     DIR* dir;
     struct dirent *dp;
     dir = opendir(src);
-printf("Reading directory %s\n", src);
+
     while ((dp = readdir(dir)) != NULL && dp->d_name != NULL) {
         if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..")) {
             FiFileInfo *p_info = fi_file_list_get_file_info_from_dirent_m(src, dp);
@@ -125,11 +125,11 @@ fi_file_list_get_file_type(const unsigned char *type, const char* path, const ch
                         case S_IFBLK:
                         case S_IFSOCK:
                         default: /* Done intentionally */
+                            t = FI_FILE_TYPE_UNKNOWN;
                             break;
                     }
                 }
                 free(f_name); // Release the memory
-                t = FI_FILE_TYPE_UNKNOWN;
             }
             break;
     }

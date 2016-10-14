@@ -46,6 +46,7 @@ typedef enum {
     FI_FILE_TYPE_DIRECTORY,
     FI_FILE_TYPE_LINK,
     FI_FILE_TYPE_OTHER,
+    FI_NUM_OF_FILE_TYPES
 } FiFileType;
 
 

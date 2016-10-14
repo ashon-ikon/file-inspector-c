@@ -69,8 +69,29 @@ fi_file_list_new ()
 void
 fi_file_info_print_content(const FiFileInfo* info)
 {
-    printf("\n(D) Path: %s\tFilename: %s\tType: %u\tExtension: %s\n\n",
-           info->file_path, info->filename, info->file_type, info->file_extension);
+    const char *type[FI_NUM_OF_FILE_TYPES] = {
+        "Unmapped Type",
+        "Directory",
+        "File",
+        "Link",
+    };
+    int key = 0;
+    switch (info->file_type) {
+        case FI_FILE_TYPE_DIRECTORY:
+            key = 1;
+            break;
+        case FI_FILE_TYPE_REGULAR:
+            key = 2;
+            break;
+        case FI_FILE_TYPE_LINK:
+            key = 3;
+            break;
+        default:
+            key = 0;
+            break;
+    }
+    printf("(D) Path: '%s'\tFilename: '%s'\tType: %s\tExtension: '%s'\n",
+           info->file_path, info->filename, type[key], info->file_extension);
             
 }
 
