@@ -50,7 +50,7 @@ main(int argc, char* argv[])
     char* dest = strdup("/home/yasonibare/Downloads/dump");
 
     FiFileList* src_list = fi_file_list_get_list_from_source_m(src, true);
-    
+
     FI_FOREACH_INFO (src_list, &foreach_callback);
 
     // Free resources...

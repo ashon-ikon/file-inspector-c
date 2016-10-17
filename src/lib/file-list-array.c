@@ -29,13 +29,33 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <time.h>
 
 #include "debug.h"
 #include "file-list-array.h"
 
+extern const char path_separator;
+
 /* This is the minimum items in list to start with 
  */
 #define FILE_LIST_ALLOC_CHUNK_SIZE 20
+
+/**
+ * char              * filename;
+ * char              * file_path;
+ * char              * file_extension;
+ * off_t               size_byte;
+ * FiFileType          file_type;
+ * struct timespec     modified_at;
+ */
+const FiFileInfo EmptyInfo = {
+    NULL, /* *filename          */
+    NULL, /* *file_path         */
+    NULL, /* *file_extension    */
+    0L,   /* size_byte          */
+    0,    /* file_type          */
+    {0, 0}, /* modified_at      */
+};
 
 /**
  * Returns an empty
@@ -90,8 +110,12 @@ fi_file_info_print_content(const FiFileInfo* info)
             key = 0;
             break;
     }
-    printf("(D) Path: '%s'\tFilename: '%s'\tType: %s\tExtension: '%s'\n",
-           info->file_path, info->filename, type[key], info->file_extension);
+    printf("(D) Path: '%s%c%s'\tType: '%s'\tExtension: '%s'",
+           info->file_path, path_separator, info->filename, type[key],
+           info->file_extension);
+    if (info->modified_at.tv_sec)
+        printf(" '%lu' modified: %s", info->modified_at.tv_sec, ctime(&info->modified_at.tv_sec));
+    printf("\n");
             
 }
 
@@ -162,6 +186,8 @@ fi_file_info_copy (FiFileInfo ** dest, const FiFileInfo * src)
     tmp->file_path      = strdup (src->file_path);
     tmp->filename       = strdup (src->filename);
     tmp->file_type      = src->file_type;
+    tmp->size_byte      = src->size_byte;
+    tmp->modified_at    = src->modified_at;
     
     *dest = tmp;
     

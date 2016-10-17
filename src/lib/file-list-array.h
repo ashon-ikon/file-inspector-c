@@ -62,7 +62,7 @@ resize_list_if_required(FiFileList * list, size_t size);
 void
 fi_file_info_print_content(const FiFileInfo* info);
 
-#define FI_FOREACH_INFO(l, fn)  for (size_t i; i < (l)->length; i++ ) \
+#define FI_FOREACH_INFO(l, fn)  for (size_t i = 0; i < (l)->length; i++ ) \
                                     (fn) (i, (l)->pfile_info_list[i]);
 
 #ifdef __cplusplus
