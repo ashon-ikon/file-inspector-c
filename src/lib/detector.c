@@ -46,6 +46,8 @@ const char path_separator =
 #else
                             '/';
 #endif
+                            
+extern const FiFileInfo EmptyInfo;
 
 static char *
 fi_detector_full_filename_m(const char *path, const char *filename)
@@ -88,75 +90,74 @@ fi_file_list_read_mirror_dir_content(FiFileList* list,
     return list;
 }
 
-FiFileType
-fi_file_list_get_file_type(const unsigned char *type, const char* path, const char* filename)
+void
+fi_file_list_set_file_params (FiFileInfo *pinfo,
+                              const char *filename)
 {
-    FiFileType t = FI_FILE_TYPE_UNKNOWN;
-    struct stat sb;
-    char *f_name;
-    
-    // First we'll attempt using regular dirent.d_type
-    switch (*type) {
-        case DT_DIR: t = FI_FILE_TYPE_DIRECTORY;
-            break;
-        case DT_REG: t = FI_FILE_TYPE_REGULAR;
-            break;
-        case DT_BLK:
-        case DT_CHR: /* Done intentionally */
-        case DT_FIFO:
-        case DT_LNK:
-        case DT_SOCK:
-        case DT_UNKNOWN: /* Done intentionally */
-        default:
-            f_name = fi_detector_full_filename_m(path, filename);
-            if (f_name) {
-                // Make the full path
-                // Now let's attempt to the type via stat
-                if (stat(f_name, &sb) != -1) {
-                    switch (sb.st_mode & S_IFMT) {
-                        case S_IFREG: t = FI_FILE_TYPE_REGULAR;
-                            break;
-                        case S_IFDIR: t = FI_FILE_TYPE_DIRECTORY;
-                            break;
-                        case S_IFLNK: t = FI_FILE_TYPE_LINK;
-                            break;
-                        case S_IFCHR: /* Done intentionally */
-                        case S_IFIFO:
-                        case S_IFBLK:
-                        case S_IFSOCK:
-                        default: /* Done intentionally */
-                            t = FI_FILE_TYPE_UNKNOWN;
-                            break;
-                    }
-                }
-                free(f_name); // Release the memory
+    FiFileType t     = FI_FILE_TYPE_UNKNOWN;
+
+    if (filename) {
+        // Make the full path
+        // Now let's attempt to the type via stat
+        struct stat sb;
+        if (lstat(filename, &sb) != -1) {
+            switch (sb.st_mode & S_IFMT) {
+                case S_IFREG: t = FI_FILE_TYPE_REGULAR;
+                    break;
+                case S_IFDIR: t = FI_FILE_TYPE_DIRECTORY;
+                    break;
+                case S_IFLNK: t = FI_FILE_TYPE_LINK;
+                    break;
+                case S_IFCHR:  /* Done intentionally */
+                case S_IFIFO:
+                case S_IFBLK:
+                case S_IFSOCK:
+                default:        /* Done intentionally */
+                    t = FI_FILE_TYPE_UNKNOWN;
+                    break;
             }
-            break;
+            // Set the size
+            pinfo->size_byte = sb.st_size;
+            // Set the modification times
+            pinfo->modified_at  = sb.st_mtim;
+        }
     }
-    return t;
+    pinfo->file_type = t;
 }
 
 /**
  * Returns the FileInfo
  * @param dp
- * @return 
+ * @return
  */
 FiFileInfo *
-fi_file_list_get_file_info_from_dirent_m(const char           *path,
-                             const struct dirent *dp)
+fi_file_list_get_file_info_from_dirent_m(const char	     *path,
+                             		 const struct dirent *dp)
 {
     FiFileInfo * pinfo = malloc (sizeof (* pinfo));
     if (NULL == pinfo){
         fi_print_error("Failed to allocate enough memory. dirent");
         return NULL;
     }
+    
+    // Prefill the structure
+    *pinfo = EmptyInfo;
 
     pinfo->filename     = strndup (dp->d_name, strlen(dp->d_name));
     pinfo->file_path    = strndup (path, strlen(path));
-    pinfo->file_type    = fi_file_list_get_file_type(&dp->d_type, path, dp->d_name);
-    // Attempt to get the file extension
-    char* ext_str = strrchr(dp->d_name, '.');
-    pinfo->file_extension = fi_strdup(! ext_str ? "UNKNONWN" : (ext_str + 1));
+    if (DT_DIR != dp->d_type) {
+        // Attempt to get the file extension
+        char *ext_str = strrchr(dp->d_name, '.');
+        char *f_name  = fi_detector_full_filename_m(path, dp->d_name);
+        // Set the extension
+        pinfo->file_extension = fi_strdup(! ext_str ? "UNKNONWN" : (ext_str + 1));
+        fi_file_list_set_file_params (pinfo, f_name);
+        free (f_name); // Release the dynamic filename buffer created
+
+    } else {
+        pinfo->file_extension   = strdup ("Dir");
+        pinfo->file_type        = FI_FILE_TYPE_DIRECTORY;
+    }
 
     return pinfo;
 }

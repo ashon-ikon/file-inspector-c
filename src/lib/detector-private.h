@@ -38,8 +38,8 @@ extern "C" {
 #include "detector.h"
 #include "lib-common.h"
 
-FiFileType
-fi_file_list_get_file_type(const unsigned char *type, const char* path, const char* filename);
+void
+fi_file_list_set_file_params (FiFileInfo *pinfo, const char* path_filename);
 
 /**
  * Returns the FileInfo

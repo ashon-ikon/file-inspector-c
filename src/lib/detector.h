@@ -27,8 +27,10 @@
 #ifndef FINSPECTOR_FILE_DETECTOR_H
 #define FINSPECTOR_FILE_DETECTOR_H
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <time.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,10 +56,12 @@ typedef struct _FiFileInfo FiFileInfo;
 typedef struct _FiFileList FiFileList;
 
 struct _FiFileInfo {
-    char * filename;
-    char * file_path;
-    char * file_extension;
-    FiFileType file_type;
+    char              * filename;
+    char              * file_path;
+    char              * file_extension;
+    off_t               size_byte;
+    FiFileType          file_type;
+    struct timespec     modified_at;
 };
 
 // File List structure
@@ -67,6 +71,15 @@ struct _FiFileList {
     uint64_t capacity;
     FiFileInfo ** pfile_info_list;
 };
+
+/**
+ * Types of Duplicates to detect
+ */
+#define FI_DUPLICATE_FILENAME               1 << 0;
+#define FI_DUPLICATE_FILE_SIZE              1 << 1;
+#define FI_DUPLICATE_MODIFICATION_TIME      1 << 2;
+#define FI_DUPLICATE_ALL                    0x0F;
+
 
 // ---------------------------------------
 // Helper methods
