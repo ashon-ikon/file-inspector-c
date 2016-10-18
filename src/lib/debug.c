@@ -1,8 +1,7 @@
-/* 
- * File:   file-inspector.h
- * Author: yasonibare
+/**
+ * Author: Yinka Ashon
  * 
- * Copyright (c) 2016 Yinka Asonibare
+ * Handy module for printing error messages
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -22,18 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * 
- * Created on 28 August 2016, 10:42 PM
+ * 
  */
-#ifndef FINSPECTOR_COMMON_H__
-#define FINSPECTOR_COMMON_H__
 
-#ifdef HAVE_CONFIG_H
-#include "../config.h"
-#endif
+#include <stdlib.h>         // malloc
+#include <stdio.h>
+#include <stdarg.h>         // vargs
 
-
-#include "lib/string-helper.h"
+#include "debug.h"
+#include "string-helper.h"
 
 
-#endif /* FINSPECTOR_COMMON_H__ */
 
+/**
+ * Handy method to print error messages
+ * @param err
+ * @param ...
+ */
+void
+fi_print_error(const char * err, ...)
+{
+
+    va_list ap;
+    va_start(ap, err);
+    char * ae = fi_vsstrdup(err, ap);
+    va_end(ap);
+    
+    fprintf(stderr, "Error: %s\n", ae);    
+    // Free the memory
+    free(ae);
+}

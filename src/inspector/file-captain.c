@@ -25,65 +25,54 @@
  * Created on 28 August 2016, 10:42 PM
  */
 
-#include <iostream>
 
-#include "file-captain.h"
-
-namespace FInspector {
-
-    FileCaptain::FileCaptain() {
-    }
-
-    FileCaptain::FileCaptain(const FileCaptain& orig) {
-    }
-
-    FileCaptain::~FileCaptain() {
-    }
-
-    /**
-     * 
-     * @param path
-     * @return 
-     */
-    bool
-    FileCaptain::checkSourceFolder(const ustring& path) {
-        if (path.empty()) {
-
-        }
-        std::cout << path.length() << std::endl;
-        return true;
-    }
-
-    /**
-     * 
-     * @param path
-     * @return 
-     */
-    bool
-    FileCaptain::checkDestFolder(const ustring& path) {
-        if (path.empty()) {
-
-        }
-        return false;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    bool
-    FileCaptain::isDirectory(const ustring& path) {
-        return false;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    bool
-    FileCaptain::isFile(const ustring& path) {
-        return false;
-    }
-
-
-}
+//#include "file-captain.h"
+//
+///**
+// * Private structure declaration
+// */
+//typedef struct {
+//    
+//} InspectorFileCaptainPrivate;
+//
+//// InspectorFileCaptain instance
+//struct _InspectorFileCaptain {
+//    // This should always be the very first
+//    GObject parent_instance;
+//    
+//    
+//    // Other members
+//};
+//
+///*
+// * We need to make the type known to GObject
+// */
+//G_DEFINE_TYPE (InspectorFileCaptain, inspector_file_captain, G_TYPE_OBJECT)
+//        
+///**
+// * Initializes the class object
+// * We make sure to initialize or override class methods
+// * (that is, assign to each class' method its function pointer)
+// * and create the signals and the properties associated to your object.
+// * 
+// * @param klass
+// */
+//static void
+//inspector_file_captain_class_init(InspectorFileCaptainClass *klass)
+//{    
+//}
+//
+///**
+// * This is called once to create the first construct of file captain object
+// * @param self
+// */
+//static void
+//inspector_file_captain_init(InspectorFileCaptain * self)
+//{
+//    InspectorFileCaptainPrivate *priv = inspector_file_captain_get_instance_private(self);
+//    
+//    if (priv != NULL) {
+//        
+//    }
+//    // We'll add private and some public members
+//}

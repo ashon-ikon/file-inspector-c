@@ -8,6 +8,8 @@
 AC_PREREQ([2.69])
 AC_INIT([file-inspector], [0.0.2], [gigalimit20@yahoo.com])
 
+AM_PROG_AR
+LT_INIT
 
 ## Files
 AC_CONFIG_SRCDIR([src/common.h])
@@ -16,6 +18,7 @@ AC_CONFIG_FILES([
 	Makefile
 	man/Makefile
 	src/Makefile
+        src/lib/Makefile
         src/inspector/Makefile
 ])
 
@@ -23,7 +26,7 @@ AC_CONFIG_FILES([
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
-#AC_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 
 # Checks for libraries.
 
@@ -33,7 +36,7 @@ AC_PROG_INSTALL
 AC_CHECK_HEADER_STDBOOL
 
 # Checks for library functions.
-PKG_CHECK_MODULES([FI_DEPS], [glib-2.0])
+PKG_CHECK_MODULES([FI_DEPS], [glib-2.0 gobject-2.0])
 
 
 ## Automake things

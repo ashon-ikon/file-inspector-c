@@ -1,8 +1,7 @@
-/* 
- * File:   file-inspector.h
- * Author: yasonibare
+/** 
+ * File:   detector-private.h
  * 
- * Copyright (c) 2016 Yinka Asonibare
+ * Author: Yinka Ashon
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -22,18 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * 
- * Created on 28 August 2016, 10:42 PM
- */
-#ifndef FINSPECTOR_COMMON_H__
-#define FINSPECTOR_COMMON_H__
 
-#ifdef HAVE_CONFIG_H
-#include "../config.h"
+ *
+ * Created on 27 September 2016, 7:48 PM
+ */
+
+#ifndef FINSPECTOR_FILE_DETECTOR_PRIVATE_H
+#define FINSPECTOR_FILE_DETECTOR_PRIVATE_H
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
+#include <dirent.h>
+    
+#include "detector.h"
+#include "lib-common.h"
 
-#include "lib/string-helper.h"
+void
+fi_file_list_set_file_params (FiFileInfo *pinfo, const char* path_filename);
+
+/**
+ * Returns the FileInfo
+ * @param dp
+ * @return 
+ */
+FiFileInfo *
+fi_file_list_get_file_info_from_dirent_m(const char * path, const struct dirent *dp);
 
 
-#endif /* FINSPECTOR_COMMON_H__ */
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* FINSPECTOR_FILE_DETECTOR_PRIVATE_H */
 
