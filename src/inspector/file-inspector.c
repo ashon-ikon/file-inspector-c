@@ -29,34 +29,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
+
+#include "../lib/lib.h"
 #include "file-inspector.h"
-#include "src/lib/detector.h"
-#include "src/lib/file-list-array.h"
 
-
-void
-foreach_callback (int index, FiFileInfo * info)
-{
-    fi_file_info_print_content(info);
-}
-
-int
-main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     // Set the default locale
     setlocale(LC_CTYPE, "");
-    
-    char* src = fi_strdup("/home/yasonibare/Workspace/C-C++/file-inspector-c/test");
-    char* dest = strdup("/home/yasonibare/Downloads/dump");
 
-    FiFileList* src_list = fi_file_list_get_list_from_source_m(src, true);
-
-    FI_FOREACH_INFO (src_list, &foreach_callback);
-
-    // Free resources...
-    fi_file_list_free(src_list);
-    free(src);
-    free(dest);
-    
     return 0;
 }

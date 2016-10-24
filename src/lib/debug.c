@@ -29,7 +29,7 @@
 #include <stdarg.h>         // vargs
 
 #include "debug.h"
-#include "string-helper.h"
+//#include "string-helper.h"
 
 
 
@@ -42,12 +42,15 @@ void
 fi_print_error(const char * err, ...)
 {
 
-    va_list ap;
-    va_start(ap, err);
-    char * ae = fi_vsstrdup(err, ap);
-    va_end(ap);
-    
-    fprintf(stderr, "Error: %s\n", ae);    
-    // Free the memory
-    free(ae);
+    if (NULL != err) {
+        
+    }
+//    va_list ap;
+//    va_start(ap, err);
+//    char * ae = fi_vsstrdup(err, ap);
+//    va_end(ap);
+//    
+//    fprintf(stderr, "Error: %s\n", ae);    
+//    // Free the memory
+//    free(ae);
 }

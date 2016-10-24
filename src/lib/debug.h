@@ -1,10 +1,4 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
  * File:   debug.h
  * Author: Yinka Ashon
  *
@@ -40,6 +34,7 @@
 extern "C" {
 #endif
 
+#define fmt_printf __attribute__((format(printf, 1, 2)))
     
 typedef enum {
     FI_DEBUG_LEVEL_INFO,
@@ -52,8 +47,7 @@ typedef enum {
  * @param err
  * @param ...
  */
-void
-fi_print_error(const char * err, ...);
+void fi_print_error(const char * err, ...) fmt_printf;
 
 
 #ifdef __cplusplus
