@@ -1,5 +1,5 @@
-/* 
- * File:   lib.h
+/*
+ * File:   util-time.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,23 +22,17 @@
  * 
  */
 
-#ifndef FINSPECTOR_LIB_LIB_H
-#define FINSPECTOR_LIB_LIB_H
+#ifndef FINSPECTOR_UTIL_TIME_H
+#define FINSPECTOR_UTIL_TIME_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "array.h"
-#include "debug.h"
 #include "lib-common.h"
-#include "file.h"
+
+FI_BEGIN_DECLS
 
 
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif /* FINSPECTOR_LIB_LIB_H */
+FI_END_DECLS
+
+#endif /* FINSPECTOR_UTIL_TIME_H */
 

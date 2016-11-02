@@ -23,16 +23,14 @@
  * Created on 5 October 2016, 11:28 AM
  */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef FINSPECTOR_DEBUG_H
+#define FINSPECTOR_DEBUG_H
 
 #include <stdarg.h>
 
 #include "lib-common.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+FI_BEGIN_DECLS
 
 #define fmt_printf __attribute__((format(printf, 1, 2)))
     
@@ -50,9 +48,7 @@ typedef enum {
 void fi_print_error(const char * err, ...) fmt_printf;
 
 
-#ifdef __cplusplus
-}
-#endif
+FI_END_DECLS
 
-#endif /* DEBUG_H */
+#endif /* FINSPECTOR_DEBUG_H */
 

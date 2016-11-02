@@ -1,5 +1,5 @@
 /* 
- * File:   lib.h
+ * File:   util-string.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,23 +22,38 @@
  * 
  */
 
-#ifndef FINSPECTOR_LIB_LIB_H
-#define FINSPECTOR_LIB_LIB_H
+#ifndef FINSPECTOR_UTIL_STRING_H
+#define FINSPECTOR_UTIL_STRING_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "array.h"
-#include "debug.h"
+#include <string.h>
 #include "lib-common.h"
-#include "file.h"
 
+FI_BEGIN_DECLS
 
-
-#ifdef __cplusplus
-}
+#if defined XOPEN_SOURCE >= 500 \
+    || /* Since glibc 2.12: */ _POSIX_C_SOURCE >= 200809L \
+    || /* Glibc versions <= 2.19: */ _BSD_SOURCE || _SVID_SOURCE // need to fix code
+    #define fi_strdup   strdup
+    #define fi_strndup  strndup
+#else
+    // Probably windows or some sort
+    #define FI_NO_STRDUP_FOUND
+    #define fi_strdup   _fi_strdup
+    #define fi_strndup  _fi_strndup
 #endif
 
-#endif /* FINSPECTOR_LIB_LIB_H */
+char * fi_rtrim(char * str, const char * impurities);
+char * fi_ltrim(char * str, const char * impurities);
+char * fi_trim(char * str, const char * impurities);
+
+#ifdef FI_NO_STRDUP_FOUND
+/* Platform appears not to have support for strdup and strndup
+ */
+char * _fi_strdup (const char *src);
+char * _fi_strndup(const char *src, size_t n);
+#endif
+
+FI_END_DECLS
+
+#endif /* FINSPECTOR_UTIL_STRING_H */
 

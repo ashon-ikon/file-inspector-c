@@ -1,5 +1,4 @@
-/* 
- * File:   lib.h
+/*
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,26 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  */
-
-#ifndef FINSPECTOR_LIB_LIB_H
-#define FINSPECTOR_LIB_LIB_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "array.h"
-#include "debug.h"
-#include "lib-common.h"
-#include "file.h"
-
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* FINSPECTOR_LIB_LIB_H */
 

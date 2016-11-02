@@ -1,5 +1,4 @@
-/* 
- * File:   lib.h
+/*
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,24 +20,37 @@
  * SOFTWARE.
  * 
  */
+#include <stddef.h>
 
-#ifndef FINSPECTOR_LIB_LIB_H
-#define FINSPECTOR_LIB_LIB_H
+#include "util-string.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+char * fi_rtrim(char * str, const char * impurities)
+{
+    char * x = NULL;
+    return x;
+}
 
-#include "array.h"
-#include "debug.h"
-#include "lib-common.h"
-#include "file.h"
+char * fi_ltrim(char * str, const char * impurities)
+{
+    char * x = NULL;
+    return x;
+}
 
+char * fi_trim(char * str, const char * impurities)
+{
+    char * x = NULL;
+    return x;
+}
 
-
-#ifdef __cplusplus
+#if defined FI_NO_STRDUP_FOUND
+/* Platform appears not to have support for strdup and strndup
+ */
+char * _fi_strdup (const char *src)
+{
+    
+}
+char * _fi_strndup(const char *src, size_t n)
+{
+    
 }
 #endif
-
-#endif /* FINSPECTOR_LIB_LIB_H */
-

@@ -14,10 +14,23 @@
 #ifndef LIB_COMMON_H
 #define LIB_COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
+#include <stdlib.h>
+
+#ifndef __BEGIN_DECLS
+    #ifdef __cplusplus
+        #define __BEGIN_DECLS extern "C" {
+        #define __END_DECLS }
+    #else
+        #define __BEGIN_DECLS
+        #define __END_DECLS
+    #endif
 #endif
 
+#define FI_BEGIN_DECLS  __BEGIN_DECLS
+#define FI_END_DECLS    __END_DECLS
+
+
+FI_BEGIN_DECLS
 
 typedef enum {
     FI_SUCCESS          = 0,
@@ -26,9 +39,7 @@ typedef enum {
 } FiReturnResponse;
 
 
-#ifdef __cplusplus
-}
-#endif
+FI_END_DECLS
 
 #endif /* LIB_COMMON_H */
 

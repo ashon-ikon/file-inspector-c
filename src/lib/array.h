@@ -1,5 +1,5 @@
 /* 
- * File:   lib.h
+ * File:   array.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,23 +22,37 @@
  * 
  */
 
-#ifndef FINSPECTOR_LIB_LIB_H
-#define FINSPECTOR_LIB_LIB_H
+#ifndef ARRAY_H
+#define ARRAY_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stddef.h>
 
-#include "array.h"
-#include "debug.h"
 #include "lib-common.h"
-#include "file.h"
 
+FI_BEGIN_DECLS
 
+struct FiContainer_st {
+    void        *container;
+    unsigned     size;
+    int          count;
+    int         (*inc_ref) (struct FiContainer_st *con);
+    int         (*dec_ref) (struct FiContainer_st *con);
+};
 
-#ifdef __cplusplus
-}
-#endif
+struct FiArray_st {
+    unsigned               len;
+    unsigned               capacity;
+    struct FiContainer_st *data;
+};
 
-#endif /* FINSPECTOR_LIB_LIB_H */
+void  fi_array_init(struct FiArray_st *arr);
+void  fi_array_destroy(struct FiArray_st *arr);
+short fi_array_push(struct FiArray_st *arr, void * data, unsigned n);
+struct FiContainer_st *fi_array_get(struct FiArray_st *arr, struct FiContainer_st *dest, unsigned i);
+void  fi_array_copy(const struct FiArray_st *src, struct FiArray_st *dst);
+
+        
+FI_END_DECLS
+
+#endif /* ARRAY_H */
 

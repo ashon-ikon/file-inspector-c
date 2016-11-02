@@ -1,5 +1,5 @@
-/* 
- * File:   lib.h
+/*
+ * File:   file-manager.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,20 +19,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  */
-
-#ifndef FINSPECTOR_LIB_LIB_H
-#define FINSPECTOR_LIB_LIB_H
+#ifndef FILE_MANAGER_H
+#define FILE_MANAGER_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "array.h"
-#include "debug.h"
-#include "lib-common.h"
-#include "file.h"
 
 
 
@@ -40,5 +35,5 @@ extern "C" {
 }
 #endif
 
-#endif /* FINSPECTOR_LIB_LIB_H */
+#endif /* FILE_MANAGER_H */
 
