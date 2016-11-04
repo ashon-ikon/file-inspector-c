@@ -26,11 +26,13 @@
 
 #include <stdlib.h>         // malloc
 #include <stdio.h>
-#include <stdarg.h>         // vargs
+#include <stdarg.h>
+#include <string.h>         // vargs
 
 #include "debug.h"
-//#include "string-helper.h"
 
+#define FI_MSG_MAX          1024
+#define FI_FN_MAX            128
 
 
 /**
@@ -38,19 +40,26 @@
  * @param err
  * @param ...
  */
-void
-fi_print_error(const char * err, ...)
+void _fi_log_message(FiMessageType type,
+                    const char * fn, const int line,
+                    const char * err, ...)
 {
+    char  fname[FI_FN_MAX], msg[FI_MSG_MAX];
 
-    if (NULL != err) {
-        
+    short m = snprintf(fname, 128, "Func: %s (%d) ", fn, line);
+
+    va_list ap;
+    va_start(ap, err);
+    vsnprintf(msg, FI_MSG_MAX - (m - 1), err, ap);
+    va_end(ap);
+
+    char t = ' ';
+    switch(type) {
+        case FI_DEBUG_LEVEL_CRITICAL: t = 'C'; break;
+        case FI_DEBUG_LEVEL_FATAL: t = 'F'; break;
+        case FI_DEBUG_LEVEL_INFO: t = 'I'; break;
+        case FI_DEBUG_LEVEL_WARN: t = 'W'; break;
     }
-//    va_list ap;
-//    va_start(ap, err);
-//    char * ae = fi_vsstrdup(err, ap);
-//    va_end(ap);
-//    
-//    fprintf(stderr, "Error: %s\n", ae);    
-//    // Free the memory
-//    free(ae);
+
+    fprintf(stderr, "== %c%c == %s%s\n", t, t, fname, msg);
 }

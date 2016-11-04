@@ -32,21 +32,32 @@
 
 FI_BEGIN_DECLS
 
-#define fmt_printf __attribute__((format(printf, 1, 2)))
+#if __STDC_VERSION__ >= 199901L
+    #ifndef __FUNC__
+    #define __FUNC__ __func__
+    #endif
+#else
+    #define __FUNC__    ""
+#endif
+
+#define fmt_printf __attribute__((format(printf, 4, 5)))
     
 typedef enum {
-    FI_DEBUG_LEVEL_INFO,
     FI_DEBUG_LEVEL_CRITICAL,
-    FI_DEBUG_LEVEL_VERBOSE,
+    FI_DEBUG_LEVEL_FATAL,
+    FI_DEBUG_LEVEL_INFO,
+    FI_DEBUG_LEVEL_WARN,
 
-} FiDebugLevel;
-/**
- * Handy method to print error messages
- * @param err
- * @param ...
- */
-void fi_print_error(const char * err, ...) fmt_printf;
+} FiMessageType;
 
+void _fi_log_message(FiMessageType level,
+                    const char * fn, const int line,
+                    const char * err, ...) fmt_printf;
+
+#define fi_log_message(lv, fmt, ...) do {                   \
+                _fi_log_message((lv),                       \
+                __FUNC__, __LINE__, (fmt) , ##__VA_ARGS__); \
+            } while(0)
 
 FI_END_DECLS
 
