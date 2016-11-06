@@ -1,5 +1,5 @@
 /*
- * File:   file.h
+ * File:   file-array.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef FINSPECTOR_FILE_H
-#define FINSPECTOR_FILE_H
+#ifndef FINSPECTOR_FILE_ARRAY_H
+#define FINSPECTOR_FILE_ARRAY_H
 
 
 /*
@@ -61,15 +61,16 @@ typedef struct FiFileInfo FiFileInfo_st;
 
 
 #if (! defined(__timespec_defined))
-#define __timespec_defined 1
-// Following lines are copied from <time.h>
-# include <bits/types.h>	/* This defines __time_t for us.  */
+    #define __timespec_defined 1
+    // Following lines are copied from <time.h>
+    # include <bits/types.h>	/* This defines __time_t for us.  */
 
-struct timespec {
-    time_t      tv_sec;		/* Seconds.  */
-    __int64_t   tv_nsec;	/* Nanoseconds.  */
-};
+    struct timespec {
+        time_t      tv_sec;		/* Seconds.  */
+        __int64_t   tv_nsec;	/* Nanoseconds.  */
+    };
 #endif
+
 struct FiFileInfo {
     char               *filename;
     char               *file_path;
@@ -79,21 +80,19 @@ struct FiFileInfo {
     struct timespec     modified_at;
 };
 
-struct FiFileArray_st {
-    struct FiArray_st bank;
+struct FiFileArray {
+    struct FiArray   bank;
 };
 
-void fi_file_init(FiFileInfo_st *file);
-void fi_file_destroy(FiFileInfo_st *file);
-void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest);
-
-
-
 // File array
-void fi_file_array_init(struct FiFileArray_st * array);
+void fi_file_array_init(struct FiFileArray * array);
+int  fi_file_array_add_file_info(struct FiFileArray *arr,
+                                 struct FiFileInfo  *info);
+
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* FINSPECTOR_FILE_H */
+#endif /* FINSPECTOR_FILE_ARRAY_H */
 

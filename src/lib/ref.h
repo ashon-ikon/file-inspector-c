@@ -1,5 +1,5 @@
 /* 
- * File:   array.h
+ * File:   ref.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,42 +20,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * 
+ * Created on 4 November 2016, 5:03 PM
  */
 
-#ifndef FINSPECTOR_ARRAY_H
-#define FINSPECTOR_ARRAY_H
+#ifndef REF_H
+#define REF_H
 
-#include <stddef.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include "lib-common.h"
-#include "ref.h"
+/* Greatly inspired by Chris Wellon's demonstration of the same
+ */
+#ifndef container_of
+#define container_of(ptr, type, member) ((type *) \
+    ((char *)(1 ? (ptr) : &((type *)0)->member) - offsetof(type, member)))
+#endif    
 
-FI_BEGIN_DECLS
-
-#define FI_DATA_SIZE    unsigned
-
-struct FiContainer {
-    void         *data;
-    FI_DATA_SIZE  size;
-    struct FiRef  reference;
+struct FiRef {
+    int  count;
+    void (*free)(const struct FiRef *ref);
 };
 
-struct FiArray {
-    unsigned            len;
-    unsigned            capacity;
-    struct FiContainer *container;
-};
+static inline int fi_ref_inc(const struct FiRef *ref)
+{
+    int t = ((struct FiRef *)ref)->count++;
 
-void  fi_array_init(struct FiArray *arr);
-void  fi_array_destroy(struct FiArray *arr);
-void  fi_array_copy(const struct FiArray *src, struct FiArray *dst);
-short fi_array_push(struct FiArray *arr, void * data, FI_DATA_SIZE size);
-struct FiContainer *fi_array_get(struct FiArray *arr, unsigned i);
+    return t >= 0 ? 0 : -1;
+}
 
+static inline int fi_ref_dec(const struct FiRef *ref)
+{
+    int t = --((struct FiRef *)ref)->count;
 
+    if (t == 0 && ((struct FiRef *)ref)->free)
+        ((struct FiRef *)ref)->free(ref);
+    
+    return t >= 0 ? 0 : -1;
+}
 
-        
-FI_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
-#endif /* FINSPECTOR_ARRAY_H */
+#endif /* REF_H */
 

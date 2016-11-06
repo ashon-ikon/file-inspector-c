@@ -30,46 +30,51 @@
 #include <string.h>
 
 #include "array.h"
+#include "debug.h"
 
 /* This is the minimum items in list to start with 
  */
 #define FI_ARRAY_ALLOC_CHUNK_SIZE 20
 
-typedef struct FiContainer_st FiContainer;
+typedef struct FiContainer FiContainer_st;
 
-static FiContainer empty_content = {NULL, 0};
+static FiContainer_st empty_content = {NULL, 0, {0, NULL}};
 
 /* Prototypes */
-static bool fi_array_expand_container(struct FiArray_st **cur, unsigned n);
-static bool fi_array_copy_container(const FiContainer *src, FiContainer *dst);
+static bool fi_array_expand_container(struct FiArray **cur, unsigned n);
+static void fi_array_container_create(struct FiContainer *con,
+                                      void *data, FI_DATA_SIZE size);
+static void fi_array_container_free(const struct FiRef *con);
+
 
 /* Helper macros */
+
 
 /**
  * Creates the array holder
  * @return 
  */
-void fi_array_init(struct FiArray_st *arr)
+void fi_array_init(struct FiArray *arr)
 {
     if (! arr) { 
         fprintf(stderr, "Failed to allocate memory for array\n");
         return;
     }
     
-    arr->capacity = 0;
-    arr->len      = 0;
-    arr->data     = NULL;
+    arr->capacity  = 0;
+    arr->len       = 0;
+    arr->container = NULL;
     fi_array_expand_container(&arr, FI_ARRAY_ALLOC_CHUNK_SIZE);
 
     return;
 }
 
-void fi_array_destroy(struct FiArray_st *arr)
+void fi_array_destroy(struct FiArray *arr)
 {
     if (arr) {
         for (unsigned i = 0; i < arr->capacity; i++)
-            free(arr->data[i].container);
-        free(arr->data);
+            fi_ref_dec(&arr->container[i].reference);
+        free(arr->container);
     }
 }
 
@@ -79,21 +84,20 @@ void fi_array_destroy(struct FiArray_st *arr)
  * @param n
  * @return 
  */
-static bool fi_array_expand_container(struct FiArray_st ** cur, unsigned n)
+static bool fi_array_expand_container(struct FiArray ** cur, unsigned n)
 {
-    struct FiContainer_st *tmp =
-        realloc((*cur)->data, (*cur)->capacity + n * sizeof(*tmp));
+    struct FiContainer *tmp =
+        realloc((*cur)->container, n * sizeof(*tmp));
     
     if (NULL != tmp) {
 
-        unsigned cap      = (*cur)->capacity;
-        (*cur)->capacity += n;
         // Empty out the container
-        for (unsigned i = cap; i < (*cur)->capacity; i++)
+        for (unsigned i = (*cur)->capacity; i < n; i++)
             // Assign the empty value
             tmp[i] = empty_content;
 
-        (*cur)->data = tmp;
+        (*cur)->container = tmp;
+        (*cur)->capacity  = n;
         return true;
     }
     
@@ -106,26 +110,15 @@ static bool fi_array_expand_container(struct FiArray_st ** cur, unsigned n)
  * @param data
  * @param n
  */
-short fi_array_push (struct FiArray_st *arr, void * data, unsigned n)
+short fi_array_push (struct FiArray *arr, void * data, FI_DATA_SIZE size)
 {
-    unsigned n_size = n + arr->len;
-    if (n_size >= arr->capacity) {
-        if ( ! fi_array_expand_container(&arr,
-                arr->capacity + FI_ARRAY_ALLOC_CHUNK_SIZE) )
+
+    if (arr->capacity < (1 + arr->len))
+        if (! fi_array_expand_container(&arr, arr->capacity * 2))
             return -1;
-    }
-
-    unsigned i = arr->len++;
-    arr->data[i].container = malloc(n);
-
-    if (! arr->data[i].container) {
-        fprintf(stderr, "Failed to allocate memory to store %d th element\n", i);
-        return -1;
-    }
-
-    memcpy(arr->data[i].container, data, n);
-    arr->data[i].size = n;
     
+    fi_array_container_create(&arr->container[arr->len++], data, size);
+
     return 0;
 }
 
@@ -134,14 +127,21 @@ short fi_array_push (struct FiArray_st *arr, void * data, unsigned n)
  * @param arr
  * @param i
  */
-struct FiContainer_st *fi_array_get(struct FiArray_st *arr,
-                                    struct FiContainer_st *dest, u_int i)
+struct FiContainer *fi_array_get(struct FiArray *arr, u_int i)
 {
-    if (i >= 0 && i < arr->len) 
-        *dest = arr->data[i];
-    else {
+    if (! arr)
+        return NULL;
+
+    struct FiContainer *dest;
+
+    if (i >= 0 && i < arr->len) { 
+
+        dest = &arr->container[i];
+        fi_ref_inc(&dest->reference);
+
+    } else {
         *dest = empty_content;
-        fprintf(stderr, "Subscript '%d' out of range\n", i);
+        fi_log_message(FI_DEBUG_LEVEL_WARN, "Subscript '%d' out of range\n", i);
     }
 
     return dest;
@@ -152,47 +152,60 @@ struct FiContainer_st *fi_array_get(struct FiArray_st *arr,
  * @param src
  * @param dst
  */
-void  fi_array_copy(const struct FiArray_st *src, struct FiArray_st *dst)
+void  fi_array_copy(const struct FiArray *src, struct FiArray *dst)
 {
-    if (src->len) {
+    if (! src->len)
+        return;
 
-        dst->data = malloc(src->capacity * sizeof(dst->data[0]));
-        if (dst->data) {
+    dst->container = malloc(src->capacity * sizeof(dst->container[0]));
+    if (dst->container) {
 
-            for (unsigned i = 0; i < src->capacity; i++)
-                fi_array_copy_container(&src->data[i], &dst->data[i]);
+        for (unsigned i = 0; i < src->capacity; i++)
+            fi_array_container_create(&dst->container[i],
+                                      src->container[i].data,
+                                      src->container[i].size);
 
-            dst->len = src->len;
-            dst->capacity = src->capacity;
-        }
+        dst->len = src->len;
+        dst->capacity = src->capacity;
     }
 }
 
+
 /**
- * Copies the container
- * @param src
- * @param dst
+ * Intializes container
+ * @param data
+ * @param size
  * @return 
  */
-static bool fi_array_copy_container(const FiContainer* src, FiContainer* dst)
+static void fi_array_container_create(struct FiContainer *p,
+        void *data, FI_DATA_SIZE size)
 {
-    if (! src) {
-        dst = NULL;
-        return false;
+    
+    *p = empty_content;
+
+    if (data) {
+        p->data    = malloc((size_t)size);
+        if (! p->data) {
+            fi_log_message(FI_DEBUG_LEVEL_CRITICAL,
+                           "Failed to allocate array container data memory");
+            return;
+        }
+        memcpy(p->data, data, size);
+        p->reference.free = fi_array_container_free;
+        p->size           =  size;
+        fi_ref_inc(&p->reference);
     }
 
-    dst->container = malloc(src->size);
+}
 
-    if (dst->container) {
-        memcpy(dst->container, src->container, src->size);
-        dst->count   = src->count;
-        dst->dec_ref = src->dec_ref;
-        dst->inc_ref = src->inc_ref;
-        dst->size    = src->size;
+static void fi_array_container_free(const struct FiRef *ref)
+{
+    if (! ref)
+        return;
+    struct FiContainer *con = container_of(ref, struct FiContainer, reference);
+    
+    if (! con)
+        return;
 
-        return true;
-    }
-    else
-        return false;
-
+    free(con->data);
 }

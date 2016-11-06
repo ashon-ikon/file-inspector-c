@@ -28,5 +28,6 @@
 #define FINSPECTOR_FILE_INSPECTOR_H__
 
 #include "../common.h"
+#include "../lib/lib.h" // Core Library
 
 #endif // FINSPECTOR_FILE_INSPECTOR_H__

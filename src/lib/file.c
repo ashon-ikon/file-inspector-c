@@ -1,5 +1,5 @@
 /*
- * File:   file.c
+ * File:   file-array.c
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,16 +28,17 @@
 #include "util-string.h"
 
 const struct FiFileInfo EMPTY_FILE = { NULL, NULL, NULL, 0L, 0, {0, 0}};
-/**
- * 
- * @param blank
- * @return FiFileInfo_st
- */
+
+/* Prototypes */
+static void fi_file_init(FiFileInfo_st *file);
+static void fi_file_destroy(FiFileInfo_st *file);
+static void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest);
+
 /**
  * Initializes file info structure
  * @param file
  */
-void fi_file_init(FiFileInfo_st  * file)
+static void fi_file_init(FiFileInfo_st  * file)
 {
     if (! file)
         return;
@@ -49,7 +50,7 @@ void fi_file_init(FiFileInfo_st  * file)
  * Free the resources
  * @param file
  */
-void fi_file_destroy(struct FiFileInfo * file)
+static void fi_file_destroy(struct FiFileInfo * file)
 {
     if (! file)
         return;
@@ -65,7 +66,7 @@ void fi_file_destroy(struct FiFileInfo * file)
  * @param src
  * @param dest
  */
-void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
+static void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
 {
     if (! src || ! dest)
         return;
@@ -81,10 +82,24 @@ void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
  * Initializes the file array
  * @param array
  */
-void fi_file_array_init(struct FiFileArray_st * array)
+void fi_file_array_init(struct FiFileArray * array)
 {
     if (! array)
         return;
 
     fi_array_init(&array->bank);
+}
+
+/**
+ * @param arr
+ * @param info
+ * @return 
+ */
+int fi_file_array_add_file_info(struct FiFileArray *arr,
+                                struct FiFileInfo *info)
+{
+    if (! info || ! arr)
+        return -1;
+    
+    return 0;
 }

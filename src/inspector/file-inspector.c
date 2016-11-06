@@ -30,13 +30,31 @@
 #include <string.h>
 #include <locale.h>
 
-#include "../lib/lib.h"
 #include "file-inspector.h"
 
 int main(int argc, char* argv[])
 {
     // Set the default locale
     setlocale(LC_CTYPE, "");
-
+    
+    struct FiArray arr;
+    fi_array_init(&arr);
+    int i = 9, b = -1;
+    fi_array_push(&arr, &i, sizeof i);
+    i = 39;
+    fi_array_push(&arr, &i, sizeof i);
+    struct FiArray cpy;
+    fi_array_copy(&arr, &cpy);
+    
+    struct FiContainer *container = fi_array_get(&cpy, 1);
+    memcpy(&b, container->data, container->size);
+    printf("We got %d\n", b);
+    
+    fi_ref_dec(&container->reference);
+    fi_array_destroy(&arr);
+    fi_array_destroy(&cpy);
+    
+    fi_log_message(FI_DEBUG_LEVEL_FATAL, "This is a fatal error");
+    fi_log_message(FI_DEBUG_LEVEL_CRITICAL, "This is a critical error");
     return 0;
 }
