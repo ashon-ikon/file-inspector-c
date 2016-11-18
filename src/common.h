@@ -32,7 +32,7 @@
 #endif
 
 
-#include "lib/string-helper.h"
+//#include "lib/string-helper.h"
 
 
 #endif /* FINSPECTOR_COMMON_H__ */

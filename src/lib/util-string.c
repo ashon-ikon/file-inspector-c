@@ -45,12 +45,31 @@ char * fi_trim(char * str, const char * impurities)
 #if defined FI_NO_STRDUP_FOUND
 /* Platform appears not to have support for strdup and strndup
  */
-char * _fi_strdup (const char *src)
+char *_fi_strdup (const char *src)
 {
+    size_t n = 0;
+    const char *dup = src;
+    while(*dup++ != '\0') n++;
     
+    return _fi_strndup(src, n + 2); // + '\0'
 }
-char * _fi_strndup(const char *src, size_t n)
+
+char *_fi_strndup(const char *src, size_t n)
 {
+    char *dup = NULL;
+    const char *tmp;
+       
+    tmp = src;
+    if (! src)
+        return NULL;
     
+    if (n <= 0)
+        return NULL;
+    
+    dup = malloc(n + 1);
+    memcpy(dup, src, n - 1);
+    dup[n] = '\0';
+    
+    return dup;
 }
 #endif

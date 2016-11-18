@@ -33,6 +33,7 @@ extern "C" {
 #include "debug.h"
 #include "lib-common.h"
 #include "file.h"
+#include "util-string.h"
 
 
 

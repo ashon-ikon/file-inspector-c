@@ -61,5 +61,5 @@ void _fi_log_message(FiMessageType type,
         case FI_DEBUG_LEVEL_WARN: t = 'W'; break;
     }
 
-    fprintf(stderr, "== %c%c == %s%s\n", t, t, fname, msg);
+    fprintf(stderr, "(%c%c) %s%s\n", t, t, fname, msg);
 }

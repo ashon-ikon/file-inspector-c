@@ -25,16 +25,6 @@
 #ifndef FINSPECTOR_FILE_ARRAY_H
 #define FINSPECTOR_FILE_ARRAY_H
 
-
-/*
- * To ensure we enables "struct timespec" in time.h, we define
- * the followin
- */
-#if __STDC_VERSION__ >= 199901L
-#define _XOPEN_SOURCE 600
-#else
-#define _XOPEN_SOURCE 500
-#endif /* __STDC_VERSION__ */
 #include <time.h>
 #include <stdint.h>
 #include <sys/types.h>
@@ -42,11 +32,17 @@
 
 #include "array.h"
 #include "debug.h"
+#include "ref.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifndef FI_FUNC_RESPONSES
+#define FI_FUNC_FAIL            -1
+#define FI_FUNC_SUCCEED          0
+#define FI_FUNC_RESPONSES       0x1200
+#endif
 
 typedef enum {
     FI_FILE_TYPE_UNKNOWN,
@@ -78,17 +74,29 @@ struct FiFileInfo {
     off_t               size_byte;
     FiFileType          file_type;
     struct timespec     modified_at;
+    struct FiRef        ref_count;
+    unsigned char       free_struct;
 };
 
 struct FiFileArray {
     struct FiArray   bank;
+    unsigned long    cursor;
 };
+
+void fi_file_init(struct FiFileInfo *file);
+void fi_file_destroy(struct FiFileInfo **file);
+void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest);
 
 // File array
 void fi_file_array_init(struct FiFileArray * array);
+void fi_file_array_destroy(struct FiFileArray *arr);
 int  fi_file_array_add_file_info(struct FiFileArray *arr,
                                  struct FiFileInfo  *info);
-
+unsigned fi_file_array_get_size(struct FiFileArray *arr);
+unsigned short fi_file_array_get_at(struct FiFileArray *arr, unsigned long i, struct FiFileInfo *pFile);
+unsigned short fi_file_array_get_begin(struct FiFileArray *arr, struct FiFileInfo *file);
+unsigned short fi_file_array_get_next(struct FiFileArray *arr, struct FiFileInfo *file);
+unsigned short fi_file_array_get_end(struct FiFileArray *arr, struct FiFileInfo *file);
 
 #ifdef __cplusplus
 }

@@ -42,3 +42,4 @@ nbproject*
 src/Helper/*.dirstamp
 *.dirstamp
 /ar-lib
+*.lo

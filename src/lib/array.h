@@ -25,6 +25,7 @@
 #ifndef FINSPECTOR_ARRAY_H
 #define FINSPECTOR_ARRAY_H
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #include "lib-common.h"
@@ -32,27 +33,41 @@
 
 FI_BEGIN_DECLS
 
-#define FI_DATA_SIZE    unsigned
+#define FI_TYPE_SIZE    unsigned
 
-struct FiContainer {
-    void         *data;
-    FI_DATA_SIZE  size;
-    struct FiRef  reference;
-};
+
+struct FiArray;
+
+typedef bool (*fi_array_data_cp_fn) (void const *src, void *dst, unsigned n);
 
 struct FiArray {
-    unsigned            len;
-    unsigned            capacity;
-    struct FiContainer *container;
+    void          *data;
+    FI_TYPE_SIZE   len;
+    FI_TYPE_SIZE   capacity;
+    size_t         unit_size;
+    struct FiRef   ref_count;
+    void         (*cleanup_notify)(struct FiArray* arr);
+    fi_array_data_cp_fn copy_func;
 };
 
-void  fi_array_init(struct FiArray *arr);
+struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp);
 void  fi_array_destroy(struct FiArray *arr);
 void  fi_array_copy(const struct FiArray *src, struct FiArray *dst);
-short fi_array_push(struct FiArray *arr, void * data, FI_DATA_SIZE size);
-struct FiContainer *fi_array_get(struct FiArray *arr, unsigned i);
+short fi_array_push(struct FiArray *arr, void const *data);
+short fi_array_insert(struct FiArray *arr, void *data, FI_TYPE_SIZE i);
 
+#define fi_array_get_ptr(a, t, i) ((t*)( (a)->data + ( (a)->unit_size * (i) )) )
+#define fi_array_get(a, t, i) ( ((t*)(void *)(a)->data) [(i)] )
 
+static inline FI_TYPE_SIZE fi_array_size(struct FiArray *arr)
+{
+    return arr->len;
+}
+
+static inline FI_TYPE_SIZE fi_array_capacity(struct FiArray *arr)
+{
+    return arr->capacity;
+}
 
         
 FI_END_DECLS

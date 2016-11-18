@@ -14,6 +14,10 @@
 #ifndef LIB_COMMON_H
 #define LIB_COMMON_H
 
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 200809L
+#endif
+
 #include <stdlib.h>
 
 #ifndef __BEGIN_DECLS
@@ -38,6 +42,11 @@ typedef enum {
     FI_ERROR_NULL_VALUE = 1 << 2
 } FiReturnResponse;
 
+#ifndef FI_FUNC_RESPONSES
+#define FI_FUNC_FAIL            -1
+#define FI_FUNC_SUCCEED          0
+#define FI_FUNC_RESPONSES       0x1200
+#endif
 
 FI_END_DECLS
 
