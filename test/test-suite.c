@@ -53,11 +53,13 @@ int run(FiTestFunc *tests)
     int successful = 0;
     int failed     = 0;
     int skipped    = 0;
+    int ret        = FI_TEST_OKAY;
 
     for (; tests[test_count].test; test_count++) {
         test_func test = tests[test_count].test;
         char *test_name = tests[test_count].name;
-        switch ( test() ) {
+        FI_TEST_RESULT result = test();
+        switch ( result ) {
         case FI_TEST_OKAY:
             print_test_outcome(test_name, "passed");
             successful++;
@@ -74,6 +76,8 @@ int run(FiTestFunc *tests)
             print_test_outcome(test_name, "<UNKNOWN>!!");
             break;
         }
+        
+        ret = ret < result ? result : ret;
     }
     
     printf("\nTest summary\n\n"
@@ -81,7 +85,7 @@ int run(FiTestFunc *tests)
             test_count, (test_count > 1? "s": ""), skipped, failed, successful);
     
 
-    return 0;
+    return ret;
 }
 
 char *fi_got_msg(char *fmt, ...)

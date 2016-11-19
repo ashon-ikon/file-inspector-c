@@ -38,10 +38,10 @@ extern "C" {
 
 typedef enum {
     FI_TEST_OKAY = 0,
-    FI_TEST_FAIL = 10,
     FI_TEST_SKIPPED = 77,
     FI_TEST_LEAKED = 96,
-    FI_TEST_CRITICAL = 99,
+    FI_TEST_FAIL = 99,
+    FI_TEST_CRITICAL = 137,
             
 } FI_TEST_RESULT;
     
