@@ -28,7 +28,7 @@
 #include <locale.h>
 
 #include "./../tests-common.h"
-#include "array-test.h"
+#include "test-array.h"
 
 
 FI_TEST_RESULT test_array_simple_allocation()
@@ -38,29 +38,55 @@ FI_TEST_RESULT test_array_simple_allocation()
     int t = 0;
     
     fi_array_push(arr, &t); t++;
-    fi_return_if_fail(fi_array_get(arr, int, 0) == 0);
+    fi_return_if_fail(fi_array_get(arr, int, 0) == 0,
+                        fi_got_msg("We got %d", fi_array_get(arr, int, 0)));
     
     fi_array_push(arr, &t); t++;
-    fi_return_if_fail(fi_array_get(arr, int, 1) == 1);
+    fi_return_if_fail(fi_array_get(arr, int, 1) == 1,
+                        fi_got_msg("We got %d", fi_array_get(arr, int, 1)));
     
     fi_array_push(arr, &t); t++;
-    fi_return_if_fail(fi_array_get(arr, int, 2) == 2);
+    fi_return_if_fail(fi_array_get(arr, int, 2) == 2,
+                        fi_got_msg("We got %d", fi_array_get(arr, int, 2)));
     
     fi_array_copy(arr, arr_cpy);
-    fi_return_if_fail(fi_array_size(arr) == fi_array_size(arr_cpy));
+    fi_return_if_fail(fi_array_size(arr) == fi_array_size(arr_cpy),
+            "Wrong number of data copied!");
     
     
     fi_array_push(arr_cpy, &t);
-    fi_return_if_fail(fi_array_get(arr, int, 3) == 3);
+    fi_return_if_fail(fi_array_get(arr_cpy, int, 3) == 3,
+                        fi_got_msg("We got %d", fi_array_get(arr_cpy, int, 3)));
     
     t = 1000;
     fi_array_insert(arr_cpy, &t, 2);
-    fi_return_if_fail(fi_array_get(arr_cpy, int, 2) == 1000);
+    fi_return_if_fail(fi_array_get(arr_cpy, int, 2) == 1000,
+                        fi_got_msg("We got %d", fi_array_get(arr, int, 2)));
 
-    fi_return_if_fail(*fi_array_get_ptr(arr_cpy, int, 2) == 1000);
+    fi_return_if_fail(*fi_array_get_ptr(arr_cpy, int, 2) == 1000,
+                        fi_got_msg("We got %d", *fi_array_get_ptr(arr, int, 2)));
 
     fi_array_destroy(arr);
     fi_array_destroy(arr_cpy);
+    
+    return FI_TEST_OKAY;
+}
+
+FI_TEST_RESULT test_array_each_loop()
+{
+    struct FiArray *arr = fi_array_new(sizeof(int), NULL);
+    int t = 0;
+    
+    for (t = 200; t < 203; t++)
+        fi_array_push(arr, &t);
+    
+    t = 200;
+    
+    int *p = NULL;
+    fi_array_each(arr, int, p) {
+        fi_return_if_fail(t++ == *p,
+            fi_got_msg("We got %d, instead of %d", *p, (t - 1)));
+    }
     
     return FI_TEST_OKAY;
 }

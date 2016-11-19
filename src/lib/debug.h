@@ -27,6 +27,7 @@
 #define FINSPECTOR_DEBUG_H
 
 #include <stdarg.h>
+#include <string.h>
 
 #include "lib-common.h"
 
@@ -39,8 +40,9 @@ FI_BEGIN_DECLS
 #else
     #define __FUNC__    ""
 #endif
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
-#define fmt_printf __attribute__((format(printf, 4, 5)))
+#define fmt_printf __attribute__((format(printf, 5, 6)))
     
 typedef enum {
     FI_DEBUG_LEVEL_CRITICAL,
@@ -52,12 +54,12 @@ typedef enum {
 } FiMessageType;
 
 void _fi_log_message(FiMessageType level,
-                    const char * fn, const int line,
+                    const char * fn, const int line, const char *file,
                     const char * err, ...) fmt_printf;
 
 #define fi_log_message(lv, fmt, ...) do {                   \
                 _fi_log_message((lv),                       \
-                __FUNC__, __LINE__, (fmt) , ##__VA_ARGS__); \
+                __FUNC__, __LINE__, __FILENAME__, (fmt) , ##__VA_ARGS__); \
             } while(0)
 
 FI_END_DECLS

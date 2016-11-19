@@ -1,4 +1,4 @@
 /test-inspector*
-/test-suite.*
+/test-suite.log
 /*.log
 /*.trs

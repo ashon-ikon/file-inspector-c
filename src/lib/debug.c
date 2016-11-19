@@ -41,12 +41,12 @@
  * @param ...
  */
 void _fi_log_message(FiMessageType type,
-                    const char * fn, const int line,
+                    const char * fn, const int line, const char *file,
                     const char * err, ...)
 {
     char  fname[FI_FN_MAX], msg[FI_MSG_MAX];
 
-    short m = snprintf(fname, 128, "Func: %s (%d) ", fn, line);
+    short m = snprintf(fname, 128, "%s(%d) %s() ", file, line, fn);
 
     va_list ap;
     va_start(ap, err);
@@ -56,6 +56,7 @@ void _fi_log_message(FiMessageType type,
     char t = ' ';
     switch(type) {
         case FI_DEBUG_LEVEL_CRITICAL: t = 'C'; break;
+        case FI_DEBUG_LEVEL_ERROR: t = 'E'; break;
         case FI_DEBUG_LEVEL_FATAL: t = 'F'; break;
         case FI_DEBUG_LEVEL_INFO: t = 'I'; break;
         case FI_DEBUG_LEVEL_WARN: t = 'W'; break;

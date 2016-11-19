@@ -48,6 +48,12 @@ typedef enum {
 #define FI_FUNC_RESPONSES       0x1200
 #endif
 
+#ifdef __GNUC__
+#define fi_checkprintf  __attribute__ (( format(printf, 1, 2) ))
+#else
+#define fi_checkprintf
+#endif
+
 FI_END_DECLS
 
 #endif /* LIB_COMMON_H */

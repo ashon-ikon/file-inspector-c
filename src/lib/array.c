@@ -29,26 +29,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <X11/X.h>
 
 #include "array.h"
 #include "debug.h"
 
 /* This is the minimum items in list to start with 
  */
-#define FI_INITIAL_ARRAY_ALLOC_SIZE 1 << 0
+#define FI_INITIAL_ARRAY_ALLOC_SIZE 1 << 4
 
 /* Prototypes */
-static bool fi_array_expand_container(struct FiArray **cur, unsigned n);
+static bool fi_array_expand_container(struct FiArray *cur, unsigned n);
 static bool fi_array_data_copy(void const *src, void *dest, unsigned n);
 
 /* Helper macros */
 #define fi_data_get_offset(array, i) ((array)->data + (array)->unit_size * (i))
 
 
-static FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE proposed, FI_TYPE_SIZE sz) {
+static FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE desired, FI_TYPE_SIZE sz) {
     
     FI_TYPE_SIZE best =0, s = 0;
-    s = proposed > sz ? proposed : sz;
+    s = desired > sz ? desired : sz;
 
     do 
         best = 1 << best;
@@ -75,9 +76,11 @@ struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp)
     arr->unit_size = unit_size;
     arr->capacity  = 0;
     arr->len       = 0;
+    arr->cursor    = -1;
     arr->ref_count = (struct FiRef){0, NULL};
     arr->copy_func = cp == NULL ? fi_array_data_copy : cp;
-    fi_array_expand_container(&arr, fi_mem_best_size(unit_size, FI_INITIAL_ARRAY_ALLOC_SIZE));
+    fi_array_expand_container(arr, fi_mem_best_size(unit_size,
+                              FI_INITIAL_ARRAY_ALLOC_SIZE));
     
     fi_ref_inc(&arr->ref_count);
 
@@ -111,17 +114,17 @@ static bool fi_array_data_copy(void const *src, void* dest, unsigned n)
  * @param n
  * @return 
  */
-static bool fi_array_expand_container(struct FiArray ** cur, unsigned n)
+static bool fi_array_expand_container(struct FiArray * cur, unsigned n)
 {
-    void *tmp = realloc((*cur)->data, n * (*cur)->unit_size);
+    void *tmp = realloc(cur->data, n * cur->unit_size);
     
     if (NULL != tmp) {
 
         // Empty out the container
-        memset(tmp + (*cur)->capacity, 0, n);
+        memset(tmp + cur->capacity, 0, n);
 
-        (*cur)->data = tmp;
-        (*cur)->capacity  = n;
+        cur->data = tmp;
+        cur->capacity  = n;
         return true;
     }
     
@@ -135,15 +138,32 @@ static bool fi_array_expand_container(struct FiArray ** cur, unsigned n)
  */
 short fi_array_push (struct FiArray *arr, void const *data)
 {
+    if (! arr)
+        return FI_FUNC_FAIL;
 
     if ((arr->capacity < (1 + arr->len)) 
-    && ! fi_array_expand_container(&arr, fi_mem_best_size(1, arr->capacity * 2)))
-            return -1;
+    && ! fi_array_expand_container(arr, fi_mem_best_size(1, arr->capacity * 2)))
+            return FI_FUNC_FAIL;
 
-    if (data)
-        memcpy(fi_data_get_offset(arr, arr->len++), data, arr->unit_size);
+    return fi_array_insert(arr, data, arr->len++);
 
-    return 0;
+}
+
+
+short fi_array_insert(struct FiArray *arr, void const *data, FI_TYPE_SIZE i)
+{
+    if (! data || ! arr)
+        return FI_FUNC_FAIL;
+    
+    if (i < 0 || i >= arr->capacity)
+        return FI_FUNC_FAIL;
+    
+    memcpy(fi_data_get_offset(arr, i), data, arr->unit_size);
+
+    // Set the cursor
+    arr->cursor = i;
+
+    return FI_FUNC_SUCCEED;    
 }
 
 /**
@@ -163,15 +183,44 @@ void  fi_array_copy(const struct FiArray *src, struct FiArray *dst)
     dst->capacity = src->capacity;
 }
 
-short fi_array_insert(struct FiArray *arr, void *data, FI_TYPE_SIZE i)
-{
-    if (! data || ! arr)
-        return FI_FUNC_FAIL;
-    
-    if (i < 0 || i >= arr->capacity)
-        return FI_FUNC_FAIL;
-    
-    memcpy(fi_data_get_offset(arr, i), data, arr->unit_size);
 
-    return FI_FUNC_SUCCEED;    
+void *_fi_array_get_begin(struct FiArray *arr)
+{
+    if (! arr || arr->cursor < 0 || arr->len == 0)
+        return NULL;
+    
+    arr->cursor = 0;
+    
+    return fi_array_get_ptr(arr, void *, arr->cursor);
+}
+
+/**
+ * Returns the next available data. NULL if cursor is out of scope
+ * 
+ * @param arr
+ * @return 
+ */
+void *_fi_array_get_next(struct FiArray *arr)
+{
+    if (! arr || arr->cursor < 0)
+        return NULL;
+    
+    arr->cursor++;
+    
+    if (arr->cursor >= arr->len) {
+        arr->cursor = arr->len;
+        return NULL;
+    }
+    
+    return fi_array_get_ptr(arr, void *, arr->cursor);
+}
+
+void *_if_array_get_end(struct FiArray *arr)
+{
+    if (! arr || arr->cursor < 0 || arr->len == 0)
+        return NULL;
+    
+    arr->cursor = arr->len - 1;
+    
+    return fi_array_get_ptr(arr, void *, arr->cursor);
 }

@@ -27,6 +27,7 @@
 #define FINSPECTOR_TESTS_COMMON_H
 
 #include <stdbool.h>
+#include <stdarg.h>
 
 #include "./../src/lib/debug.h"
 
@@ -46,9 +47,14 @@ typedef enum {
     
 typedef FI_TEST_RESULT (*test_func) ();
 
+extern char *fi_got_msg(char *fmt, ...) fi_checkprintf;
+
 #define fi_assert_true(con) ( (con) == true ? FI_TEST_OKAY : FI_TEST_FAIL)
 #define fi_assert_fail(con) fi_assert_true(! (con) )
-#define fi_return_if_fail(con) if (! fi_assert_true( (con) )) return FI_TEST_FAIL
+#define fi_return_if_fail(con, msg) do {FI_TEST_RESULT r = 0; \
+        if (FI_TEST_OKAY != (r = fi_assert_true( (con) ) )) { \
+        fi_log_message(FI_DEBUG_LEVEL_ERROR, "Assertion failed. %s. (%u)", msg, r); \
+    return r; } } while(0)
 
 
 #ifdef __cplusplus

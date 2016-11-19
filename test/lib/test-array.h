@@ -5,7 +5,7 @@
  */
 
 /* 
- * File:   array-test.h
+ * File:   test-array.h
  * Author: yasonibare
  *
  * Created on 18 November 2016, 7:42 AM
@@ -22,6 +22,7 @@
 extern "C" {
 #endif
 FI_TEST_RESULT test_array_simple_allocation();
+FI_TEST_RESULT test_array_each_loop();
 
 
 
