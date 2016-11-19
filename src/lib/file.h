@@ -59,11 +59,11 @@ typedef struct FiFileInfo FiFileInfo_st;
 #if (! defined(__timespec_defined))
     #define __timespec_defined 1
     // Following lines are copied from <time.h>
-    # include <bits/types.h>	/* This defines __time_t for us.  */
+    # include <bits/types.h>	/* This defines time_t for us.  */
 
     struct timespec {
-        time_t      tv_sec;		/* Seconds.  */
-        __int64_t   tv_nsec;	/* Nanoseconds.  */
+        time_t      tv_sec;	/* Seconds.  */
+        int64_t     tv_nsec;	/* Nanoseconds.  */
     };
 #endif
 
@@ -75,28 +75,23 @@ struct FiFileInfo {
     FiFileType          file_type;
     struct timespec     modified_at;
     struct FiRef        ref_count;
-    unsigned char       free_struct;
 };
 
-struct FiFileArray {
-    struct FiArray   bank;
-    unsigned long    cursor;
-};
 
 void fi_file_init(struct FiFileInfo *file);
-void fi_file_destroy(struct FiFileInfo **file);
+void fi_file_destroy(struct FiFileInfo *file);
 void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest);
 
-// File array
-void fi_file_array_init(struct FiFileArray * array);
-void fi_file_array_destroy(struct FiFileArray *arr);
-int  fi_file_array_add_file_info(struct FiFileArray *arr,
-                                 struct FiFileInfo  *info);
-unsigned fi_file_array_get_size(struct FiFileArray *arr);
-unsigned short fi_file_array_get_at(struct FiFileArray *arr, unsigned long i, struct FiFileInfo *pFile);
-unsigned short fi_file_array_get_begin(struct FiFileArray *arr, struct FiFileInfo *file);
-unsigned short fi_file_array_get_next(struct FiFileArray *arr, struct FiFileInfo *file);
-unsigned short fi_file_array_get_end(struct FiFileArray *arr, struct FiFileInfo *file);
+//// File array
+//void fi_file_array_init(struct FiFileArray * array);
+//void fi_file_array_destroy(struct FiFileArray *arr);
+//int  fi_file_array_add_file_info(struct FiFileArray *arr,
+//                                 struct FiFileInfo  *info);
+//unsigned fi_file_array_get_size(struct FiFileArray *arr);
+//unsigned short fi_file_array_get_at(struct FiFileArray *arr, unsigned long i, struct FiFileInfo *pFile);
+//unsigned short fi_file_array_get_begin(struct FiFileArray *arr, struct FiFileInfo *file);
+//unsigned short fi_file_array_get_next(struct FiFileArray *arr, struct FiFileInfo *file);
+//unsigned short fi_file_array_get_end(struct FiFileArray *arr, struct FiFileInfo *file);
 
 #ifdef __cplusplus
 }

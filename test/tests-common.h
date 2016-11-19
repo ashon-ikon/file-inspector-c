@@ -47,6 +47,11 @@ typedef enum {
     
 typedef FI_TEST_RESULT (*test_func) ();
 
+typedef struct {
+    char      *name;
+    test_func test;
+} FiTestFunc;
+
 extern char *fi_got_msg(char *fmt, ...) fi_checkprintf;
 
 #define fi_assert_true(con) ( (con) == true ? FI_TEST_OKAY : FI_TEST_FAIL)
@@ -56,6 +61,7 @@ extern char *fi_got_msg(char *fmt, ...) fi_checkprintf;
         fi_log_message(FI_DEBUG_LEVEL_ERROR, "Assertion failed. %s. (%u)", msg, r); \
     return r; } } while(0)
 
+int run(FiTestFunc *tests);
 
 #ifdef __cplusplus
 }

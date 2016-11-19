@@ -50,8 +50,8 @@ char *_fi_strdup (const char *src)
     size_t n = 0;
     const char *dup = src;
     while(*dup++ != '\0') n++;
-    
-    return _fi_strndup(src, n + 2); // + '\0'
+
+    return _fi_strndup(src, n);
 }
 
 char *_fi_strndup(const char *src, size_t n)
@@ -67,7 +67,7 @@ char *_fi_strndup(const char *src, size_t n)
         return NULL;
     
     dup = malloc(n + 1);
-    memcpy(dup, src, n - 1);
+    memcpy(dup, src, n);
     dup[n] = '\0';
     
     return dup;

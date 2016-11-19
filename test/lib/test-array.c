@@ -1,5 +1,5 @@
 /* 
- * File:   array-test.c
+ * File:   test-array.c
  * Author: yasonibare
  * 
  * Copyright (c) 2016 Yinka Asonibare
@@ -27,7 +27,6 @@
 #include <stdio.h>
 #include <locale.h>
 
-#include "./../tests-common.h"
 #include "test-array.h"
 
 
@@ -89,4 +88,15 @@ FI_TEST_RESULT test_array_each_loop()
     }
     
     return FI_TEST_OKAY;
+}
+
+int main()
+{
+    FiTestFunc fi_tests [] = {
+        {"test_array_simple_allocation", test_array_simple_allocation},
+        {"test_array_each_loop",         test_array_each_loop},
+        {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
+    };
+    
+    return run(fi_tests);
 }

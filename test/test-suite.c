@@ -28,15 +28,7 @@
 
 #include "tests-common.h"
 #include "lib/test-array.h"
-
-struct {
-    char      *name;
-    test_func test;
-} fi_tests [] = {
-    {"test_array_simple_allocation", test_array_simple_allocation},
-    {"test_array_each_loop", test_array_each_loop},
-    {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
-};
+#include "lib/test-file-creation.h"
 
 #define MAX_MSG     512
 #define OUTCOME     32
@@ -52,7 +44,7 @@ void print_test_outcome(char *test_name, char *result)
     printf(msg_output);
 }
 
-int main()
+int run(FiTestFunc *tests)
 {
     // Set the default locale
     setlocale(LC_CTYPE, "");
@@ -62,9 +54,9 @@ int main()
     int failed     = 0;
     int skipped    = 0;
 
-    for (; fi_tests[test_count].test; test_count++) {
-        test_func test = fi_tests[test_count].test;
-        char *test_name = fi_tests[test_count].name;
+    for (; tests[test_count].test; test_count++) {
+        test_func test = tests[test_count].test;
+        char *test_name = tests[test_count].name;
         switch ( test() ) {
         case FI_TEST_OKAY:
             print_test_outcome(test_name, "passed");
