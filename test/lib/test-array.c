@@ -87,6 +87,8 @@ FI_TEST_RESULT test_array_each_loop()
             fi_got_msg("We got %d, instead of %d", *p, (t - 1)));
     }
     
+    fi_array_destroy(arr);
+    
     return FI_TEST_OKAY;
 }
 
