@@ -1,5 +1,5 @@
 /* 
- * File:   file-captain.h
+ * File:   test-file-container.h
  * Author: yasonibare
  * 
  * Copyright (c) 2016 Yinka Asonibare
@@ -21,31 +21,24 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- * Created on 28 August 2016, 10:42 PM
  */
 
-#ifndef FINSPECTOR_FILE_CAPTAIN_H__
-#define FINSPECTOR_FILE_CAPTAIN_H__
+#ifndef FINSPECTOR_TESTS_TEST_FILECONTAINER_H
+#define FINSPECTOR_TESTS_TEST_FILECONTAINER_H
 
-#include <glib-object.h>
+#include "./../tests-common.h"
+#include "./../../src/lib/file.h"
 
-G_BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/**
- * File-Captain type definition
- */
-#define INSPECTOR_TYPE_FILE_CAPTAIN inspector_file_captain_get_type()
-G_DECLARE_FINAL_TYPE (InspectorFileCaptain, inspector_file_captain, \
-                      INSPECTOR, FILE_CAPTAIN, GObject)
+FI_TEST_RESULT test_file_container_creation();
+FI_TEST_RESULT test_file_container_push_data();
 
 
-/**
- * Method definition
- */
-InspectorFileCaptain * inspector_file_captain_new();
-        
-G_END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
-#endif /* FINSPECTOR_FILE_CAPTAIN_H__ */
-
+#endif /* FINSPECTOR_TESTS_TEST_FILECONTAINER_H */

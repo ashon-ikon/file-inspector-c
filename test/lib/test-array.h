@@ -1,7 +1,8 @@
-/** 
- * File:   detector-private.h
+/* 
+ * File:   test-array.h
+ * Author: yasonibare
  * 
- * Author: Yinka Ashon
+ * Copyright (c) 2016 Yinka Asonibare
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -20,39 +21,26 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
-
- *
- * Created on 27 September 2016, 7:48 PM
  */
 
-#ifndef FINSPECTOR_FILE_DETECTOR_PRIVATE_H
-#define FINSPECTOR_FILE_DETECTOR_PRIVATE_H
+#ifndef FINSPECTOR_TESTS_ARRAY_TEST_H
+#define FINSPECTOR_TESTS_ARRAY_TEST_H
+
+
+#include "./../tests-common.h"
+#include "./../../src/lib/array.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+FI_TEST_RESULT test_array_simple_allocation();
+FI_TEST_RESULT test_array_each_loop();
 
-#include <dirent.h>
-    
-#include "detector.h"
-#include "lib-common.h"
-
-void
-fi_file_list_set_file_params (FiFileInfo *pinfo, const char* path_filename);
-
-/**
- * Returns the FileInfo
- * @param dp
- * @return 
- */
-FiFileInfo *
-fi_file_list_get_file_info_from_dirent_m(const char * path, const struct dirent *dp);
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* FINSPECTOR_FILE_DETECTOR_PRIVATE_H */
+#endif /* FINSPECTOR_TESTS_ARRAY_TEST_H */
 

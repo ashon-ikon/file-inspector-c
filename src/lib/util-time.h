@@ -1,6 +1,6 @@
-/* 
- * File:   string-helper.h
- * Author: yasonibare
+/*
+ * File:   util-time.h
+ * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,42 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * 
- * Created on 30 September 2016, 5:32 PM
  */
 
-#ifndef FINSPECTOR_STRING_HELPER_H
-#define FINSPECTOR_STRING_HELPER_H
+#ifndef FINSPECTOR_UTIL_TIME_H
+#define FINSPECTOR_UTIL_TIME_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "lib-common.h"
 
-#include <stdarg.h>
-
-/**
- * Duplicates given string.
- * 
- * result must be freed when done!
- * 
- * @param src
- * @return char*
- */
-char *
-fi_strdup(const char * src);
-
-char *
-fi_strndup(const char * src, const size_t len);
-
-char *
-fi_sstrdup(const char * frm, ...);
-
-char *
-fi_vsstrdup(const char * frm, va_list ap);
+FI_BEGIN_DECLS
 
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif /* FINSPECTOR_STRING_HELPER_H */
+
+FI_END_DECLS
+
+#endif /* FINSPECTOR_UTIL_TIME_H */
 

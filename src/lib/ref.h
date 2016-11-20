@@ -1,5 +1,5 @@
-/*
- * File:   debug.h
+/* 
+ * File:   ref.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,50 +19,49 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- * Created on 5 October 2016, 11:28 AM
+ * 
+ * Created on 4 November 2016, 5:03 PM
  */
 
-#ifndef FINSPECTOR_DEBUG_H
-#define FINSPECTOR_DEBUG_H
+#ifndef REF_H
+#define REF_H
 
-#include <stdarg.h>
-#include <string.h>
-
-#include "lib-common.h"
-
-FI_BEGIN_DECLS
-
-#if __STDC_VERSION__ >= 199901L
-    #ifndef __FUNC__
-    #define __FUNC__ __func__
-    #endif
-#else
-    #define __FUNC__    ""
+#ifdef __cplusplus
+extern "C" {
 #endif
-#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
-#define fmt_printf __attribute__((format(printf, 5, 6)))
+/* Greatly inspired by Chris Wellon's demonstration of the same
+ */
+#ifndef container_of
+#define container_of(ptr, type, member) ((type *) \
+    ((char *)(1 ? (ptr) : &((type *)0)->member) - offsetof(type, member)))
+#endif    
+
+struct FiRef {
+    int  count;
+    void (*free)(const struct FiRef *ref);
+};
+
+static inline int fi_ref_inc(const struct FiRef *ref)
+{
+    int t = ((struct FiRef *)ref)->count++;
+
+    return t >= 0 ? 0 : -1;
+}
+
+static inline int fi_ref_dec(const struct FiRef *ref)
+{
+    int t = --((struct FiRef *)ref)->count;
+
+    if (t == 0 && ((struct FiRef *)ref)->free)
+        ((struct FiRef *)ref)->free(ref);
     
-typedef enum {
-    FI_DEBUG_LEVEL_CRITICAL,
-    FI_DEBUG_LEVEL_ERROR,
-    FI_DEBUG_LEVEL_FATAL,
-    FI_DEBUG_LEVEL_INFO,
-    FI_DEBUG_LEVEL_WARN,
+    return t >= 0 ? 0 : -1;
+}
 
-} FiMessageType;
+#ifdef __cplusplus
+}
+#endif
 
-void _fi_log_message(FiMessageType level,
-                    const char * fn, const int line, const char *file,
-                    const char * err, ...) fmt_printf;
-
-#define fi_log_message(lv, fmt, ...) do {                   \
-                _fi_log_message((lv),                       \
-                __FUNC__, __LINE__, __FILENAME__, (fmt) , ##__VA_ARGS__); \
-            } while(0)
-
-FI_END_DECLS
-
-#endif /* FINSPECTOR_DEBUG_H */
+#endif /* REF_H */
 

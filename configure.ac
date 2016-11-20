@@ -17,6 +17,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 	Makefile
 	man/Makefile
+        test/Makefile
 	src/Makefile
         src/lib/Makefile
         src/inspector/Makefile

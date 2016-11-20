@@ -1,5 +1,4 @@
 /*
- * File:   debug.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,50 +18,58 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- * Created on 5 October 2016, 11:28 AM
+ * 
  */
+#include <stddef.h>
 
-#ifndef FINSPECTOR_DEBUG_H
-#define FINSPECTOR_DEBUG_H
+#include "util-string.h"
 
-#include <stdarg.h>
-#include <string.h>
+char * fi_rtrim(char * str, const char * impurities)
+{
+    char * x = NULL;
+    return x;
+}
 
-#include "lib-common.h"
+char * fi_ltrim(char * str, const char * impurities)
+{
+    char * x = NULL;
+    return x;
+}
 
-FI_BEGIN_DECLS
+char * fi_trim(char * str, const char * impurities)
+{
+    char * x = NULL;
+    return x;
+}
 
-#if __STDC_VERSION__ >= 199901L
-    #ifndef __FUNC__
-    #define __FUNC__ __func__
-    #endif
-#else
-    #define __FUNC__    ""
-#endif
-#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#if defined FI_NO_STRDUP_FOUND
+/* Platform appears not to have support for strdup and strndup
+ */
+char *_fi_strdup (const char *src)
+{
+    size_t n = 0;
+    const char *dup = src;
+    while(*dup++ != '\0') n++;
 
-#define fmt_printf __attribute__((format(printf, 5, 6)))
+    return _fi_strndup(src, n);
+}
+
+char *_fi_strndup(const char *src, size_t n)
+{
+    char *dup = NULL;
+    const char *tmp;
+       
+    tmp = src;
+    if (! src)
+        return NULL;
     
-typedef enum {
-    FI_DEBUG_LEVEL_CRITICAL,
-    FI_DEBUG_LEVEL_ERROR,
-    FI_DEBUG_LEVEL_FATAL,
-    FI_DEBUG_LEVEL_INFO,
-    FI_DEBUG_LEVEL_WARN,
-
-} FiMessageType;
-
-void _fi_log_message(FiMessageType level,
-                    const char * fn, const int line, const char *file,
-                    const char * err, ...) fmt_printf;
-
-#define fi_log_message(lv, fmt, ...) do {                   \
-                _fi_log_message((lv),                       \
-                __FUNC__, __LINE__, __FILENAME__, (fmt) , ##__VA_ARGS__); \
-            } while(0)
-
-FI_END_DECLS
-
-#endif /* FINSPECTOR_DEBUG_H */
-
+    if (n <= 0)
+        return NULL;
+    
+    dup = malloc(n + 1);
+    memcpy(dup, src, n);
+    dup[n] = '\0';
+    
+    return dup;
+}
+#endif
