@@ -1,5 +1,5 @@
 /* 
- * File:   test-file-creation.h
+ * File:   test-file-container.h
  * Author: yasonibare
  * 
  * Copyright (c) 2016 Yinka Asonibare
@@ -23,9 +23,8 @@
  * SOFTWARE.
  */
 
-#ifndef FINSPECTOR_TESTS_TEST_FILE_CREATION_H
-#define FINSPECTOR_TESTS_TEST_FILE_CREATION_H
-
+#ifndef FINSPECTOR_TESTS_TEST_FILECONTAINER_H
+#define FINSPECTOR_TESTS_TEST_FILECONTAINER_H
 
 #include "./../tests-common.h"
 #include "./../../src/lib/file.h"
@@ -34,12 +33,12 @@
 extern "C" {
 #endif
 
+FI_TEST_RESULT test_file_container_creation();
+FI_TEST_RESULT test_file_container_push_data();
 
-FI_TEST_RESULT test_file_info_creation();
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* FINSPECTOR_TESTS_TEST_FILE_CREATION_H */
-
+#endif /* FINSPECTOR_TESTS_TEST_FILECONTAINER_H */

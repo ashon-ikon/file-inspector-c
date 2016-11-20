@@ -71,16 +71,31 @@ void fi_file_destroy(struct FiFileInfo * file)
 
 }
 
+bool fi_file_copy_proxy(void const *src, void *dst, unsigned n)
+{
+    if (! src || ! dst)
+        return false;
+    
+    if (n != sizeof(struct FiFileInfo)) {
+        fi_log_message(FI_DEBUG_LEVEL_WARN,
+            "Failed to copy data. Size mismatch. Expected %u, got %d",
+            sizeof (struct FiFileInfo), n);
+        return false;
+    }
+    
+    return fi_file_copy((struct FiFileInfo *)src, (struct FiFileInfo*) dst);
+}
+
 /**
  * Duplicates the file information
  * ** Remember to destroy copy
  * @param src
  * @param dest
  */
-void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
+bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
 {
     if (! src || ! dest)
-        return;
+        return false;
 
     dest->filename       = fi_strndup(src->filename, strlen(src->filename));
     dest->file_path      = fi_strndup(src->file_path, strlen(src->file_path));
@@ -90,36 +105,50 @@ void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
     dest->modified_at    = src->modified_at;
     dest->ref_count.free = src->ref_count.free;
     fi_ref_inc(&dest->ref_count);
+
+    return true;
 }
 
 
-///**
-// * Initializes the file array
-// * @param array
-// */
-//void fi_file_array_init(struct FiFileArray * array)
-//{
-//    if (! array)
-//        return;
-//
-//    fi_array_new(&array->bank);
-//    
-//    array->cursor = 0L;
-//}
-//
-//void fi_file_array_destroy(struct FiFileArray *arr)
-//{
-//    struct FiFileInfo file;
-//    fi_file_init(&file);
-//    fi_file_array_get_begin(arr, &file);
-//    while(FI_FUNC_SUCCEED == fi_file_array_get_next(arr, &file)) {
-//        fi_ref_dec(&file.ref_count);
-//    }
-//    fi_array_destroy(&arr->bank);
-//
-//    arr->cursor = 0L;
-//}
-//
+/**
+ * Initializes the file array
+ * @param array
+ */
+struct FiFileContainer *fi_file_container_init()
+{
+    struct FiFileContainer *container = malloc(sizeof *container);
+    
+    if (! container)
+        return NULL;
+
+    container->array = fi_array_new(sizeof (struct FiFileInfo),
+                                    fi_file_copy_proxy);
+    
+    if (! container->array) {
+        fi_log_message(FI_DEBUG_LEVEL_CRITICAL,
+                       "Failed to allocate container array memory");
+        free(container);
+        return NULL;
+    }
+
+    return container;
+}
+
+void fi_file_container_destroy(struct FiFileContainer *container)
+{
+    if (! container)
+        return;
+
+    struct FiFileInfo *file = NULL;
+    fi_array_each(container->array, struct FiFileInfo, file) {
+        fi_file_destroy(file);
+    }
+
+    fi_array_destroy(container->array);
+
+    free(container);
+}
+
 //static unsigned short  fi_file_get_info_from_container(struct FiContainer *container,
 //                                            struct FiFileInfo **ppFile)
 //{
@@ -142,53 +171,44 @@ void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
 //    
 //    fi_file_destroy(&pInfo);
 //}
-//
-///**
-// * @param arr
-// * @param info
-// * @return 
-// */
-//int fi_file_array_add_file_info(struct FiFileArray *arr,
-//                                struct FiFileInfo *info)
-//{
-//    if (! info || ! arr)
-//        return FI_FUNC_FAIL;
-//
-//    fi_array_push(&arr->bank, info, sizeof *info);
-//    
-//    return FI_FUNC_SUCCEED;
-//}
-//
-//
-//unsigned fi_file_array_get_size(struct FiFileArray *arr)
-//{
-//    return arr->bank.len;
-//}
-//
-///* ------------------------------------------------------------------
-// * ------------------------------------------------------------------
-// * Traversing
-// */
-//
-///**
-// * Returns File Info structure
-// * 
-// * return value must be freed with "fi_file_info_value_cleanup" !
-// * @param arr
-// * @param i
-// * @return FileInfo
-// */
-//unsigned short fi_file_array_get_at(struct FiFileArray *arr, 
-//                          unsigned long i, struct FiFileInfo *pInfo)
-//{
-//
-//    struct FiContainer *pCon = fi_array_get(&arr->bank, i);
-//    unsigned short ret = fi_file_get_info_from_container(pCon, &pInfo);
-//
-//    fi_ref_dec(&pCon->ref_count); // Free the resource
-//
-//    return ret;
-//}
+
+/**
+ * @param arr
+ * @param info
+ * @return 
+ */
+unsigned short fi_file_container_push(struct FiFileContainer *arr,
+                                      struct FiFileInfo  *info)
+{
+    if (! info || ! arr)
+        return FI_FUNC_FAIL;
+
+    return fi_array_push(arr->array, info);    
+}
+
+/* ------------------------------------------------------------------
+ * ------------------------------------------------------------------
+ * Traversing
+ */
+
+/**
+ * Returns File Info structure
+ * 
+ * return value must be freed with "fi_file_info_value_cleanup" !
+ * @param arr
+ * @param i
+ * @return FileInfo
+ */
+struct FiFileInfo *fi_file_container_get_at(struct FiFileContainer *con, unsigned long i)
+{
+    if (! con)
+        return NULL;
+
+    if (i < 0 || i > fi_file_container_size(con))
+        return NULL;
+
+    return fi_array_get_ptr(con->array, struct FiFileInfo, i);
+}
 //
 //unsigned short fi_file_array_get_begin(struct FiFileArray *arr, struct FiFileInfo *file)
 //{

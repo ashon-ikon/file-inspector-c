@@ -108,6 +108,13 @@ static bool fi_array_data_copy(const void const *src, void* dest, unsigned n)
     return false;
 }
 
+void fi_array_set_cleanup_notifier(struct FiArray *arr, 
+                                   void  (*fn)(struct FiArray *))
+{
+    if (arr && fn)
+        arr->cleanup_notify = fn;
+}
+
 /**
  * Expands the current array
  * @param cur

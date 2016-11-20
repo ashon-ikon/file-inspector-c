@@ -26,6 +26,7 @@
 #define FINSPECTOR_FILE_ARRAY_H
 
 #include <time.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <sys/types.h>
 
@@ -77,18 +78,29 @@ struct FiFileInfo {
     struct FiRef        ref_count;
 };
 
+struct FiFileContainer {
+    struct FiArray *array;
+};
 
 void fi_file_init(struct FiFileInfo *file);
 void fi_file_destroy(struct FiFileInfo *file);
-void fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest);
+bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest);
 
-//// File array
-//void fi_file_array_init(struct FiFileArray * array);
-//void fi_file_array_destroy(struct FiFileArray *arr);
-//int  fi_file_array_add_file_info(struct FiFileArray *arr,
-//                                 struct FiFileInfo  *info);
+// File array
+struct FiFileContainer *fi_file_container_init();
+void fi_file_container_destroy(struct FiFileContainer *container);
+unsigned short fi_file_container_push(struct FiFileContainer *arr,
+                                      struct FiFileInfo  *info);
+
+bool fi_file_copy_proxy(void const *src, void *dst, unsigned n); // Copy method
+
+static inline FI_TYPE_SIZE fi_file_container_size(struct FiFileContainer *con)
+{
+    return con->array->len;
+}
+
 //unsigned fi_file_array_get_size(struct FiFileArray *arr);
-//unsigned short fi_file_array_get_at(struct FiFileArray *arr, unsigned long i, struct FiFileInfo *pFile);
+struct FiFileInfo *fi_file_container_get_at(struct FiFileContainer *arr, unsigned long i);
 //unsigned short fi_file_array_get_begin(struct FiFileArray *arr, struct FiFileInfo *file);
 //unsigned short fi_file_array_get_next(struct FiFileArray *arr, struct FiFileInfo *file);
 //unsigned short fi_file_array_get_end(struct FiFileArray *arr, struct FiFileInfo *file);
