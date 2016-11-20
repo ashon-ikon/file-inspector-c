@@ -70,9 +70,8 @@ FI_TEST_RESULT test_file_container_push_data()
     
     fi_return_if_fail(fi_file_container_size(con) == FILE_COUNT,
                       "Wrong number of files added");
-    for (int i = 0; i < FILE_COUNT; i++) {
-        struct FiFileInfo *file = fi_file_container_get_at(con, i);
-        
+    struct FiFileInfo *file = NULL;
+    fi_container_each(con, file) {
         fi_return_if_fail(strcmp(file->file_extension, ".docx") == 0,
                         fi_got_msg("We got %s", file->file_extension));
     }

@@ -69,9 +69,9 @@ void *_fi_array_get_end(struct FiArray *arr);
 #define fi_array_get_ptr_end(a, t)      ( (t*) _fi_array_get_end((a)) )
 
 
-#define fi_array_each(a, t, pd) for (pd = (t*) _fi_array_get_begin((a)); \
-                                     pd ; \
-                                     pd = (t*) _fi_array_get_next((a)) )
+#define fi_array_each(a, t, pd) for ((pd) = (t*) _fi_array_get_begin((a)); \
+                                     (pd) ; \
+                                     (pd) = (t*) _fi_array_get_next((a)) )
 
 static inline FI_TYPE_SIZE fi_array_size(struct FiArray *arr)
 {

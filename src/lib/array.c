@@ -48,7 +48,7 @@ static bool fi_array_data_copy(const void const *src, void *dest, unsigned n);
 
 static FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE desired, FI_TYPE_SIZE sz) {
     
-    FI_TYPE_SIZE best =0, s = 0;
+    FI_TYPE_SIZE best = 0, s = 0;
     s = desired > sz ? desired : sz;
 
     do 
@@ -224,7 +224,7 @@ void *_fi_array_get_next(struct FiArray *arr)
     return fi_array_get_ptr(arr, void *, arr->cursor);
 }
 
-void *_if_array_get_end(struct FiArray *arr)
+void *_fi_array_get_end(struct FiArray *arr)
 {
     if (! arr || arr->cursor < 0 || arr->len == 0)
         return NULL;

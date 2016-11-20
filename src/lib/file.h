@@ -99,11 +99,15 @@ static inline FI_TYPE_SIZE fi_file_container_size(struct FiFileContainer *con)
     return con->array->len;
 }
 
-//unsigned fi_file_array_get_size(struct FiFileArray *arr);
 struct FiFileInfo *fi_file_container_get_at(struct FiFileContainer *arr, unsigned long i);
-//unsigned short fi_file_array_get_begin(struct FiFileArray *arr, struct FiFileInfo *file);
-//unsigned short fi_file_array_get_next(struct FiFileArray *arr, struct FiFileInfo *file);
-//unsigned short fi_file_array_get_end(struct FiFileArray *arr, struct FiFileInfo *file);
+struct FiFileInfo *fi_file_container_get_begin(struct FiFileContainer *con);
+struct FiFileInfo *fi_file_container_get_next(struct FiFileContainer *con);
+struct FiFileInfo *fi_file_container_get_end(struct FiFileContainer *con);
+
+#define fi_container_each(pcon, pfile) for ( \
+                (pfile) = fi_file_container_get_begin((pcon)); \
+                (pfile); \
+                (pfile) = fi_file_container_get_next((con)) ) 
 
 #ifdef __cplusplus
 }

@@ -149,29 +149,6 @@ void fi_file_container_destroy(struct FiFileContainer *container)
     free(container);
 }
 
-//static unsigned short  fi_file_get_info_from_container(struct FiContainer *container,
-//                                            struct FiFileInfo **ppFile)
-//{
-//    if (! container || ! container->data)
-//        return FI_FUNC_FAIL;
-//
-//    (*ppFile)->ref_count.free = fi_file_info_ref_destory;
-//    fi_ref_inc(&(*ppFile)->ref_count);
-//    
-//    return FI_FUNC_SUCCEED;
-//    
-//}
-//
-//static void fi_file_info_ref_destory(const struct FiRef *ref)
-//{
-//    struct FiFileInfo *pInfo = container_of(ref, struct FiFileInfo, ref_count);
-//    
-//    if (! pInfo)
-//        return;
-//    
-//    fi_file_destroy(&pInfo);
-//}
-
 /**
  * @param arr
  * @param info
@@ -209,30 +186,19 @@ struct FiFileInfo *fi_file_container_get_at(struct FiFileContainer *con, unsigne
 
     return fi_array_get_ptr(con->array, struct FiFileInfo, i);
 }
-//
-//unsigned short fi_file_array_get_begin(struct FiFileArray *arr, struct FiFileInfo *file)
-//{
-//    arr->cursor = 0L;
-//    
-//    return fi_file_array_get_at(arr, arr->cursor, file);
-//}
-//
-//
-//unsigned short fi_file_array_get_next(struct FiFileArray *arr, struct FiFileInfo *file)
-//{
-//    if (arr->bank.len <= (arr->cursor + 1))
-//        return FI_FUNC_FAIL;
-//    
-//    return fi_file_array_get_at(arr, ++arr->cursor, file);    
-//}
-//
-//unsigned short fi_file_array_get_end(struct FiFileArray *arr, struct FiFileInfo *file)
-//{
-//    unsigned short ret = FI_FUNC_FAIL;
-//    if ((arr->bank.len -1) > -1) {
-//        ret = fi_file_array_get_at(arr, arr->bank.len - 1, file);
-//    }
-//    
-//    return ret;
-//}
-//
+
+struct FiFileInfo *fi_file_container_get_begin(struct FiFileContainer *con)
+{    
+    return fi_array_get_ptr_being(con->array, struct FiFileInfo);
+}
+
+
+struct FiFileInfo *fi_file_container_get_next(struct FiFileContainer *con)
+{
+    return fi_array_get_ptr_next(con->array, struct FiFileInfo);
+}
+
+struct FiFileInfo *fi_file_container_get_end(struct FiFileContainer *con)
+{
+    return fi_array_get_ptr_end(con->array, struct FiFileInfo);
+}
