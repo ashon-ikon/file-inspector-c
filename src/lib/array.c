@@ -40,7 +40,7 @@
 
 /* Prototypes */
 static bool fi_array_expand_container(struct FiArray *cur, unsigned n);
-static bool fi_array_data_copy(void const *src, void *dest, unsigned n);
+static bool fi_array_data_copy(const void const *src, void *dest, unsigned n);
 
 /* Helper macros */
 #define fi_data_get_offset(array, i) ((array)->data + (array)->unit_size * (i))
@@ -98,7 +98,7 @@ void fi_array_destroy(struct FiArray *arr)
     }
 }
 
-static bool fi_array_data_copy(void const *src, void* dest, unsigned n)
+static bool fi_array_data_copy(const void const *src, void* dest, unsigned n)
 {
     if (src && dest) {
         memcpy(dest, src, n);
@@ -158,12 +158,14 @@ short fi_array_insert(struct FiArray *arr, void const *data, FI_TYPE_SIZE i)
     if (i < 0 || i >= arr->capacity)
         return FI_FUNC_FAIL;
     
-    memcpy(fi_data_get_offset(arr, i), data, arr->unit_size);
+    if (arr->copy_func(data, fi_data_get_offset(arr, i), arr->unit_size)) {
+        // Set the cursor
+        arr->cursor = i;
 
-    // Set the cursor
-    arr->cursor = i;
+        return FI_FUNC_SUCCEED;    
+    }
 
-    return FI_FUNC_SUCCEED;    
+    return FI_FUNC_FAIL;
 }
 
 /**
