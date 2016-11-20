@@ -27,10 +27,6 @@
 #include "file.h"
 #include "util-string.h"
 
-//#define fi_each_file(pArr, f)  fi_file_init( &(f) );                        \
-//                                    fi_file_array_get_begin( (pArr) , &(file) ); \
-//                                    while(FI_FUNC_SUCCEED == fi_file_array_get_next( (pArr) , &(f) ))
-//
 const struct FiFileInfo EMPTY_FILE = {  
     NULL,      /* filename */
     NULL,      /* file_path */
