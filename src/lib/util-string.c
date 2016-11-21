@@ -21,6 +21,7 @@
  * 
  */
 #include <stddef.h>
+#include <stdlib.h>
 
 #include "util-string.h"
 
@@ -40,6 +41,12 @@ char * fi_trim(char * str, const char * impurities)
 {
     char * x = NULL;
     return x;
+}
+
+size_t fi_strlen(const char const* s)
+{
+    return (! s) ? 0 : strlen(s);
+    
 }
 
 #if defined FI_NO_STRDUP_FOUND
@@ -73,3 +80,32 @@ char *_fi_strndup(const char *src, size_t n)
     return dup;
 }
 #endif
+
+char * fi_strconcat(const unsigned char num, ...)
+{
+    if (num < 1)
+        return NULL;
+
+    unsigned int  len = 0;
+    unsigned char i = 0;
+    char          *words[num];
+
+    va_list ap;
+    va_start(ap, num);
+    for (i = 0; i < num; i++) {
+        words[i] = va_arg(ap, char*);
+        len += strlen(words[i]);
+    }
+    va_end(ap);
+    
+    // Let's create the final string
+    char *str = malloc(len + 1);
+    if (! str)
+        return NULL;
+    str[0] = '\0';
+
+    for (i = 0; i < num; i++)
+        strncat(str, words[i], strlen(words[i]));
+
+    return str;
+}

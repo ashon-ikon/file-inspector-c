@@ -25,6 +25,8 @@
 #ifndef FINSPECTOR_UTIL_STRING_H
 #define FINSPECTOR_UTIL_STRING_H
 
+#include <stdarg.h>
+#include <stddef.h>
 #include <string.h>
 
 #include "lib-common.h"
@@ -49,6 +51,8 @@ FI_BEGIN_DECLS
 char *fi_rtrim(char * str, const char * impurities);
 char *fi_ltrim(char * str, const char * impurities);
 char *fi_trim(char * str, const char * impurities);
+char *fi_strconcat(const unsigned char num, ...);
+size_t fi_strlen(const char const* s);
 
 #ifdef FI_NO_STRDUP_FOUND
 /* Platform appears not to have support for strdup and strndup
@@ -56,6 +60,7 @@ char *fi_trim(char * str, const char * impurities);
 char *_fi_strdup (const char *src);
 char *_fi_strndup(const char *src, size_t n);
 #endif
+
 
 FI_END_DECLS
 
