@@ -54,6 +54,8 @@ size_t fi_strlen(const char const* s)
  */
 char *_fi_strdup (const char *src)
 {
+    if (! src) return NULL;
+
     size_t n = 0;
     const char *dup = src;
     while(*dup++ != '\0') n++;

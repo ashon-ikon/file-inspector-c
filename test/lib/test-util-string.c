@@ -23,8 +23,56 @@
  * SOFTWARE.
  */
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "test-util-string.h"
+
+FI_TEST_RESULT test_string_empty()
+{
+    char *no_str = NULL;
+    char *empty = fi_strdup(no_str);
+    fi_return_if_fail(NULL == empty, "String should be empty");
+    
+    fi_return_if_fail(fi_strlen(no_str) == 0, "String length should be '0' ");
+
+    return FI_TEST_OKAY;
+}
+
+static FI_TEST_RESULT run_string_dup_test(const char *str, const char *expected)
+{
+    fi_return_if_fail(NULL != str, "Failed to create string");
+    
+    bool same = strlen(expected) == fi_strlen(str);
+    bool same_com = strcmp(expected, str) == 0;
+    
+    fi_return_if_fail(same, "String duplication failed");
+    fi_return_if_fail(same_com, "String duplication failed");
+    
+    return FI_TEST_OKAY;
+}
+
+FI_TEST_RESULT test_string_duplication()
+{
+    const char word1[] = "Lorem ipsum";
+
+    char *new_string = fi_strdup(word1);
+    FI_TEST_RESULT r = run_string_dup_test(new_string, word1);
+    free (new_string);
+    
+    return r;
+}
+
+FI_TEST_RESULT test_string_duplication_with_length()
+{
+    const char word1[] = "Lorem ipsum";
+
+    char *new_string = fi_strndup(word1, fi_strlen(word1));
+    
+    FI_TEST_RESULT r = run_string_dup_test(new_string, word1);
+    free (new_string);
+    
+    return r;
+}
 
 FI_TEST_RESULT test_string_concatenation()
 {
@@ -44,6 +92,9 @@ int main()
 {
     FiTestFunc fi_tests [] = {
         {"test_string_concatenation", test_string_concatenation},
+        {"test_string_empty",         test_string_empty},
+        {"test_string_duplication",   test_string_duplication},
+        {"test_string_duplication_with_length", test_string_duplication_with_length},
         {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
     };
     
