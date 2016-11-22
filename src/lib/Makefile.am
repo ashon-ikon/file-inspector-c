@@ -6,5 +6,6 @@ __top_builddir__lib_libdetector_la_SOURCES = \
 	debug.c				     \
 	array.c				     \
 	util-string.c			     \
-	file.c				    
+	file.c				     \
+	file-manager.c
 
