@@ -48,7 +48,7 @@ static void add_files_to_create_outside(struct FiFileContainer *con)
         fi_file_init(&file);
         
         file.file_extension = fi_strdup(".docx");
-        file.file_path      = fi_strdup("/home/lorem/ipsum/");
+        file.path      = fi_strdup("/home/lorem/ipsum/");
         file.filename       = fi_strdup("oh_praise_him");
         file.file_type      = FI_FILE_TYPE_REGULAR;
     

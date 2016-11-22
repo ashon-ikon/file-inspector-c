@@ -21,19 +21,22 @@
  * SOFTWARE.
  *
  */
-#ifndef FILE_MANAGER_H
-#define FILE_MANAGER_H
+#ifndef FINSPECTOR_LIB_FILE_MANAGER_H
+#define FINSPECTOR_LIB_FILE_MANAGER_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdbool.h>
+
+#include "lib-common.h"
+#include "file.h"
+
+FI_BEGIN_DECLS
+
+bool fi_file_manager_read_dir(const char const *path,
+                              struct FiFileContainer *con,
+                              bool recursive);
 
 
+FI_END_DECLS
 
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* FILE_MANAGER_H */
+#endif /* FINSPECTOR_LIB_FILE_MANAGER_H */
 

@@ -30,6 +30,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#include "lib-common.h"
 
 #include "array.h"
 #include "debug.h"
@@ -70,7 +71,7 @@ typedef struct FiFileInfo FiFileInfo_st;
 
 struct FiFileInfo {
     char               *filename;
-    char               *file_path;
+    char               *path;
     char               *file_extension;
     off_t               size_byte;
     FiFileType          file_type;
@@ -81,6 +82,9 @@ struct FiFileInfo {
 struct FiFileContainer {
     struct FiArray *array;
 };
+
+#define FI_FILE_INIT(f) struct FiFileInfo (f); fi_file_init(&(f))
+#define FI_FILE_FREE(f) (f); fi_file_destroy(&(f))
 
 void fi_file_init(struct FiFileInfo *file);
 void fi_file_destroy(struct FiFileInfo *file);

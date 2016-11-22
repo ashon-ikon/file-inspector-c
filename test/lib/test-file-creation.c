@@ -40,7 +40,7 @@ FI_TEST_RESULT test_file_info_creation()
     const char test_path[]      =  "/home/lorem/workspace/";
     
     file.file_extension = fi_strdup(test_extension);
-    file.file_path      = fi_strdup(test_path);
+    file.path      = fi_strdup(test_path);
     file.filename       = fi_strdup(test_filename);
     file.file_type      = FI_FILE_TYPE_LINK;
     
@@ -50,8 +50,8 @@ FI_TEST_RESULT test_file_info_creation()
     fi_return_if_fail(strcmp(file2.file_extension, test_extension) == 0,
                         fi_got_msg("We got %s", file2.file_extension));
 
-    fi_return_if_fail(strcmp(file2.file_path, test_path) == 0,
-                        fi_got_msg("We got %s", file2.file_path));
+    fi_return_if_fail(strcmp(file2.path, test_path) == 0,
+                        fi_got_msg("We got %s", file2.path));
     
     fi_return_if_fail(strcmp(file2.filename, test_filename) == 0,
                         fi_got_msg("We got %s", file2.filename));
