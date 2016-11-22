@@ -63,7 +63,7 @@ void fi_file_destroy(struct FiFileInfo * file)
 
     free(file->filename);
     free(file->path);
-    free(file->file_extension);
+    free(file->extension);
 
 }
 
@@ -94,9 +94,8 @@ bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
         return false;
 
     dest->filename       = fi_strndup(src->filename, fi_strlen(src->filename));
-    dest->path      = fi_strndup(src->path, fi_strlen(src->path));
-    dest->file_extension = fi_strndup(src->file_extension,
-                                      fi_strlen(src->file_extension));
+    dest->path           = fi_strndup(src->path, fi_strlen(src->path));
+    dest->extension      = fi_strndup(src->extension, fi_strlen(src->extension));
     dest->size_byte      = src->size_byte;
     dest->modified_at    = src->modified_at;
     dest->ref_count.free = src->ref_count.free;

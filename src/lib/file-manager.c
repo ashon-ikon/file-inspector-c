@@ -60,18 +60,16 @@ bool fi_file_manager_read_dir(const char const       *path,
     char path_sep[] = {path_separator, '\0'};
     
     while ((dp = readdir(dir)) != NULL) {
+        
         if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..")) {
-
             fi_file_init(&file);
             if (! read_file_info(path, dp->d_name, &file))
                 continue;
 
             fi_file_container_push(con, &file);
-
-            if (recursive && file.file_type == FI_FILE_TYPE_DIRECTORY) {
+            if (recursive && file.type == FI_FILE_TYPE_DIRECTORY) {
                 // Add directory content recursively
-                char *full_filename = fi_strconcat(3,
-                        path, path_sep, dp->d_name);
+                char *full_filename = fi_strconcat(3, path, path_sep, dp->d_name);
                 fi_file_manager_read_dir(full_filename, con, recursive);
                 free(full_filename);
             }
@@ -79,7 +77,6 @@ bool fi_file_manager_read_dir(const char const       *path,
         }
     }
     closedir(dir);
-    
     
     return true;
 }
@@ -103,13 +100,13 @@ static bool read_file_info(const char const  *path,
 
     char *ext = file_extension(filename);
     
-    file->file_extension = fi_strdup(ext ? ext : "");
-    file->path      = fi_strndup(path,     strlen(path));
-    file->filename       = fi_strndup(filename, strlen(filename));
-    file->size_byte      = st_buff.st_size;
-    file->file_type      = get_file_type(st_buff.st_mode);
-    file->modified_at    = (struct timespec) st_buff.st_mtim;
-    file->ref_count      = (struct FiRef){0, NULL};
+    file->extension   = fi_strdup(ext ? ext : "");
+    file->path        = fi_strndup(path,     strlen(path));
+    file->filename    = fi_strndup(filename, strlen(filename));
+    file->size_byte   = st_buff.st_size;
+    file->type        = get_file_type(st_buff.st_mode);
+    file->modified_at = (struct timespec) st_buff.st_mtim;
+    file->ref_count   = (struct FiRef){0, NULL};
 
     return true;
 }

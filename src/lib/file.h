@@ -72,9 +72,9 @@ typedef struct FiFileInfo FiFileInfo_st;
 struct FiFileInfo {
     char               *filename;
     char               *path;
-    char               *file_extension;
+    char               *extension;
     off_t               size_byte;
-    FiFileType          file_type;
+    FiFileType          type;
     struct timespec     modified_at;
     struct FiRef        ref_count;
 };
