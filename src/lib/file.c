@@ -120,7 +120,7 @@ struct FiFileContainer *fi_file_container_init()
                                     fi_file_copy_proxy);
     
     if (! container->array) {
-        fi_log_message(FI_DEBUG_LEVEL_CRITICAL,
+        fi_log_message(FI_DEBUG_LEVEL_ERROR,
                        "Failed to allocate container array memory");
         free(container);
         return NULL;
