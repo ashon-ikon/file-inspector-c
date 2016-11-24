@@ -58,7 +58,8 @@ extern char *fi_got_msg(char *fmt, ...) fi_checkprintf;
 #define fi_assert_fail(con) fi_assert_true(! (con) )
 #define fi_return_if_fail(con, msg) do {FI_TEST_RESULT r = 0; \
         if (FI_TEST_OKAY != (r = fi_assert_true( (con) ) )) { \
-        fi_log_message(FI_DEBUG_LEVEL_ERROR, "Assertion failed. %s. (%u)", msg, r); \
+        fi_log_message(FI_DEBUG_LEVEL_ERROR,                  \
+                       "Assertion failed. %s. (%u)", msg, r); \
     return r; } } while(0)
 
 int run(FiTestFunc *tests);

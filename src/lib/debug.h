@@ -43,23 +43,35 @@ FI_BEGIN_DECLS
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
 #define fmt_printf __attribute__((format(printf, 5, 6)))
-    
+
 typedef enum {
-    FI_DEBUG_LEVEL_CRITICAL,
-    FI_DEBUG_LEVEL_ERROR,
-    FI_DEBUG_LEVEL_FATAL,
+    FI_DEBUG_LEVEL_VERB  =   0x01,
+    FI_DEBUG_LEVEL_DEBUG,
     FI_DEBUG_LEVEL_INFO,
     FI_DEBUG_LEVEL_WARN,
+    FI_DEBUG_LEVEL_ERROR,
+    FI_DEBUG_LEVEL_ASSERT,
+
+    FI_MSG_TYPE_CRITICAL,
+    FI_MSG_TYPE_ERROR,
+    FI_MSG_TYPE_FATAL,
+    FI_MSG_TYPE_INFO,
+    FI_MSG_TYPE_WARN,
 
 } FiMessageType;
+
+#ifndef FI_DEBUG_LEVEL
+#define FI_DEBUG_LEVEL  FI_DEBUG_LEVEL_INFO
+#endif
 
 void _fi_log_message(FiMessageType level,
                     const char * fn, const int line, const char *file,
                     const char * err, ...) fmt_printf;
 
 #define fi_log_message(lv, fmt, ...) do {                   \
-                _fi_log_message((lv),                       \
-                __FUNC__, __LINE__, __FILENAME__, (fmt) , ##__VA_ARGS__); \
+                if (FI_DEBUG_LEVEL <= (lv))                 \
+                    _fi_log_message((lv),                   \
+                    __FUNC__, __LINE__, __FILENAME__, (fmt) , ##__VA_ARGS__); \
             } while(0)
 
 FI_END_DECLS
