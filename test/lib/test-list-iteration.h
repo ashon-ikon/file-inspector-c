@@ -1,4 +1,5 @@
-/*
+/* 
+ * File:   test-list-iteration.h
  * Author: yasonibare
  * 
  * Copyright (c) 2016 Yinka Asonibare
@@ -20,53 +21,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
  */
 
-#ifndef FINSPECTOR_TESTS_COMMON_H
-#define FINSPECTOR_TESTS_COMMON_H
+#ifndef FINSPECTOR_TESTS_TEST_LIST_ITERATION_H
+#define FINSPECTOR_TESTS_TEST_LIST_ITERATION_H
 
-#include <stdbool.h>
-#include <stdarg.h>
-
-#include "./../src/lib/debug.h"
+#include "./../tests-common.h"
+#include "./../../src/lib/list.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
 
-typedef enum {
-    FI_TEST_OKAY = 0,
-    FI_TEST_SKIPPED = 77,
-    FI_TEST_LEAKED = 96,
-    FI_TEST_FAIL = 99,
-    FI_TEST_CRITICAL = 137,
-            
-} FI_TEST_RESULT;
-    
-typedef FI_TEST_RESULT (*test_func) ();
-
-typedef struct {
-    char      *name;
-    test_func test;
-} FiTestFunc;
-
-extern char *fi_got_msg(char *fmt, ...) fi_checkprintf;
-
-#define fi_assert_true(con) ( (con) == true ? FI_TEST_OKAY : FI_TEST_FAIL)
-#define fi_assert_fail(con) fi_assert_true(! (con) )
-#define fi_return_if_fail(con, msg) do {FI_TEST_RESULT r = 0; \
-        if (FI_TEST_OKAY != (r = fi_assert_true( (con) ) )) { \
-        fi_log_message(FI_DEBUG_LEVEL_ERROR,                  \
-                       "Failed. %s (%u)", msg, r); \
-    return r; } } while(0)
-
-int run(FiTestFunc *tests);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* FINSPECTOR_TESTS_COMMON_H */
-
+#endif /* FINSPECTOR_TESTS_TEST_LIST_ITERATION_H */

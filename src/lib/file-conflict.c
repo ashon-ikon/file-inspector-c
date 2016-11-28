@@ -1,5 +1,5 @@
-/*
- * File:   file-manager.h
+/* 
+ * File:   file-conflict.c
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,24 +19,37 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
+ * 
  */
-#ifndef FINSPECTOR_LIB_FILE_MANAGER_H
-#define FINSPECTOR_LIB_FILE_MANAGER_H
+#include <malloc.h>
+#include <string.h>
+#include <stdlib.h>
 
-#include <stdbool.h>
-
-#include "lib-common.h"
-#include "file.h"
-
-FI_BEGIN_DECLS
-
-bool fi_file_manager_read_dir(const char const *path,
-                              struct FiFileContainer *con,
-                              bool recursive);
+#include "file-conflict.h"
+#include "util-string.h"
 
 
-FI_END_DECLS
+struct FiConflictList *fi_conflict_new(const char *name)
+{
+    struct FiConflictList *list = malloc(sizeof *list);
+    if (! list) {
+        fi_log_message(FI_DEBUG_LEVEL_ERROR,
+                      "Failed to create conflict list");
+        return NULL;
+    }
+    list->con  = fi_file_container_init();
+    strncpy(list->name, name, FI_MAX_NAME - 1);
+    
+    return list;
+}
 
-#endif /* FINSPECTOR_LIB_FILE_MANAGER_H */
+void fi_conflict_destroy(struct FiConflictList *list)
+{
+    if (! list)
+        return;    
 
+    fi_file_container_destroy(list->con);
+
+    free(list);
+      
+}

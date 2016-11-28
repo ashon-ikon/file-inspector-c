@@ -66,7 +66,7 @@ struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp)
 {
     struct FiArray *arr = malloc(sizeof *arr);
     if (! arr) {
-        fi_log_message(FI_DEBUG_LEVEL_FATAL,
+        fi_log_message(FI_DEBUG_LEVEL_ASSERT,
                        "Failed to allocate memory for array\n");
         return NULL;
     }

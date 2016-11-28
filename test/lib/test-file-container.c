@@ -47,10 +47,10 @@ static void add_files_to_create_outside(struct FiFileContainer *con)
         struct FiFileInfo file;
         fi_file_init(&file);
         
-        file.file_extension = fi_strdup(".docx");
-        file.file_path      = fi_strdup("/home/lorem/ipsum/");
+        file.extension = fi_strdup(".docx");
+        file.path      = fi_strdup("/home/lorem/ipsum/");
         file.filename       = fi_strdup("oh_praise_him");
-        file.file_type      = FI_FILE_TYPE_REGULAR;
+        file.type      = FI_FILE_TYPE_REGULAR;
     
         fi_file_container_push(con, &file);
         
@@ -72,8 +72,8 @@ FI_TEST_RESULT test_file_container_push_data()
                       "Wrong number of files added");
     struct FiFileInfo *file = NULL;
     fi_container_each(con, file) {
-        fi_return_if_fail(strcmp(file->file_extension, ".docx") == 0,
-                        fi_got_msg("We got %s", file->file_extension));
+        fi_return_if_fail(strcmp(file->extension, ".docx") == 0,
+                        fi_got_msg("We got %s", file->extension));
     }
     
     // Free the 

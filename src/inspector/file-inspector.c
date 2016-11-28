@@ -34,5 +34,9 @@
 
 
 int main() {
+    
+    // Set the default locale
+    setlocale(LC_CTYPE, "");
+
     return 0;
 }

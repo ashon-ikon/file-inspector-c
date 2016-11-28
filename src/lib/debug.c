@@ -55,11 +55,13 @@ void _fi_log_message(FiMessageType type,
 
     char t = ' ';
     switch(type) {
-        case FI_DEBUG_LEVEL_CRITICAL: t = 'C'; break;
-        case FI_DEBUG_LEVEL_ERROR: t = 'E'; break;
-        case FI_DEBUG_LEVEL_FATAL: t = 'F'; break;
-        case FI_DEBUG_LEVEL_INFO: t = 'I'; break;
-        case FI_DEBUG_LEVEL_WARN: t = 'W'; break;
+
+        case FI_DEBUG_LEVEL_ASSERT: t = 'A'; break;
+        case FI_DEBUG_LEVEL_DEBUG:  t = 'D'; break;
+        case FI_DEBUG_LEVEL_ERROR:  t = 'E'; break;
+        case FI_DEBUG_LEVEL_INFO:   t = 'I'; break;
+        case FI_DEBUG_LEVEL_WARN:   t = 'W'; break;
+        case FI_DEBUG_LEVEL_VERB:   t = 'V'; break;
     }
 
     fprintf(stderr, "(%c%c) %s%s\n", t, t, fname, msg);

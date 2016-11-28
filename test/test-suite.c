@@ -30,9 +30,8 @@
 #include "lib/test-array.h"
 #include "lib/test-file-creation.h"
 
-#define MAX_MSG     512
-#define OUTCOME     32
-#define FI_REASON_MAX 50
+#define MAX_MSG         512
+#define FI_REASON_MAX   65
 
 char reason_buff[FI_REASON_MAX];
 extern char *fi_got_msg(char *fmt, ...) fi_checkprintf;

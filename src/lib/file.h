@@ -30,6 +30,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#include "lib-common.h"
 
 #include "array.h"
 #include "debug.h"
@@ -39,6 +40,18 @@
 extern "C" {
 #endif
 
+#ifndef PATH_MAX
+#ifdef _POSIX_VERSION
+#define PATH_MAX _POSIX_PATH_MAX
+#else
+#ifdef MAXPATHLEN
+#define PATH_MAX MAXPATHLEN
+#else
+#define PATH_MAX 1024
+#endif
+#endif
+#endif
+    
 #ifndef FI_FUNC_RESPONSES
 #define FI_FUNC_FAIL            -1
 #define FI_FUNC_SUCCEED          0
@@ -70,10 +83,10 @@ typedef struct FiFileInfo FiFileInfo_st;
 
 struct FiFileInfo {
     char               *filename;
-    char               *file_path;
-    char               *file_extension;
+    char               *path;
+    char               *extension;
     off_t               size_byte;
-    FiFileType          file_type;
+    FiFileType          type;
     struct timespec     modified_at;
     struct FiRef        ref_count;
 };
@@ -81,6 +94,9 @@ struct FiFileInfo {
 struct FiFileContainer {
     struct FiArray *array;
 };
+
+#define FI_FILE_INIT(f) struct FiFileInfo (f); fi_file_init(&(f))
+#define FI_FILE_FREE(f) (f); fi_file_destroy(&(f))
 
 void fi_file_init(struct FiFileInfo *file);
 void fi_file_destroy(struct FiFileInfo *file);

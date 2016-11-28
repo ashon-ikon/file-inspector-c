@@ -21,6 +21,7 @@
  * 
  */
 #include <stddef.h>
+#include <stdlib.h>
 
 #include "util-string.h"
 
@@ -42,11 +43,19 @@ char * fi_trim(char * str, const char * impurities)
     return x;
 }
 
+size_t fi_strlen(const char const* s)
+{
+    return (! s) ? 0 : strlen(s);
+    
+}
+
 #if defined FI_NO_STRDUP_FOUND
 /* Platform appears not to have support for strdup and strndup
  */
 char *_fi_strdup (const char *src)
 {
+    if (! src) return NULL;
+
     size_t n = 0;
     const char *dup = src;
     while(*dup++ != '\0') n++;
@@ -73,3 +82,37 @@ char *_fi_strndup(const char *src, size_t n)
     return dup;
 }
 #endif
+
+char * fi_strconcat(const unsigned char num, ...)
+{
+    if (num < 1)
+        return NULL;
+
+    unsigned int  len = 0;
+    unsigned char i = 0;
+    char          *words[num];
+
+    va_list ap;
+    va_start(ap, num);
+    for (i = 0; i < num; i++) {
+        words[i] = va_arg(ap, char*);
+        len += strlen(words[i]);
+    }
+    va_end(ap);
+    
+    // Let's create the final string
+    char *str = malloc(len + 1);
+    if (! str)
+        return NULL;
+    str[0] = '\0';
+
+    for (i = 0; i < num; i++)
+        strncat(str, words[i], strlen(words[i]));
+
+    return str;
+}
+
+int fi_strcmp0(const char const *s1, const char const *s2)
+{
+    return strcmp(s1, s2) == 0;
+}

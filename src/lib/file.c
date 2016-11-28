@@ -62,8 +62,8 @@ void fi_file_destroy(struct FiFileInfo * file)
         return;
 
     free(file->filename);
-    free(file->file_path);
-    free(file->file_extension);
+    free(file->path);
+    free(file->extension);
 
 }
 
@@ -93,10 +93,9 @@ bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
     if (! src || ! dest)
         return false;
 
-    dest->filename       = fi_strndup(src->filename, strlen(src->filename));
-    dest->file_path      = fi_strndup(src->file_path, strlen(src->file_path));
-    dest->file_extension = fi_strndup(src->file_extension,
-                                      strlen(src->file_extension));
+    dest->filename       = fi_strndup(src->filename, fi_strlen(src->filename));
+    dest->path           = fi_strndup(src->path, fi_strlen(src->path));
+    dest->extension      = fi_strndup(src->extension, fi_strlen(src->extension));
     dest->size_byte      = src->size_byte;
     dest->modified_at    = src->modified_at;
     dest->ref_count.free = src->ref_count.free;
@@ -121,7 +120,7 @@ struct FiFileContainer *fi_file_container_init()
                                     fi_file_copy_proxy);
     
     if (! container->array) {
-        fi_log_message(FI_DEBUG_LEVEL_CRITICAL,
+        fi_log_message(FI_DEBUG_LEVEL_ERROR,
                        "Failed to allocate container array memory");
         free(container);
         return NULL;
