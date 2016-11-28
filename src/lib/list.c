@@ -107,7 +107,7 @@ struct FiList *fi_list_head(struct FiList *list)
 
     struct FiList *cur = list;
     
-    for (; cur->prev; cur = cur->prev) printf("Moving to the head\n");
+    for (; cur->prev; cur = cur->prev);
 
     return cur;
 }

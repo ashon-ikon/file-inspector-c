@@ -1,5 +1,5 @@
-/*
- * File:   list.h
+/* 
+ * File:   file-conflict.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,48 +22,32 @@
  * 
  */
 
-#ifndef FINSPECTOR_LIB_LIST_H
-#define FINSPECTOR_LIB_LIST_H
+#ifndef FINSPECTOR_LIB_FILE_CONFLICT_H
+#define FINSPECTOR_LIB_FILE_CONFLICT_H
 
-#include <stdbool.h>
-
+#include "array.h"
 #include "lib-common.h"
+#include "file.h"
 
 FI_BEGIN_DECLS
-        
-        
-struct FiList {
-    struct FiList *prev;
-    struct FiList *next;
-    void          *data;
-    bool (*destroy_callback)(struct FiList *node);
+
+#ifndef FI_MAX_NAME
+#define FI_MAX_NAME        64
+#define FI_MAX_DESC        512
+#endif
+
+/**
+ * List of conflict file containers
+ */
+struct FiConflictList {
+    char name[FI_MAX_NAME];
+    struct FiFileContainer *con;
 };
 
-// Data Access
-#define fi_list_data_ptr(n, t)      ((t*)(void *) (n)->data)
-
-struct FiList *fi_list_new(void *data,
-                           bool (*fn)(struct FiList * n));
-void fi_list_free(struct FiList *list);
-void fi_list_append(struct FiList *list, struct FiList *next);
-void fi_list_prepend(struct FiList *list, struct FiList *prev);
-unsigned fi_list_count(struct FiList *list);
-
-// Traversing
-struct FiList *fi_list_head(struct FiList *list);
-struct FiList *fi_list_tail(struct FiList *list);
-
-static inline struct FiList *fi_list_prev(const struct FiList const *list)
-{
-    return (list && list->prev) ? list->prev : NULL;
-}
-
-static inline struct FiList *fi_list_next(const struct FiList const *list)
-{
-    return (list && list->next) ? list->next : NULL;    
-}
+struct FiConflictList *fi_conflict_new(const char *name);
+void fi_conflict_destroy(struct FiConflictList *list);
 
 FI_END_DECLS
 
-#endif /* FINSPECTOR_LIB_LIST_H */
+#endif /* FINSPECTOR_LIB_FILE_CONFLICT_H */
 

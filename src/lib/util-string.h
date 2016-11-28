@@ -53,6 +53,7 @@ char *fi_ltrim(char * str, const char * impurities);
 char *fi_trim(char * str, const char * impurities);
 char *fi_strconcat(const unsigned char num, ...);
 size_t fi_strlen(const char const* s);
+int fi_strcmp0(const char const *s1, const char const *s2);
 
 #ifdef FI_NO_STRDUP_FOUND
 /* Platform appears not to have support for strdup and strndup

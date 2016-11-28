@@ -1,4 +1,5 @@
-/*
+/* 
+ * File:   test-conflict-list-iteration.c
  * Author: yasonibare
  * 
  * Copyright (c) 2016 Yinka Asonibare
@@ -20,53 +21,32 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
  */
 
-#ifndef FINSPECTOR_TESTS_COMMON_H
-#define FINSPECTOR_TESTS_COMMON_H
+#include "test-conflict-list-iteration.h"
 
-#include <stdbool.h>
-#include <stdarg.h>
 
-#include "./../src/lib/debug.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+FI_TEST_RESULT test_conflict_list_creation()
+{
+#define TestName "Test Conflict"
+    struct FiConflictList *conflict = fi_conflict_new(TestName);
     
+    fi_return_if_fail(NULL != conflict, "Failed to create conflict contianer");
 
-typedef enum {
-    FI_TEST_OKAY = 0,
-    FI_TEST_SKIPPED = 77,
-    FI_TEST_LEAKED = 96,
-    FI_TEST_FAIL = 99,
-    FI_TEST_CRITICAL = 137,
-            
-} FI_TEST_RESULT;
+    fi_return_if_fail(fi_strcmp0(conflict->name, TestName),
+                       "Failed to create conflict contianer");
     
-typedef FI_TEST_RESULT (*test_func) ();
-
-typedef struct {
-    char      *name;
-    test_func test;
-} FiTestFunc;
-
-extern char *fi_got_msg(char *fmt, ...) fi_checkprintf;
-
-#define fi_assert_true(con) ( (con) == true ? FI_TEST_OKAY : FI_TEST_FAIL)
-#define fi_assert_fail(con) fi_assert_true(! (con) )
-#define fi_return_if_fail(con, msg) do {FI_TEST_RESULT r = 0; \
-        if (FI_TEST_OKAY != (r = fi_assert_true( (con) ) )) { \
-        fi_log_message(FI_DEBUG_LEVEL_ERROR,                  \
-                       "Failed. %s (%u)", msg, r); \
-    return r; } } while(0)
-
-int run(FiTestFunc *tests);
-
-#ifdef __cplusplus
+    fi_conflict_destroy(conflict);
+    
+    return FI_TEST_OKAY;
 }
-#endif
 
-#endif /* FINSPECTOR_TESTS_COMMON_H */
-
+int main()
+{
+    FiTestFunc fi_tests [] = {
+        {"test_conflict_list_creation", test_conflict_list_creation},
+        {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
+    };
+    
+    return run(fi_tests);
+}

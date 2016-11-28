@@ -42,8 +42,6 @@ FI_TEST_RESULT test_list_append()
 {
     struct FiList *list = fi_list_new(NULL, NULL);
     
-    fi_return_if_fail(NULL != list, "Failed to create list");
-    
     for (unsigned char i = 0; i < LIST_COUNT; i++) {
         struct FiList *li = fi_list_new(NULL, NULL);
         fi_list_append(list, li);
@@ -63,8 +61,6 @@ FI_TEST_RESULT test_list_prepend()
 {
     struct FiList *list = fi_list_new(NULL, NULL);
     
-    fi_return_if_fail(NULL != list, "Failed to create list");
-    
     for (unsigned char i = 0; i < LIST_COUNT; i++) {
         struct FiList *li = fi_list_new(NULL, NULL);
         fi_list_prepend(list, li);
@@ -80,12 +76,45 @@ FI_TEST_RESULT test_list_prepend()
     return FI_TEST_OKAY;
 }
 
+#include <stdio.h>
+FI_TEST_RESULT test_list_iteration()
+{
+    int    var[LIST_COUNT + 1], t = 0, *pint = NULL;
+    var[0] = 10;
+    struct FiList *list = fi_list_new(var, NULL);
+    
+    struct FiList *li = NULL;
+    for (unsigned char i = 1; i < LIST_COUNT + 1; i++) {
+        var[i] = i + 10;
+        li = fi_list_new(var + i, NULL);
+        fi_list_prepend(list, li);
+        
+        li = fi_list_head(list);
+
+    }
+
+    t  = 15;
+    for (li = fi_list_head(list); li != NULL; li = fi_list_next(li) ) {
+        
+        pint = fi_list_data_ptr(li, int);
+        fi_return_if_fail(*pint == t--,
+            fi_got_msg("Failed to get stored value. Got %d, Expected %d",
+                *pint, t
+            ));
+    }
+    
+    fi_list_free(list);
+    
+    return FI_TEST_OKAY;
+}
+
 int main()
 {
     FiTestFunc fi_tests [] = {
         {"test_list_creation", test_list_creation},
         {"test_list_append", test_list_append},
         {"test_list_prepend", test_list_prepend},
+        {"test_list_iteration", test_list_iteration},
         {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
     };
     
