@@ -85,6 +85,7 @@ int main()
     FiTestFunc fi_tests [] = {
         {"test_list_creation", test_list_creation},
         {"test_list_append", test_list_append},
+        {"test_list_prepend", test_list_prepend},
         {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
     };
     
