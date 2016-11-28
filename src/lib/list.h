@@ -22,14 +22,46 @@
  * 
  */
 
-#ifndef LIST_H
-#define LIST_H
+#ifndef FINSPECTOR_LIB_LIST_H
+#define FINSPECTOR_LIB_LIST_H
+
+#include <stdbool.h>
 
 #include "lib-common.h"
 
 FI_BEGIN_DECLS
         
+        
+struct FiList {
+    struct FiList *prev;
+    struct FiList *next;
+    void          *data;
+    bool (*destroy_callback)(struct FiList *node);
+};
+
+
+struct FiList *fi_list_new(void *data,
+                           bool (*fn)(struct FiList * n));
+void fi_list_free(struct FiList *list);
+void fi_list_append(struct FiList *list, struct FiList *next);
+void fi_list_prepend(struct FiList *list, struct FiList *prev);
+unsigned fi_list_count(struct FiList *list);
+
+// Traversing
+struct FiList *fi_list_head(struct FiList *list);
+struct FiList *fi_list_tail(struct FiList *list);
+
+static inline struct FiList *fi_list_prev(const struct FiList const *list)
+{
+    return (list && list->prev) ? list->prev : NULL;
+}
+
+static inline struct FiList *fi_list_next(const struct FiList const *list)
+{
+    return (list && list->next) ? list->next : NULL;    
+}
+
 FI_END_DECLS
 
-#endif /* LIST_H */
+#endif /* FINSPECTOR_LIB_LIST_H */
 
