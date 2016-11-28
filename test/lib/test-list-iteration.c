@@ -59,48 +59,26 @@ FI_TEST_RESULT test_list_append()
     return FI_TEST_OKAY;
 }
 
-//
-//#define FILE_COUNT      3
-//static void add_files_to_create_outside(struct FiFileContainer *con)
-//{
-//    for (int i = 0; i < FILE_COUNT; i++) {
-//        struct FiFileInfo file;
-//        fi_file_init(&file);
-//        
-//        file.extension = fi_strdup(".docx");
-//        file.path      = fi_strdup("/home/lorem/ipsum/");
-//        file.filename       = fi_strdup("oh_praise_him");
-//        file.type      = FI_FILE_TYPE_REGULAR;
-//    
-//        fi_file_container_push(con, &file);
-//        
-//        // free the memory
-//        fi_file_destroy(&file);
-//        
-//    }
-//}
-//
-//FI_TEST_RESULT test_file_container_push_data()
-//{
-//    struct FiFileContainer *con = fi_file_container_init();
-//    
-//    fi_return_if_fail(NULL != con, "Failed to create container");
-//    
-//    add_files_to_create_outside(con);
-//    
-//    fi_return_if_fail(fi_file_container_size(con) == FILE_COUNT,
-//                      "Wrong number of files added");
-//    struct FiFileInfo *file = NULL;
-//    fi_container_each(con, file) {
-//        fi_return_if_fail(strcmp(file->extension, ".docx") == 0,
-//                        fi_got_msg("We got %s", file->extension));
-//    }
-//    
-//    // Free the 
-//    fi_file_container_destroy(con);
-//    
-//    return FI_TEST_OKAY;
-//}
+FI_TEST_RESULT test_list_prepend()
+{
+    struct FiList *list = fi_list_new(NULL, NULL);
+    
+    fi_return_if_fail(NULL != list, "Failed to create list");
+    
+    for (unsigned char i = 0; i < LIST_COUNT; i++) {
+        struct FiList *li = fi_list_new(NULL, NULL);
+        fi_list_prepend(list, li);
+
+        fi_return_if_fail(fi_list_count(li) == (i + 2), // One added before
+            fi_got_msg("Wrong count of items in a list. Got %d, Expected %d",
+                fi_list_count(li), (i + 2)
+            ));
+    }
+
+    fi_list_free(list);
+    
+    return FI_TEST_OKAY;
+}
 
 int main()
 {
