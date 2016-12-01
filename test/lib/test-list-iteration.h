@@ -28,6 +28,7 @@
 
 #include "./../tests-common.h"
 #include "./../../src/lib/list.h"
+#include "./../../src/lib/util-string.h"
 
 #ifdef __cplusplus
 extern "C" {

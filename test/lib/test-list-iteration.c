@@ -23,6 +23,8 @@
  * SOFTWARE.
  */
 
+#include <string.h>
+
 #include "test-list-iteration.h"
 
 
@@ -76,7 +78,6 @@ FI_TEST_RESULT test_list_prepend()
     return FI_TEST_OKAY;
 }
 
-#include <stdio.h>
 FI_TEST_RESULT test_list_iteration()
 {
     int    var[LIST_COUNT + 1], t = 0, *pint = NULL;
@@ -88,9 +89,6 @@ FI_TEST_RESULT test_list_iteration()
         var[i] = i + 10;
         li = fi_list_new(var + i, NULL);
         fi_list_prepend(list, li);
-        
-        li = fi_list_head(list);
-
     }
 
     t  = 15;
@@ -107,6 +105,40 @@ FI_TEST_RESULT test_list_iteration()
     
     return FI_TEST_OKAY;
 }
+
+static char data_buff[13]; // 6 x 2 + '\0'
+static void each_callback(void *data)
+{
+    char num[3];
+    itoa(*(int *)data, num);
+    strncat(data_buff, num, 2);
+}
+
+FI_TEST_RESULT test_list_each_func()
+{
+    int    var[LIST_COUNT + 1];
+    var[0] = 10;
+    struct FiList *list = fi_list_new(var, NULL);
+    
+    struct FiList *li = NULL;
+    for (unsigned char i = 1; i < LIST_COUNT + 1; i++) {
+        var[i] = i + 10;
+        li = fi_list_new(var + i, NULL);
+        fi_list_prepend(list, li);
+    }
+
+    data_buff[0] = '\0'; // Zero out the string
+    fi_list_each(list, each_callback);
+    fi_return_if_fail(12 == strlen(data_buff),
+        fi_got_msg("Foreach method is faulty. Got %lu, Expected %d",
+            strlen(data_buff), 12
+        ));
+    
+    fi_list_free(list);
+    
+    return FI_TEST_OKAY;
+}
+
 
 int main()
 {
