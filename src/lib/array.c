@@ -64,6 +64,14 @@ static FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE desired, FI_TYPE_SIZE sz) {
  */
 struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp)
 {
+    // Create the minimum elements
+    return fi_array_new_n(unit_size, cp, FI_INITIAL_ARRAY_ALLOC_SIZE);    
+}
+
+struct FiArray *fi_array_new_n(size_t unit_size,
+                               fi_array_data_cp_fn cp,
+                               FI_TYPE_SIZE n)
+{
     struct FiArray *arr = malloc(sizeof *arr);
     if (! arr) {
         fi_log_message(FI_DEBUG_LEVEL_ASSERT,
@@ -79,8 +87,7 @@ struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp)
     arr->cursor    = -1;
     arr->ref_count = (struct FiRef){0, NULL};
     arr->copy_func = cp == NULL ? fi_array_data_copy : cp;
-    fi_array_expand_container(arr, fi_mem_best_size(unit_size,
-                              FI_INITIAL_ARRAY_ALLOC_SIZE));
+    fi_array_expand_container(arr, fi_mem_best_size(unit_size, n));
     
     fi_ref_inc(&arr->ref_count);
 

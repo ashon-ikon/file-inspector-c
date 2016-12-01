@@ -25,9 +25,12 @@
 #ifndef FINSPECTOR_LIB_FILE_CONFLICT_H
 #define FINSPECTOR_LIB_FILE_CONFLICT_H
 
+#include <stdbool.h>
+
 #include "array.h"
-#include "lib-common.h"
 #include "file.h"
+#include "lib-common.h"
+#include "list.h"
 
 FI_BEGIN_DECLS
 
@@ -36,16 +39,35 @@ FI_BEGIN_DECLS
 #define FI_MAX_DESC        512
 #endif
 
+
 /**
- * List of conflict file containers
+ * File Conflict Group
+ *
+ * This is holds a list of files in conflict based on algorithm's rules.
+ * Each of this conflict groups will be sorted, hopefully by the detector
+ * later
  */
-struct FiConflictList {
-    char name[FI_MAX_NAME];
-    struct FiFileContainer *con;
+
+struct FiConfFile {
+    struct FiFileInfo parent;
+    unsigned char     mapped;
 };
 
-struct FiConflictList *fi_conflict_new(const char *name);
-void fi_conflict_destroy(struct FiConflictList *list);
+struct FiConfGroup {
+    struct FiList *files; /* List of FiConfFile / FiFileInfo */
+    unsigned       conflict_type_id;
+};
+
+
+struct FiConflictArray {
+    struct FiArray *file_groups;
+};
+
+struct FiConfGroup *fi_config_group_new();
+void fi_config_group_free(struct FiConfGroup *grp);
+void fi_config_group_add(struct FiConfGroup *self, struct FiFileInfo *file);
+bool fi_config_group_has(struct FiConfGroup *self, struct FiFileInfo *file);
+
 
 FI_END_DECLS
 

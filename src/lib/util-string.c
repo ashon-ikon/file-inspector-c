@@ -116,3 +116,28 @@ int fi_strcmp0(const char const *s1, const char const *s2)
 {
     return strcmp(s1, s2) == 0;
 }
+
+char *itoa(int i, char *b)
+{
+    char const digit[] = "0123456789";
+    char* p = b;
+    if (i < 0) {
+        *p++ = '-';
+        i *= -1;
+    }
+    
+    // Shift char pointer to the least 10's
+    int shifter = i;
+    do { 
+        ++p;
+        shifter = shifter / 10;
+    } while (shifter);
+    
+    *p = '\0'; // Terminate the string
+    do { //Move back, inserting digits as u go
+        *--p = digit[i % 10];
+        i = i / 10;
+    } while (i);
+
+    return b;
+}
