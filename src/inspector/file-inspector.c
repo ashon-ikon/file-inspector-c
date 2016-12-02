@@ -32,11 +32,15 @@
 
 #include "file-inspector.h"
 
+#include "./../lib/util-string.h"
 
 int main() {
     
     // Set the default locale
     setlocale(LC_CTYPE, "");
 
+    char buff[20];
+    itoa(50, buff, 1);
+    printf("V: %s\n", buff);
     return 0;
 }

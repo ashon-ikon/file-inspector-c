@@ -23,6 +23,8 @@
  * SOFTWARE.
  */
 
+#include <string.h>
+
 #include "test-list-iteration.h"
 
 
@@ -30,7 +32,7 @@ FI_TEST_RESULT test_list_creation()
 {
     struct FiList *list = fi_list_new(NULL, NULL);
     
-    fi_return_if_fail(NULL != list, "Failed to create new list");
+    fi_return_fail_if_not(NULL != list, "Failed to create new list");
 
     fi_list_free(list);
     
@@ -46,7 +48,7 @@ FI_TEST_RESULT test_list_append()
         struct FiList *li = fi_list_new(NULL, NULL);
         fi_list_append(list, li);
 
-        fi_return_if_fail(fi_list_count(li) == (i + 2), // One added before
+        fi_return_fail_if_not(fi_list_count(li) == (i + 2), // One added before
             fi_got_msg("Wrong count of items in a list. Got %d, Expected %d",
                 fi_list_count(li), (i + 2)
             ));
@@ -65,7 +67,7 @@ FI_TEST_RESULT test_list_prepend()
         struct FiList *li = fi_list_new(NULL, NULL);
         fi_list_prepend(list, li);
 
-        fi_return_if_fail(fi_list_count(li) == (i + 2), // One added before
+        fi_return_fail_if_not(fi_list_count(li) == (i + 2), // One added before
             fi_got_msg("Wrong count of items in a list. Got %d, Expected %d",
                 fi_list_count(li), (i + 2)
             ));
@@ -76,7 +78,6 @@ FI_TEST_RESULT test_list_prepend()
     return FI_TEST_OKAY;
 }
 
-#include <stdio.h>
 FI_TEST_RESULT test_list_iteration()
 {
     int    var[LIST_COUNT + 1], t = 0, *pint = NULL;
@@ -88,16 +89,13 @@ FI_TEST_RESULT test_list_iteration()
         var[i] = i + 10;
         li = fi_list_new(var + i, NULL);
         fi_list_prepend(list, li);
-        
-        li = fi_list_head(list);
-
     }
 
     t  = 15;
     for (li = fi_list_head(list); li != NULL; li = fi_list_next(li) ) {
         
         pint = fi_list_data_ptr(li, int);
-        fi_return_if_fail(*pint == t--,
+        fi_return_fail_if_not(*pint == t--,
             fi_got_msg("Failed to get stored value. Got %d, Expected %d",
                 *pint, t
             ));
@@ -107,6 +105,40 @@ FI_TEST_RESULT test_list_iteration()
     
     return FI_TEST_OKAY;
 }
+
+static char data_buff[13]; // 6 x 2 + '\0'
+static void each_callback(void *data)
+{
+    char num[3];
+    itoa(*(int *)data, num, 10);
+    strncat(data_buff, num, 2);
+}
+
+FI_TEST_RESULT test_list_each_func()
+{
+    int    var[LIST_COUNT + 1];
+    var[0] = 10;
+    struct FiList *list = fi_list_new(var, NULL);
+    
+    struct FiList *li = NULL;
+    for (unsigned char i = 1; i < LIST_COUNT + 1; i++) {
+        var[i] = i + 10;
+        li = fi_list_new(var + i, NULL);
+        fi_list_prepend(list, li);
+    }
+
+    data_buff[0] = '\0'; // Zero out the string
+    fi_list_each(list, each_callback);
+    fi_return_fail_if_not(12 == strlen(data_buff),
+        fi_got_msg("Foreach method is faulty. Got %lu, Expected %d",
+            strlen(data_buff), 12
+        ));
+    
+    fi_list_free(list);
+    
+    return FI_TEST_OKAY;
+}
+
 
 int main()
 {

@@ -45,7 +45,6 @@ struct FiList *fi_list_new(void *data,
     return list;
 }
 
-#include <stdio.h>
 void fi_list_free(struct FiList *list)
 {
     if (! list)
@@ -67,8 +66,15 @@ void fi_list_free(struct FiList *list)
 
 void fi_list_append(struct FiList *list, struct FiList *next)
 {
-    if (! list || ! next)
+ 
+    if (! next)
         return;
+
+    if (! list) {
+        list = next; // Make this the first
+        list->next = NULL;
+        return;
+    }
     
     struct FiList *tail = fi_list_tail(list);
     tail->next = next;
@@ -77,8 +83,15 @@ void fi_list_append(struct FiList *list, struct FiList *next)
 
 void fi_list_prepend(struct FiList *list, struct FiList *prev)
 {
-    if (! list || ! prev)
+
+    if (! prev)
         return;
+
+    if (! list) {
+        list = prev; // Make this the first
+        list->prev = NULL;
+        return;
+    }
     
     struct FiList *head = fi_list_head(list);
     head->prev = prev;
@@ -122,4 +135,20 @@ struct FiList *fi_list_tail(struct FiList *list)
     for (; cur && cur->next; cur = cur->next);
 
     return cur;
+}
+
+/**
+ * Calls the callback function passing the data from the list node per time
+ * @param list
+ * @param list_func
+ */
+void fi_list_each(struct FiList *list, void (*list_func) (void *data))
+{
+    struct FiList *cur = fi_list_head(list);
+    
+    if (! cur || ! list_func)
+        return;
+
+    for (; cur; cur = fi_list_next(cur))
+        list_func(cur->data);
 }

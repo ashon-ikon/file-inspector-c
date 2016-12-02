@@ -93,17 +93,34 @@ bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
     if (! src || ! dest)
         return false;
 
-    dest->filename       = fi_strndup(src->filename, fi_strlen(src->filename));
-    dest->path           = fi_strndup(src->path, fi_strlen(src->path));
-    dest->extension      = fi_strndup(src->extension, fi_strlen(src->extension));
-    dest->size_byte      = src->size_byte;
-    dest->modified_at    = src->modified_at;
-    dest->ref_count.free = src->ref_count.free;
-    fi_ref_inc(&dest->ref_count);
+    fi_file_set_props(dest,
+            src->filename,
+            src->path,
+            src->extension,
+            src->size_byte,
+            src->modified_at,
+            src->ref_count.free);
 
     return true;
 }
 
+void fi_file_set_props(struct FiFileInfo *file,
+                       const char *filename,
+                       const char *path,
+                       const char *extension,
+                       off_t size,
+                       struct timespec modified_at,
+                       void (*free)(const struct FiRef *ref))
+{
+    file->filename       = fi_strndup(filename, fi_strlen(filename));
+    file->path           = fi_strndup(path, fi_strlen(path));
+    file->extension      = fi_strndup(extension, fi_strlen(extension));
+    file->size_byte      = size;
+    file->modified_at    = modified_at;
+    file->ref_count.free = free;
+    fi_ref_inc(&file->ref_count);
+
+}
 
 /**
  * Initializes the file array

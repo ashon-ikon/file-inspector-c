@@ -31,22 +31,22 @@ FI_TEST_RESULT test_string_empty()
 {
     char *no_str = NULL;
     char *empty = fi_strdup(no_str);
-    fi_return_if_fail(NULL == empty, "String should be empty");
+    fi_return_fail_if_not(NULL == empty, "String should be empty");
     
-    fi_return_if_fail(fi_strlen(no_str) == 0, "String length should be '0' ");
+    fi_return_fail_if_not(fi_strlen(no_str) == 0, "String length should be '0' ");
 
     return FI_TEST_OKAY;
 }
 
 static FI_TEST_RESULT run_string_dup_test(const char *str, const char *expected)
 {
-    fi_return_if_fail(NULL != str, "Failed to create string");
+    fi_return_fail_if_not(NULL != str, "Failed to create string");
     
     bool same = strlen(expected) == fi_strlen(str);
     bool same_com = strcmp(expected, str) == 0;
     
-    fi_return_if_fail(same, "String duplication failed");
-    fi_return_if_fail(same_com, "String duplication failed");
+    fi_return_fail_if_not(same, "String duplication failed");
+    fi_return_fail_if_not(same_com, "String duplication failed");
     
     return FI_TEST_OKAY;
 }
@@ -81,7 +81,7 @@ FI_TEST_RESULT test_string_concatenation()
     const char word3[] = "Sed ut perspiciatis unde omnis iste natus ";
 
     char * new_string = fi_strconcat(3, word1, word2, word3);
-    fi_return_if_fail(NULL != new_string, "Failed to create string");
+    fi_return_fail_if_not(NULL != new_string, "Failed to create string");
 
     free (new_string);
     
