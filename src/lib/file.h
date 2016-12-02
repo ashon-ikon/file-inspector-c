@@ -101,6 +101,13 @@ struct FiFileContainer {
 void fi_file_init(struct FiFileInfo *file);
 void fi_file_destroy(struct FiFileInfo *file);
 bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest);
+void fi_file_set_props(struct FiFileInfo *file,
+                       const char *filename,
+                       const char *path,
+                       const char *extension,
+                       off_t size,
+                       struct timespec modified_at,
+                       void (*free)(const struct FiRef *ref));
 
 // File array
 struct FiFileContainer *fi_file_container_init();

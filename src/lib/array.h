@@ -51,6 +51,9 @@ struct FiArray {
     fi_array_data_cp_fn copy_func;
 };
 
+struct FiArray *fi_array_new_n(size_t unit_size,
+                               fi_array_data_cp_fn cp,
+                               FI_TYPE_SIZE n);
 struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp);
 void  fi_array_destroy(struct FiArray *arr);
 void  fi_array_copy(const struct FiArray *src, struct FiArray *dst);

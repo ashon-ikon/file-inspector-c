@@ -1,5 +1,5 @@
 /* 
- * File:   file-conflict.h
+ * File:   algo.c
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,54 +22,40 @@
  * 
  */
 
-#ifndef FINSPECTOR_LIB_FILE_CONFLICT_H
-#define FINSPECTOR_LIB_FILE_CONFLICT_H
-
 #include <stdbool.h>
 
-#include "array.h"
-#include "file.h"
-#include "lib-common.h"
-#include "list.h"
+#include "algo-core.h"
 
-FI_BEGIN_DECLS
+static bool fi_algo_copy_proxy(void const *src, void *dst, unsigned n);
+static bool fi_algo_copy(const struct FiAlgo const *src, struct FiAlgo *dst);
+static char fi_algo_collection_add(struct FiAlgoCollection *self,
+                                   struct FiAlgo *algo);
 
-#ifndef FI_MAX_NAME
-#define FI_MAX_NAME        64
-#define FI_MAX_DESC        512
-#endif
+void fi_algo_collection_init(struct FiAlgoCollection *coll)
+{
+    if (! coll)
+        return;
+    
+//    coll->add       = fi_algo_collection_add;
+//    coll->algos     = fi_array_new(sizeof (struct FiAlgo), fi_algo_copy_proxy);
+//    coll->get_conflicts = NULL;
+}
 
+static char fi_algo_collection_add(struct FiAlgoCollection *self, struct FiAlgo *algo)
+{
+    if (! self || ! algo)
+        return FI_FUNC_FAIL;
+    
+    // Check that we don't have algorithm yet
+    
+}
 
-/**
- * File Conflict Group
- *
- * This is holds a list of files in conflict based on algorithm's rules.
- * Each of this conflict groups will be sorted, hopefully by the detector
- * later
- */
+static bool fi_algo_copy_proxy(void const *src, void *dst, unsigned n)
+{
+    
+}
 
-struct FiConfFile {
-    struct FiFileInfo parent;
-    unsigned char     mapped;
-};
-
-struct FiConfGroup {
-    struct FiList *files; /* List of FiConfFile / FiFileInfo */
-    unsigned       conflict_type_id;
-};
-
-
-struct FiConflictArray {
-    struct FiArray *file_groups;
-};
-
-struct FiConfGroup *fi_conflict_group_new();
-void fi_conflict_group_free(struct FiConfGroup *grp);
-void fi_conflict_group_add(struct FiConfGroup *self, struct FiFileInfo *file);
-bool fi_conflict_group_has(struct FiConfGroup *self, struct FiFileInfo *file);
-
-
-FI_END_DECLS
-
-#endif /* FINSPECTOR_LIB_FILE_CONFLICT_H */
-
+static bool fi_algo_copy(const struct FiAlgo const *src, struct FiAlgo *dst)
+{
+    
+}

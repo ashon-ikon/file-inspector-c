@@ -62,6 +62,7 @@ static inline struct FiList *fi_list_next(const struct FiList const *list)
 {
     return (list && list->next) ? list->next : NULL;    
 }
+void fi_list_each(struct FiList *list, void (*list_func)(void *data));
 
 FI_END_DECLS
 
