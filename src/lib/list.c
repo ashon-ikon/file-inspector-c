@@ -45,7 +45,6 @@ struct FiList *fi_list_new(void *data,
     return list;
 }
 
-#include <stdio.h>
 void fi_list_free(struct FiList *list)
 {
     if (! list)
@@ -67,8 +66,15 @@ void fi_list_free(struct FiList *list)
 
 void fi_list_append(struct FiList *list, struct FiList *next)
 {
-    if (! list || ! next)
+ 
+    if (! next)
         return;
+
+    if (! list) {
+        list = next; // Make this the first
+        list->next = NULL;
+        return;
+    }
     
     struct FiList *tail = fi_list_tail(list);
     tail->next = next;
@@ -77,8 +83,15 @@ void fi_list_append(struct FiList *list, struct FiList *next)
 
 void fi_list_prepend(struct FiList *list, struct FiList *prev)
 {
-    if (! list || ! prev)
+
+    if (! prev)
         return;
+
+    if (! list) {
+        list = prev; // Make this the first
+        list->prev = NULL;
+        return;
+    }
     
     struct FiList *head = fi_list_head(list);
     head->prev = prev;

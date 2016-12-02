@@ -26,25 +26,95 @@
 #include "test-conflict-list-iteration.h"
 
 
-FI_TEST_RESULT test_conflict_list_creation()
+FI_TEST_RESULT test_conflict_group_creation()
 {
-#define TestName "Test Conflict"
-    struct FiConflictList *conflict = fi_conflict_new(TestName);
+    struct FiConfGroup *grp = fi_conflict_group_new();
     
-    fi_return_if_fail(NULL != conflict, "Failed to create conflict contianer");
+    fi_return_fail_if_not(NULL != grp, "Failed to create conflict group list");
 
-    fi_return_if_fail(fi_strcmp0(conflict->name, TestName),
-                       "Failed to create conflict contianer");
+    fi_conflict_group_free(grp);
+
+    return FI_TEST_OKAY;
+}
+
+FI_TEST_RESULT test_adding_files_to_conflict_group()
+{
+    struct FiConfGroup *grp = fi_conflict_group_new();
     
-    fi_conflict_destroy(conflict);
+    struct FiFileInfo file1, file2;
     
+    fi_file_init(&file1);
+    fi_file_init(&file2);
+    
+    fi_conflict_group_add(grp, &file1);
+    fi_conflict_group_add(grp, &file2);
+    
+    fi_return_fail_if_not(2 == fi_list_count(grp->files),
+                        "Wrong number of items added");
+    fi_conflict_group_free(grp);
+
+    return FI_TEST_OKAY;
+}
+
+FI_TEST_RESULT test_checking_group_for_file()
+{
+    struct FiConfGroup *grp = fi_conflict_group_new();
+    
+    struct FiFileInfo file1, file2, file3, file4;
+    
+    fi_file_init(&file1);
+    fi_file_init(&file2);
+    fi_file_init(&file3);
+    fi_file_init(&file4);
+    
+    fi_file_set_props(&file2,
+            "IMAGE002",
+            "/lorem/ipsum/",
+            "tiff",
+            (1024 * 63),
+            (struct timespec){200, 300},
+            NULL);
+            
+    fi_file_set_props(&file3,
+            "IMAGE003",
+            "/lorem/ipsum/",
+            "tiff",
+            (1024 * 63),
+            (struct timespec){200, 300},
+            NULL);
+            
+    fi_file_set_props(&file4,
+            "IMAGE004",
+            "/lorem/ipsum/",
+            "tiff",
+            (1024 * 63),
+            (struct timespec){200, 300},
+            NULL);
+
+    
+    fi_conflict_group_add(grp, &file1);
+    fi_conflict_group_add(grp, &file2);
+    fi_conflict_group_add(grp, &file4);
+    
+    
+    fi_return_fail_if_not(fi_conflict_group_has(grp, &file4),
+                        "Failed to find file 4 within group");
+    
+    fi_return_fail_if_not(! fi_conflict_group_has(grp, &file3),
+                        "File 3 should NOT be part of the group");
+
+    fi_file_destroy(&file3);
+    fi_conflict_group_free(grp);
+
     return FI_TEST_OKAY;
 }
 
 int main()
 {
     FiTestFunc fi_tests [] = {
-        {"test_conflict_list_creation", test_conflict_list_creation},
+        {"test_conflict_group_creation", test_conflict_group_creation},
+        {"test_adding_files_to_conflict_group", test_adding_files_to_conflict_group},
+        {"test_checking_group_for_file", test_checking_group_for_file},
         {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
     };
     

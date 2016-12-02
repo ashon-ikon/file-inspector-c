@@ -33,7 +33,7 @@ FI_TEST_RESULT test_file_container_creation()
 {
     struct FiFileContainer *con = fi_file_container_init();
     
-    fi_return_if_fail(NULL != con, "Failed to create container");
+    fi_return_fail_if_not(NULL != con, "Failed to create container");
 
     fi_file_container_destroy(con);
     
@@ -64,15 +64,15 @@ FI_TEST_RESULT test_file_container_push_data()
 {
     struct FiFileContainer *con = fi_file_container_init();
     
-    fi_return_if_fail(NULL != con, "Failed to create container");
+    fi_return_fail_if_not(NULL != con, "Failed to create container");
     
     add_files_to_create_outside(con);
     
-    fi_return_if_fail(fi_file_container_size(con) == FILE_COUNT,
+    fi_return_fail_if_not(fi_file_container_size(con) == FILE_COUNT,
                       "Wrong number of files added");
     struct FiFileInfo *file = NULL;
     fi_container_each(con, file) {
-        fi_return_if_fail(strcmp(file->extension, ".docx") == 0,
+        fi_return_fail_if_not(strcmp(file->extension, ".docx") == 0,
                         fi_got_msg("We got %s", file->extension));
     }
     

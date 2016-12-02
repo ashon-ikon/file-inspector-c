@@ -21,9 +21,9 @@
  * SOFTWARE.
  * 
  */
-#include <malloc.h>
-#include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "file-conflict.h"
 #include "debug.h"
@@ -32,9 +32,9 @@
 static bool fi_config_group_free_cb(struct FiList *file);
 
 
-struct FiConfGroup *fi_config_group_new()
+struct FiConfGroup *fi_conflict_group_new()
 {
-    struct FiConfGroup *grp = malloc(sizeof *grp);
+    struct FiConfGroup *grp = calloc(1, sizeof *grp);
     if (! grp) {
         fi_log_message(FI_DEBUG_LEVEL_ERROR,
                       "Failed to create conflict group list");
@@ -42,15 +42,18 @@ struct FiConfGroup *fi_config_group_new()
     }
     
     grp->files = NULL;
+
+    return grp;
 }
 
-void fi_config_group_free(struct FiConfGroup *grp)
+void fi_conflict_group_free(struct FiConfGroup *grp)
 {
     if (! grp)
         return;
 
     // Free the list
     fi_list_free(grp->files);
+
     free(grp);
 }
 
@@ -59,17 +62,20 @@ static bool fi_config_group_free_cb(struct FiList *node)
     fi_file_destroy(fi_list_data_ptr(node, struct FiFileInfo));
 }
 
-void fi_config_group_add(struct FiConfGroup *self, struct FiFileInfo *file)
+void fi_conflict_group_add(struct FiConfGroup *self, struct FiFileInfo *file)
 {
     if (! self || ! file)
         return;
 
-    fi_list_append(self->files, fi_list_new(file, fi_config_group_free_cb));
+    if (! fi_list_count(self->files))
+        self->files = fi_list_new(file, fi_config_group_free_cb);
+    else 
+        fi_list_append(self->files, fi_list_new(file, fi_config_group_free_cb));
 }
 
-bool fi_config_group_has(struct FiConfGroup *self, struct FiFileInfo *file)
+bool fi_conflict_group_has(struct FiConfGroup *self, struct FiFileInfo *file)
 {
-    for (struct FiList *c = fi_list_head(self->files); c; c->next) {
+    for (struct FiList *c = fi_list_head(self->files); c; c = c->next) {
         if ((struct FiFileInfo *)fi_list_data_ptr(c, struct FiList) == file)
             return true;
     }

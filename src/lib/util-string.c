@@ -117,27 +117,43 @@ int fi_strcmp0(const char const *s1, const char const *s2)
     return strcmp(s1, s2) == 0;
 }
 
-char *itoa(int i, char *b)
+/**
+ * 
+ * @param i
+ * @param str
+ * @param base
+ * Only bases 2 to 16 are supported
+ * @see Inspired by http://stackoverflow.com/a/9660930
+ */
+char *itoa(const int i, char *str, unsigned base)
 {
-    char const digit[] = "0123456789";
-    char* p = b;
-    if (i < 0) {
+    char const digit[] = "0123456789ABCDEF";
+    char* p = str;
+    int n = i;
+
+    if (base < 2 || base > 16){
+        *p = '\0';
+        return str;
+    }
+
+    if (n < 0) {
         *p++ = '-';
-        i *= -1;
+        n *= -1;
     }
     
     // Shift char pointer to the least 10's
-    int shifter = i;
+    int shifter = n;
     do { 
         ++p;
-        shifter = shifter / 10;
+        shifter = shifter / base;
     } while (shifter);
-    
-    *p = '\0'; // Terminate the string
-    do { //Move back, inserting digits as u go
-        *--p = digit[i % 10];
-        i = i / 10;
-    } while (i);
 
-    return b;
+    *p = '\0'; // Terminate the string
+    do { 
+        //Move back, inserting digits as u go
+        *--p = digit[n % base];
+        n = n / base;
+    } while (n);
+
+    return str;
 }
