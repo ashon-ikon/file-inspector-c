@@ -31,7 +31,6 @@
 #include "file.h"
 #include "lib-common.h"
 #include "list.h"
-#include "ref.h"
 
 FI_BEGIN_DECLS
 
@@ -57,8 +56,6 @@ struct FiConfFile {
 struct FiConfGroup {
     struct FiList *files; /* List of FiConfFile / FiFileInfo */
     unsigned       conflict_type_id;
-    bool           common_container;
-    struct FiRef   ref;
 };
 
 
@@ -70,12 +67,7 @@ struct FiConfGroup *fi_conflict_group_new();
 void fi_conflict_group_free(struct FiConfGroup *grp);
 void fi_conflict_group_add(struct FiConfGroup *self, struct FiFileInfo *file);
 bool fi_conflict_group_has(struct FiConfGroup *self, struct FiFileInfo *file);
-bool fi_conflict_group_copy(void const *src, void *dst, unsigned n);
 
-void fi_conflict_array_init(struct FiConflictArray *arr);
-void fi_conflict_array_free(struct FiConflictArray *arr);
-void fi_conflict_array_add_group(struct FiConflictArray *arr,
-                                 struct FiConfGroup *grp);
 
 FI_END_DECLS
 

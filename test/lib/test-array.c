@@ -38,15 +38,15 @@ FI_TEST_RESULT test_array_simple_allocation()
     
     fi_array_push(arr, &t); t++;
     fi_return_fail_if_not(fi_array_get(arr, int, 0) == 0,
-                        fi_make_msg("We got %d", fi_array_get(arr, int, 0)));
+                        fi_got_msg("We got %d", fi_array_get(arr, int, 0)));
     
     fi_array_push(arr, &t); t++;
     fi_return_fail_if_not(fi_array_get(arr, int, 1) == 1,
-                        fi_make_msg("We got %d", fi_array_get(arr, int, 1)));
+                        fi_got_msg("We got %d", fi_array_get(arr, int, 1)));
     
     fi_array_push(arr, &t); t++;
     fi_return_fail_if_not(fi_array_get(arr, int, 2) == 2,
-                        fi_make_msg("We got %d", fi_array_get(arr, int, 2)));
+                        fi_got_msg("We got %d", fi_array_get(arr, int, 2)));
     
     fi_array_copy(arr, arr_cpy);
     fi_return_fail_if_not(fi_array_size(arr) == fi_array_size(arr_cpy),
@@ -55,18 +55,18 @@ FI_TEST_RESULT test_array_simple_allocation()
     
     fi_array_push(arr_cpy, &t);
     fi_return_fail_if_not(fi_array_get(arr_cpy, int, 3) == 3,
-                        fi_make_msg("We got %d", fi_array_get(arr_cpy, int, 3)));
+                        fi_got_msg("We got %d", fi_array_get(arr_cpy, int, 3)));
     
     t = 1000;
     fi_array_insert(arr_cpy, &t, 2);
     fi_return_fail_if_not(fi_array_get(arr_cpy, int, 2) == 1000,
-                        fi_make_msg("We got %d", fi_array_get(arr, int, 2)));
+                        fi_got_msg("We got %d", fi_array_get(arr, int, 2)));
 
     fi_return_fail_if_not(*fi_array_get_ptr(arr_cpy, int, 2) == 1000,
-                        fi_make_msg("We got %d", *fi_array_get_ptr(arr, int, 2)));
+                        fi_got_msg("We got %d", *fi_array_get_ptr(arr, int, 2)));
 
-    fi_array_free(arr);
-    fi_array_free(arr_cpy);
+    fi_array_destroy(arr);
+    fi_array_destroy(arr_cpy);
     
     return FI_TEST_OKAY;
 }
@@ -84,10 +84,10 @@ FI_TEST_RESULT test_array_each_loop()
     int *p = NULL;
     fi_array_each(arr, int, p) {
         fi_return_fail_if_not(t++ == *p,
-            fi_make_msg("We got %d, instead of %d", *p, (t - 1)));
+            fi_got_msg("We got %d, instead of %d", *p, (t - 1)));
     }
     
-    fi_array_free(arr);
+    fi_array_destroy(arr);
     
     return FI_TEST_OKAY;
 }

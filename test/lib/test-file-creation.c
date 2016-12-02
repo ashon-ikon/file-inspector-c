@@ -48,13 +48,13 @@ FI_TEST_RESULT test_file_info_creation()
     fi_file_copy(&file, &file2);
    
     fi_return_fail_if_not(strcmp(file2.extension, test_extension) == 0,
-                        fi_make_msg("We got %s", file2.extension));
+                        fi_got_msg("We got %s", file2.extension));
 
     fi_return_fail_if_not(strcmp(file2.path, test_path) == 0,
-                        fi_make_msg("We got %s", file2.path));
+                        fi_got_msg("We got %s", file2.path));
     
     fi_return_fail_if_not(strcmp(file2.filename, test_filename) == 0,
-                        fi_make_msg("We got %s", file2.filename));
+                        fi_got_msg("We got %s", file2.filename));
     
     fi_file_destroy(&file);
     fi_file_destroy(&file2);
