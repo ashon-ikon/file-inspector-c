@@ -26,11 +26,14 @@
 #ifndef REF_H
 #define REF_H
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Greatly inspired by Chris Wellon's demonstration of the same
+ * http://nullprogram.com/blog/2015/02/17/
  */
 #ifndef container_of
 #define container_of(ptr, type, member) ((type *) \

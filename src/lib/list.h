@@ -28,6 +28,7 @@
 #include <stdbool.h>
 
 #include "lib-common.h"
+#include "ref.h"
 
 FI_BEGIN_DECLS
         
@@ -35,6 +36,7 @@ FI_BEGIN_DECLS
 struct FiList {
     struct FiList *prev;
     struct FiList *next;
+    struct FiRef   ref;
     void          *data;
     bool (*destroy_callback)(struct FiList *node);
 };
@@ -42,8 +44,8 @@ struct FiList {
 // Data Access
 #define fi_list_data_ptr(n, t)      ((t*)(void *) (n)->data)
 
-struct FiList *fi_list_new(void *data,
-                           bool (*fn)(struct FiList * n));
+struct FiList *fi_list_new(void  *data,
+                           bool (*destroy)(struct FiList * n));
 void fi_list_free(struct FiList *list);
 void fi_list_append(struct FiList *list, struct FiList *next);
 void fi_list_prepend(struct FiList *list, struct FiList *prev);
