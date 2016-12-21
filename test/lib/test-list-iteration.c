@@ -43,13 +43,13 @@ FI_TEST_RESULT test_list_creation()
 FI_TEST_RESULT test_list_append()
 {
     struct FiList *list = fi_list_new(NULL, NULL);
-    
+
     for (unsigned char i = 0; i < LIST_COUNT; i++) {
         struct FiList *li = fi_list_new(NULL, NULL);
         fi_list_append(list, li);
 
         fi_return_fail_if_not(fi_list_count(li) == (i + 2), // One added before
-            fi_got_msg("Wrong count of items in a list. Got %d, Expected %d",
+            fi_make_msg("Wrong count of items in a list. Got %d, Expected %d",
                 fi_list_count(li), (i + 2)
             ));
     }
@@ -68,7 +68,7 @@ FI_TEST_RESULT test_list_prepend()
         fi_list_prepend(list, li);
 
         fi_return_fail_if_not(fi_list_count(li) == (i + 2), // One added before
-            fi_got_msg("Wrong count of items in a list. Got %d, Expected %d",
+            fi_make_msg("Wrong count of items in a list. Got %d, Expected %d",
                 fi_list_count(li), (i + 2)
             ));
     }
@@ -92,11 +92,13 @@ FI_TEST_RESULT test_list_iteration()
     }
 
     t  = 15;
-    for (li = fi_list_head(list); li != NULL; li = fi_list_next(li) ) {
+    for (li = list; li->prev; li = li->prev);
+    // Got the other direction
+    for (; li != NULL; li = li->next ) {
         
         pint = fi_list_data_ptr(li, int);
         fi_return_fail_if_not(*pint == t--,
-            fi_got_msg("Failed to get stored value. Got %d, Expected %d",
+            fi_make_msg("Failed to get stored value. Got %d, Expected %d",
                 *pint, t
             ));
     }
@@ -130,7 +132,7 @@ FI_TEST_RESULT test_list_each_func()
     data_buff[0] = '\0'; // Zero out the string
     fi_list_each(list, each_callback);
     fi_return_fail_if_not(12 == strlen(data_buff),
-        fi_got_msg("Foreach method is faulty. Got %lu, Expected %d",
+        fi_make_msg("Foreach method is faulty. Got %lu, Expected %d",
             strlen(data_buff), 12
         ));
     

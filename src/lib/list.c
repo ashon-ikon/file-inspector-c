@@ -27,8 +27,12 @@
 #include "list.h"
 #include "debug.h"
 
-struct FiList *fi_list_new(void *data,
-                           bool (*fn)(struct FiList * n))
+static void fi_list_ref_callback(const struct FiRef *ref);
+static struct FiList *_fi_list_head(struct FiList *list);
+static struct FiList *_fi_list_tail(struct FiList *list);
+
+struct FiList *fi_list_new(void  *data,
+                           bool (*destroy)(struct FiList * n))
 {
     struct FiList *list = malloc(sizeof *list);
     if (! list) {
@@ -40,7 +44,9 @@ struct FiList *fi_list_new(void *data,
     list->prev = NULL;
     list->next = NULL;
     list->data = data ? data : NULL;
-    list->destroy_callback = fn ? fn : NULL;
+    list->ref.count = 1;
+    list->ref.free  = fi_list_ref_callback;
+    list->destroy_callback = destroy ? destroy : NULL;
     
     return list;
 }
@@ -50,18 +56,31 @@ void fi_list_free(struct FiList *list)
     if (! list)
         return;
 
+    list = _fi_list_tail(list); // Move to the tail
+    fi_ref_dec(&list->ref);
+}
+
+#include <stdio.h>
+static void fi_list_ref_callback(const struct FiRef *ref)
+{
+    struct FiList *list = container_of(ref, struct FiList, ref);
+
+    if (! list)
+        return;
+
     // Traverse through the chain and free resources
-    struct FiList *tail = fi_list_tail(list);
-    struct FiList *prev  = fi_list_prev(tail);
+    struct FiList *prev = list->prev;
 
-    do {
-        if (tail && tail->destroy_callback)
-            tail->destroy_callback(tail);
+    if (list->destroy_callback)
+        list->destroy_callback(list);
 
-        prev = fi_list_prev(tail);
-        free(tail);
+    free(list);
 
-    } while (tail = prev);
+    if (prev) {
+        prev->next = NULL;
+        fi_ref_dec(&prev->ref);
+    }
+
 }
 
 void fi_list_append(struct FiList *list, struct FiList *next)
@@ -75,8 +94,8 @@ void fi_list_append(struct FiList *list, struct FiList *next)
         list->next = NULL;
         return;
     }
-    
-    struct FiList *tail = fi_list_tail(list);
+
+    struct FiList *tail = _fi_list_tail(list);
     tail->next = next;
     next->prev = tail;
 }
@@ -93,14 +112,14 @@ void fi_list_prepend(struct FiList *list, struct FiList *prev)
         return;
     }
     
-    struct FiList *head = fi_list_head(list);
+    struct FiList *head = _fi_list_head(list);
     head->prev = prev;
     prev->next = head;
 }
 
 unsigned fi_list_count(struct FiList *list)
 {
-    struct FiList *cur = fi_list_head(list);
+    struct FiList *cur = _fi_list_head(list);
 
     unsigned c = 0;
 
@@ -118,9 +137,9 @@ struct FiList *fi_list_head(struct FiList *list)
     if (! list)
         return NULL;
 
-    struct FiList *cur = list;
-    
-    for (; cur->prev; cur = cur->prev);
+    struct FiList *cur = _fi_list_head(list);
+
+    fi_ref_inc(&cur->ref);
 
     return cur;
 }
@@ -130,9 +149,29 @@ struct FiList *fi_list_tail(struct FiList *list)
     if (! list)
         return NULL;
 
+    struct FiList *cur = _fi_list_tail(list);
+
+    fi_ref_inc(&cur->ref);
+
+    return cur;
+}
+
+struct FiList *_fi_list_head(struct FiList *list)
+{
     struct FiList *cur = list;
     
-    for (; cur && cur->next; cur = cur->next);
+    for (; cur->prev; cur = cur->prev);
+
+    return cur;
+}
+
+struct FiList *_fi_list_tail(struct FiList *list)
+{
+    struct FiList *cur = list;
+    
+    while (cur->next) {
+        cur = cur->next;
+    }
 
     return cur;
 }
@@ -149,6 +188,11 @@ void fi_list_each(struct FiList *list, void (*list_func) (void *data))
     if (! cur || ! list_func)
         return;
 
-    for (; cur; cur = fi_list_next(cur))
+    struct FiList *last = NULL;
+    while(cur) {
         list_func(cur->data);
+        last = cur;
+        cur = fi_list_next(cur); // Advance it
+        fi_ref_dec(&last->ref); // Free last
+    }
 }
