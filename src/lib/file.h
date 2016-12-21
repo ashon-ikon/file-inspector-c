@@ -86,6 +86,7 @@ struct FiFileInfo {
     char               *path;
     char               *extension;
     off_t               size_byte;
+    bool                free_container;
     FiFileType          type;
     struct timespec     modified_at;
     struct FiRef        ref_count;
