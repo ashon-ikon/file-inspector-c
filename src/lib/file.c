@@ -63,7 +63,7 @@ void fi_file_destroy(struct FiFileInfo * file)
 {
     if (! file)
         return;
-
+    
     fi_ref_dec(&file->ref_count);
 }
 
@@ -74,7 +74,7 @@ static void fi_file_info_ref_destory(const struct FiRef *ref)
     free(file->filename);
     free(file->path);
     free(file->extension);
-
+    
     if (file->free_container)
         free(file);
 }
