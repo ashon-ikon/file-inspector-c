@@ -119,7 +119,7 @@ void fi_list_prepend(struct FiList *list, struct FiList *prev)
 
 unsigned fi_list_count(struct FiList *list)
 {
-    struct FiList *cur = _fi_list_head(list);
+    struct FiList *cur = list != NULL ? _fi_list_head(list) : NULL;
 
     unsigned c = 0;
 
