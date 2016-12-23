@@ -60,7 +60,6 @@ void fi_list_free(struct FiList *list)
     fi_ref_dec(&list->ref);
 }
 
-#include <stdio.h>
 static void fi_list_ref_callback(const struct FiRef *ref)
 {
     struct FiList *list = container_of(ref, struct FiList, ref);
