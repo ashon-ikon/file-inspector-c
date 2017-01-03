@@ -55,20 +55,28 @@ struct FiArray *fi_array_new_n(size_t unit_size,
                                fi_array_data_cp_fn cp,
                                FI_TYPE_SIZE n);
 struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp);
+void  fi_array_free(struct FiArray *arr);
+void  fi_array_ref_dec(const struct FiRef *ref);
 void  fi_array_destroy(struct FiArray *arr);
 void  fi_array_copy(const struct FiArray *src, struct FiArray *dst);
 short fi_array_push(struct FiArray *arr, void const *data);
+void *_fi_array_pop(struct FiArray *arr);
 short fi_array_insert(struct FiArray *arr, void const *data, FI_TYPE_SIZE i);
+void fi_array_set_cleanup_notifier(struct FiArray *arr, 
+                                   void  (*fn)(struct FiArray *));
 
 void *_fi_array_get_begin(struct FiArray *arr);
 void *_fi_array_get_next(struct FiArray *arr);
+void *_fi_array_get_prev(struct FiArray *arr);
 void *_fi_array_get_end(struct FiArray *arr);
 
+#define fi_array_pop(arr, t)    ((t *)_fi_array_pop((arr)))
 #define fi_array_get_ptr(a, t, i) ((t*)( (a)->data + ( (a)->unit_size * (i) )) )
 #define fi_array_get(a, t, i) ( ((t*)(void *)(a)->data) [(i)] )
 
 #define fi_array_get_ptr_being(a, t)    ( (t*) _fi_array_get_begin((a)) )
 #define fi_array_get_ptr_next(a, t)     ( (t*) _fi_array_get_next((a)) )
+#define fi_array_get_ptr_prev(a, t)     ( (t*) _fi_array_get_prev((a)) )
 #define fi_array_get_ptr_end(a, t)      ( (t*) _fi_array_get_end((a)) )
 
 
