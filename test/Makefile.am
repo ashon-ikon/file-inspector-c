@@ -3,9 +3,9 @@
 TEST_CFLAGS= -g -Wall -Werror -std=c99
 
 check_PROGRAMS=test-inspector-lib-array \
-	       test-inspector-lib-list-traversing \
 	       test-inspector-lib-file-creation \
 	       test-inspector-lib-file-container \
+	       test-inspector-lib-list-traversing \
 	       test-inspector-lib-conflict-list-iteration \
 	       test-inspector-lib-util-string
 
