@@ -85,7 +85,8 @@ struct FiArray *fi_array_new_n(size_t unit_size,
     arr->capacity  = 0;
     arr->len       = 0;
     arr->cursor    = -1;
-    arr->ref_count = (struct FiRef){0, NULL};
+    arr->ref_count.count = 0;
+    arr->ref_count.free  = fi_array_ref_dec;
     arr->copy_func = cp == NULL ? fi_array_data_copy : cp;
     fi_array_expand_container(arr, fi_mem_best_size(unit_size, n));
     
@@ -94,15 +95,23 @@ struct FiArray *fi_array_new_n(size_t unit_size,
     return arr;
 }
 
-void fi_array_destroy(struct FiArray *arr)
+void fi_array_free(struct FiArray *arr)
 {
-    if (arr) {
-        if (arr->cleanup_notify)
-            arr->cleanup_notify(arr);
+    fi_ref_dec(&arr->ref_count);
+}
 
-        free(arr->data);
-        free(arr);
+void fi_array_ref_dec(const struct FiRef *ref)
+{
+    struct FiArray *arr = container_of(ref, struct FiArray, ref_count);
+    if (! arr) {
+        return;
     }
+
+    if (arr->cleanup_notify)
+        arr->cleanup_notify(arr);
+
+    free(arr->data);
+    free(arr);
 }
 
 static bool fi_array_data_copy(const void const *src, void* dest, unsigned n)
@@ -146,7 +155,7 @@ static bool fi_array_expand_container(struct FiArray * cur, unsigned n)
 }
 
 /**
- * Adds data to array
+ * Adds data to the end of array
  * @param arr
  * @param data
  */
@@ -160,6 +169,26 @@ short fi_array_push (struct FiArray *arr, void const *data)
             return FI_FUNC_FAIL;
 
     return fi_array_insert(arr, data, arr->len++);
+
+}
+
+/**
+ * remove data from array
+ * @param arr
+ * @param data
+ */
+void *_fi_array_pop(struct FiArray *arr)
+{
+    if (! arr)
+        return NULL;
+
+    if (arr->len < 1) 
+        return NULL;
+    
+    void *data = fi_data_get_offset(arr, --arr->len);
+    // ToDo: Resize array
+    
+    return data;
 
 }
 
@@ -206,6 +235,27 @@ void *_fi_array_get_begin(struct FiArray *arr)
         return NULL;
     
     arr->cursor = 0;
+    
+    return fi_array_get_ptr(arr, void *, arr->cursor);
+}
+
+/**
+ * Returns the prev data. NULL if cursor is out of scope
+ * 
+ * @param arr
+ * @return 
+ */
+void *_fi_array_get_prev(struct FiArray *arr)
+{
+    return NULL;
+    if (! arr || arr->cursor < 0)
+        return NULL;
+    arr->cursor--;
+
+    if (arr->cursor < 0) {
+        arr->cursor = 0;
+        return NULL;
+    }
     
     return fi_array_get_ptr(arr, void *, arr->cursor);
 }

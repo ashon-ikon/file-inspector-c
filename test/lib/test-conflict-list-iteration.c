@@ -43,6 +43,7 @@ FI_TEST_RESULT test_adding_files_to_conflict_group()
     
     struct FiFileInfo file1, file2;
     
+    // Add some file information
     fi_file_init(&file1);
     fi_file_init(&file2);
     
@@ -52,6 +53,9 @@ FI_TEST_RESULT test_adding_files_to_conflict_group()
     fi_return_fail_if_not(2 == fi_list_count(grp->files),
                         "Wrong number of items added");
     fi_conflict_group_free(grp);
+    
+    fi_file_destroy(&file1);
+    fi_file_destroy(&file2);
 
     return FI_TEST_OKAY;
 }
@@ -66,14 +70,14 @@ FI_TEST_RESULT test_checking_group_for_file()
     fi_file_init(&file2);
     fi_file_init(&file3);
     fi_file_init(&file4);
-    
+
     fi_file_set_props(&file2,
             "IMAGE002",
             "/lorem/ipsum/",
             "tiff",
             (1024 * 63),
             (struct timespec){200, 300},
-            NULL);
+            file2.ref_count.free);
             
     fi_file_set_props(&file3,
             "IMAGE003",
@@ -81,7 +85,7 @@ FI_TEST_RESULT test_checking_group_for_file()
             "tiff",
             (1024 * 63),
             (struct timespec){200, 300},
-            NULL);
+            file3.ref_count.free);
             
     fi_file_set_props(&file4,
             "IMAGE004",
@@ -89,7 +93,7 @@ FI_TEST_RESULT test_checking_group_for_file()
             "tiff",
             (1024 * 63),
             (struct timespec){200, 300},
-            NULL);
+            file4.ref_count.free);
 
     
     fi_conflict_group_add(grp, &file1);
@@ -103,11 +107,62 @@ FI_TEST_RESULT test_checking_group_for_file()
     fi_return_fail_if_not(! fi_conflict_group_has(grp, &file3),
                         "File 3 should NOT be part of the group");
 
+    fi_file_destroy(&file1);
+    fi_file_destroy(&file2);
     fi_file_destroy(&file3);
+    fi_file_destroy(&file4);
+
     fi_conflict_group_free(grp);
 
     return FI_TEST_OKAY;
 }
+
+
+FI_TEST_RESULT test_conflict_groups_array_creation()
+{
+    struct FiConflictArray confl_array;
+    fi_conflict_array_init(&confl_array);
+    
+    struct FiConfGroup *grp = fi_conflict_group_new();
+    
+    struct FiFileInfo file1, file2;
+
+    fi_file_init(&file1);
+    fi_file_init(&file2);
+    
+    fi_file_set_props(&file1,
+            "IMAGE201",
+            "/lorem/ipsum/",
+            "tiff",
+            (1024 * 256),
+            (struct timespec){200, 300},
+            file1.ref_count.free);
+            
+    fi_file_set_props(&file2,
+            "IMAGE202",
+            "/lorem/ipsum/",
+            "tiff",
+            (1024 * 184),
+            (struct timespec){200, 300},
+            file2.ref_count.free);
+    
+    fi_conflict_group_add(grp, &file1);
+    fi_conflict_group_add(grp, &file2);
+    
+    fi_conflict_array_add_group(&confl_array, grp);
+    
+    fi_return_fail_if_not(2 == fi_list_count(grp->files),
+                          "Wrong number of items added");
+    
+    fi_file_destroy(&file1);
+    fi_file_destroy(&file2);
+    fi_conflict_group_free(grp);
+
+    fi_conflict_array_free(&confl_array);
+
+    return FI_TEST_OKAY;
+}
+
 
 int main()
 {
@@ -115,6 +170,7 @@ int main()
         {"test_conflict_group_creation", test_conflict_group_creation},
         {"test_adding_files_to_conflict_group", test_adding_files_to_conflict_group},
         {"test_checking_group_for_file", test_checking_group_for_file},
+        {"test_conflict_groups_array_creation", test_conflict_groups_array_creation},
         {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
     };
     

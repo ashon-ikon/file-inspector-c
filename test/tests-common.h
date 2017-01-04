@@ -52,7 +52,7 @@ typedef struct {
     test_func test;
 } FiTestFunc;
 
-extern char *fi_got_msg(char *fmt, ...) fi_checkprintf;
+extern char *fi_make_msg(char *fmt, ...) fi_checkprintf;
 
 #define fi_assert_true(con) ( (con) == true ? FI_TEST_OKAY : FI_TEST_FAIL)
 #define fi_assert_fail(con) fi_assert_true(! (con) )

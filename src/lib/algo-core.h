@@ -47,6 +47,7 @@ struct FiAlgo {
     struct FiConflictArray *(*extract_conflicts) (struct FiAlgo *self,
                                          struct FiFileContainer *all_files);
 };
+
 /*
  * 
  *  This will help visualize the relationship between the structures

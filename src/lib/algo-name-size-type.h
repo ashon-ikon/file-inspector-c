@@ -1,5 +1,5 @@
-/* 
- * File:   ref.h
+/*
+ * File:   algo-name-size-type.h
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,51 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * 
- * Created on 4 November 2016, 5:03 PM
  */
 
-#ifndef REF_H
-#define REF_H
+#ifndef FINSPECTOR_ALGO_NAME_SIZE_TYPE_H
+#define FINSPECTOR_ALGO_NAME_SIZE_TYPE_H
 
-#include <stddef.h>
+#include "lib-common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Greatly inspired by Chris Wellon's demonstration of the same
- * http://nullprogram.com/blog/2015/02/17/
- */
-#ifndef container_of
-#define container_of(ptr, type, member) ((type *) \
-    ((char *)(1 ? (ptr) : &((type *)0)->member) - offsetof(type, member)))
-#endif    
 
-struct FiRef {
-    int  count;
-    void (*free)(const struct FiRef *ref);
-};
 
-static inline int fi_ref_inc(const struct FiRef *ref)
-{
-    int t = ((struct FiRef *)ref)->count++;
-
-    return t >= 0 ? 0 : -1;
-}
-
-static inline int fi_ref_dec(const struct FiRef *ref)
-{
-    int t = --((struct FiRef *)ref)->count;
-
-    if (t == 0 && ((struct FiRef *)ref)->free)
-        ((struct FiRef *)ref)->free(ref);
-    
-    return t >= 0 ? 0 : -1;
-}
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* REF_H */
+#endif /* FINSPECTOR_ALGO_NAME_SIZE_TYPE_H */
 

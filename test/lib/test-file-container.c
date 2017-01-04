@@ -73,7 +73,8 @@ FI_TEST_RESULT test_file_container_push_data()
     struct FiFileInfo *file = NULL;
     fi_container_each(con, file) {
         fi_return_fail_if_not(strcmp(file->extension, ".docx") == 0,
-                        fi_got_msg("We got %s", file->extension));
+                        fi_make_msg("We got %s", file->extension));
+        fi_ref_dec(&file->ref_count);
     }
     
     // Free the 

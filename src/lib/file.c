@@ -32,6 +32,7 @@ const struct FiFileInfo EMPTY_FILE = {
     NULL,      /* file_path */
     NULL,      /* file_extension */
     0L,        /* size */
+    false,     /* free_container */
     0,         /* file_type */
    {0, 0},     /* struct timespec */
    {0, NULL}   /* struct FiRef */
@@ -50,6 +51,8 @@ void fi_file_init(struct FiFileInfo  *file)
         return;
 
     *file = EMPTY_FILE;
+    file->ref_count.free = fi_file_info_ref_destory;
+    fi_ref_inc(&file->ref_count);
 }
 
 /**
@@ -60,11 +63,20 @@ void fi_file_destroy(struct FiFileInfo * file)
 {
     if (! file)
         return;
+    
+    fi_ref_dec(&file->ref_count);
+}
+
+static void fi_file_info_ref_destory(const struct FiRef *ref)
+{
+    struct FiFileInfo *file = container_of(ref, struct FiFileInfo, ref_count);
 
     free(file->filename);
     free(file->path);
     free(file->extension);
-
+    
+    if (file->free_container)
+        free(file);
 }
 
 bool fi_file_copy_proxy(void const *src, void *dst, unsigned n)
@@ -112,12 +124,13 @@ void fi_file_set_props(struct FiFileInfo *file,
                        struct timespec modified_at,
                        void (*free)(const struct FiRef *ref))
 {
-    file->filename       = fi_strndup(filename, fi_strlen(filename));
-    file->path           = fi_strndup(path, fi_strlen(path));
-    file->extension      = fi_strndup(extension, fi_strlen(extension));
-    file->size_byte      = size;
-    file->modified_at    = modified_at;
-    file->ref_count.free = free;
+    file->filename        = fi_strndup(filename, fi_strlen(filename));
+    file->path            = fi_strndup(path, fi_strlen(path));
+    file->extension       = fi_strndup(extension, fi_strlen(extension));
+    file->size_byte       = size;
+    file->modified_at     = modified_at;
+    file->ref_count.free  = free;
+    file->ref_count.count = 0;
     fi_ref_inc(&file->ref_count);
 
 }
@@ -156,7 +169,7 @@ void fi_file_container_destroy(struct FiFileContainer *container)
         fi_file_destroy(file);
     }
 
-    fi_array_destroy(container->array);
+    fi_array_ref_dec(&container->array->ref_count);
 
     free(container);
 }
@@ -196,21 +209,40 @@ struct FiFileInfo *fi_file_container_get_at(struct FiFileContainer *con, unsigne
     if (i < 0 || i > fi_file_container_size(con))
         return NULL;
 
-    return fi_array_get_ptr(con->array, struct FiFileInfo, i);
+    struct FiFileInfo *file = fi_array_get_ptr(con->array,
+                                               struct FiFileInfo, i);
+    fi_ref_inc(&file->ref_count);
+    
+    return file;   
 }
 
 struct FiFileInfo *fi_file_container_get_begin(struct FiFileContainer *con)
 {    
-    return fi_array_get_ptr_being(con->array, struct FiFileInfo);
+    struct FiFileInfo *file = fi_array_get_ptr_being(con->array,
+                                                     struct FiFileInfo);
+    if (file)
+        fi_ref_inc(&file->ref_count);
+    
+    return file;
 }
 
 
 struct FiFileInfo *fi_file_container_get_next(struct FiFileContainer *con)
 {
-    return fi_array_get_ptr_next(con->array, struct FiFileInfo);
+    struct FiFileInfo *file = fi_array_get_ptr_next(con->array,
+                                                    struct FiFileInfo);
+    if (file)
+        fi_ref_inc(&file->ref_count);
+    
+    return file;
 }
 
 struct FiFileInfo *fi_file_container_get_end(struct FiFileContainer *con)
 {
-    return fi_array_get_ptr_end(con->array, struct FiFileInfo);
+    struct FiFileInfo *file = fi_array_get_ptr_end(con->array,
+                                                   struct FiFileInfo);
+    if (file)
+        fi_ref_inc(&file->ref_count);
+    
+    return file;
 }
