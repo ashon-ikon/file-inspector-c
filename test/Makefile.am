@@ -5,6 +5,7 @@ TEST_CFLAGS= -g -Wall -Werror -std=c99
 check_PROGRAMS=test-inspector-lib-array \
 	       test-inspector-lib-file-creation \
 	       test-inspector-lib-file-container \
+	       test-inspector-lib-file-manager \
 	       test-inspector-lib-list-traversing \
 	       test-inspector-lib-conflict-list-iteration \
 	       test-inspector-lib-util-string
@@ -55,6 +56,14 @@ test_inspector_lib_util_string_LDADD= $(top_builddir)/lib/libdetector.la
 test_inspector_lib_util_string_CPPFLAGS=$(FI_DEPS_CFLAGS)
 test_inspector_lib_util_string_CFLAGS=$(TEST_CFLAGS)
 
+## File manager
+test_inspector_lib_file_manager_SOURCES=  \
+	test-suite.c     \
+	lib/test-file-manager.c 
+
+test_inspector_lib_file_manager_LDADD= $(top_builddir)/lib/libdetector.la
+test_inspector_lib_file_manager_CPPFLAGS=$(FI_DEPS_CFLAGS)
+test_inspector_lib_file_manager_CFLAGS=$(TEST_CFLAGS)
 
 ## File conflict unit tests
 test_inspector_lib_conflict_list_iteration_SOURCES=  \
