@@ -59,7 +59,7 @@ bool fi_file_manager_read_dir(const char const       *path,
     
     if (! (dir = opendir(path))) {
         fi_log_message(FI_DEBUG_LEVEL_WARN,
-                       "Could not read the specified path %s", path);
+                       "Count not read the specified path %s", path);
         return false;
     }
     
@@ -80,6 +80,7 @@ bool fi_file_manager_read_dir(const char const       *path,
                 fi_file_manager_read_dir(full_filename, con, recursive);
                 free(full_filename);
             }
+            printf("Current file count %d\n", file.ref_count.count);
             fi_file_destroy(&file);
         }
     }
