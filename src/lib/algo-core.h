@@ -25,6 +25,8 @@
 #ifndef FINSPECTOR_LIB_ALGO_CORE_H
 #define FINSPECTOR_LIB_ALGO_CORE_H
 
+#include <stdbool.h>
+
 #include "array.h"
 #include "lib-common.h"
 #include "file.h"
@@ -72,8 +74,7 @@ struct FiAlgo {
 struct FiAlgoCollection {
     struct FiList  *algos;
     struct FiConflictArray * (*get_conflicts)(void);
-    char                     (*add)(struct FiAlgoCollection *self,
-                               struct FiAlgo *algorithm);
+    struct FiConflictArray *conflicts;
 };
 
 void fi_algo_collection_init(struct FiAlgoCollection *coll);
