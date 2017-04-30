@@ -30,6 +30,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include "debug.h"
 #include "file.h"
 #include "file-manager.h"
 #include "util-string.h"
@@ -52,10 +53,16 @@ bool fi_file_manager_read_dir(const char const       *path,
 {
     if (! path || ! con)
         return false;
-    
+
     DIR* dir;
     struct dirent *dp;
-    dir = opendir(path);
+    
+    if (! (dir = opendir(path))) {
+        fi_log_message(FI_DEBUG_LEVEL_WARN,
+                       "Could not read the specified path %s", path);
+        return false;
+    }
+    
     struct FiFileInfo file;
     char path_sep[] = {path_separator, '\0'};
     
@@ -73,7 +80,7 @@ bool fi_file_manager_read_dir(const char const       *path,
                 fi_file_manager_read_dir(full_filename, con, recursive);
                 free(full_filename);
             }
-            FI_FILE_FREE(file);
+            fi_file_destroy(&file);
         }
     }
     closedir(dir);
@@ -106,7 +113,6 @@ static bool read_file_info(const char const  *path,
     file->size_byte   = st_buff.st_size;
     file->type        = get_file_type(st_buff.st_mode);
     file->modified_at = (struct timespec) st_buff.st_mtim;
-    file->ref_count   = (struct FiRef){0, NULL};
 
     return true;
 }
@@ -138,4 +144,14 @@ static char *file_extension(const char const *filename)
     
     // Move one past the '.'
     return h ? (h + 1) : h;
+}
+
+bool fi_file_manager_copy_file(const char const *filepath,
+                               bool              remove_source)
+{
+    if (! filepath)
+        return false;
+    
+    if (remove_source)
+        ;
 }

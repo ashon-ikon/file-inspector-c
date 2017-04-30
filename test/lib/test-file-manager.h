@@ -1,8 +1,8 @@
 /* 
- * File:   file-inspector.c
+ * File:   test-file-manager.h
  * Author: yasonibare
  * 
- * Copyright (c) 2016 Yinka Asonibare
+ * Copyright (c) 2017 Yinka Asonibare
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -21,19 +21,23 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
- * Created on 28 August 2016, 10:42 PM
  */
 
-#include <stdio.h>
-#include <locale.h>
+#ifndef FINSPECTOR_TESTS_TEST_FILE_MANAGER_H
+#define FINSPECTOR_TESTS_TEST_FILE_MANAGER_H
 
-#include "file-inspector.h"
 
-int main() {
-    
-    // Set the default locale
-    setlocale(LC_CTYPE, "");
+#include "./../tests-common.h"
+#include "./../../src/lib/file-manager.h"
 
-    return 0;
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* FINSPECTOR_TESTS_TEST_FILE_MANAGER_H */
+

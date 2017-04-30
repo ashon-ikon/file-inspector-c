@@ -1,8 +1,8 @@
 /* 
- * File:   file-inspector.c
- * Author: yasonibare
+ * File:   test-file-manager.c
+ * Author: y
  * 
- * Copyright (c) 2016 Yinka Asonibare
+ * Copyright (c) 2017 Yinka 
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -21,19 +21,44 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
- * Created on 28 August 2016, 10:42 PM
  */
+#include <limits.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#include <stdio.h>
-#include <locale.h>
+#include "test-file-manager.h"
+#include "../../src/lib/util-string.h"
 
-#include "file-inspector.h"
+#define DIR_PATH_MAX  10240
 
-int main() {
+FI_TEST_RESULT test_init()
+{
     
-    // Set the default locale
-    setlocale(LC_CTYPE, "");
+    struct FiFileContainer *con = fi_file_container_init();
+    
+    char pwd[DIR_PATH_MAX];
+    char *test_path = NULL;
+    
+    getcwd(pwd, DIR_PATH_MAX);
+    test_path = fi_strconcat(2, pwd, "/test/fs/");
+    
+    fi_file_manager_read_dir(test_path, con, true);
+    fi_return_fail_if_not(NULL != con, "Failed to create new container");
 
-    return 0;
+    fi_file_container_destroy(con);
+    free(test_path);
+    
+    return FI_TEST_OKAY;
+}
+
+
+int main()
+{
+    FiTestFunc fi_tests [] = {
+        {"test_init", test_init},
+        {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
+    };
+    
+    return run(fi_tests);
 }
