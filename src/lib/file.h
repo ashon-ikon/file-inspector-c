@@ -28,6 +28,7 @@
 #include <time.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 #include <sys/types.h>
 
 #include "lib-common.h"
@@ -120,6 +121,9 @@ bool fi_file_copy_proxy(void const *src, void *dst, unsigned n); // Copy method
 
 static inline FI_TYPE_SIZE fi_file_container_size(struct FiFileContainer *con)
 {
+    if (!con)
+        return 0;
+
     return con->array->len;
 }
 
