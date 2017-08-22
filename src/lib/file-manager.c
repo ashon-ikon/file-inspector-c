@@ -66,7 +66,8 @@ static FiFileType get_file_type(const mode_t d_type);
  * @return 
  */
 bool fi_file_manager_read_dir(const char const       *path,
-                              struct FiFileContainer *con, bool recursive)
+                              struct FiFileContainer *con,
+                              bool                    recursive)
 {
     if (! path || ! con)
         return false;
