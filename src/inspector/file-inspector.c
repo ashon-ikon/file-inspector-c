@@ -25,15 +25,47 @@
  * Created on 28 August 2016, 10:42 PM
  */
 
-#include <stdio.h>
 #include <locale.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "file-inspector.h"
 
-int main() {
+/**
+ * Runs the file inspector as a CLI application
+ * @param argc
+ * @param argv
+ */
+int run_with_params(int argc, char * argv[]);
+void run_inspector();
+
+int main(int argc, char * argv[]) {
     
     // Set the default locale
     setlocale(LC_CTYPE, "");
-
+    
+    if (argc > 1) {
+        return run_with_params(argc, argv);
+    }
+    
+    
+    run_inspector();
+    
     return 0;
+}
+
+int run_with_params(int argc, char * argv[])
+{
+    return 0;
+}
+
+void run_inspector()
+{
+    struct FiFileContainer *files = fi_file_container_init();
+    
+    fi_file_manager_read_dir("./test", files, true);
+    
+    printf("We got these many files %d\n", fi_file_container_size(files));
+    
+    fi_file_container_destroy(files);
 }
