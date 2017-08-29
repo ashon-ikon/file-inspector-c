@@ -48,8 +48,26 @@ static bool read_file_info(const char const *path,
 static char *file_extension(const char const *filename);
 static FiFileType get_file_type(const mode_t d_type);
 
+/**
+ * Method responsible for reading contents of a directory
+ * 
+ * <code>
+ *         struct FiFileContainer *files = fi_file_container_init();
+ *         fi_file_manager_read_dir("/path/to/folder", files, false);
+ *
+ *         // ... do something with files
+ *
+ *         fi_file_container_destroy(files);
+ * </code>
+ * 
+ * @param path
+ * @param con
+ * @param recursive
+ * @return 
+ */
 bool fi_file_manager_read_dir(const char const       *path,
-                              struct FiFileContainer *con, bool recursive)
+                              struct FiFileContainer *con,
+                              bool                    recursive)
 {
     if (! path || ! con)
         return false;

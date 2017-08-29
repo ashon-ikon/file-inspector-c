@@ -1,5 +1,5 @@
-/* 
- * File:   lib.h
+/*
+ * File:   detector.c
  * Author: Yinka Ashon
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,25 +22,7 @@
  * 
  */
 
-#ifndef FINSPECTOR_LIB_LIB_H
-#define FINSPECTOR_LIB_LIB_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "array.h"
-#include "debug.h"
-#include "lib-common.h"
-#include "file.h"
+#include "detector.h"
 #include "file-manager.h"
-#include "util-string.h"
 
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* FINSPECTOR_LIB_LIB_H */
 
