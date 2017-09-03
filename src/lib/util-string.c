@@ -20,33 +20,93 @@
  * SOFTWARE.
  * 
  */
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "util-string.h"
 
-char * fi_rtrim(char * str, const char * impurities)
+static bool found_char_within(const char *c, const char *impurities)
 {
-    char * x = NULL;
-    return x;
+    while (*impurities != '\0') {
+        if (*c == *impurities) {
+            return true;
+        }
+        impurities++;
+    }
+
+    return false;
 }
 
+/**
+ *  Trims string str removing any occurrence of any of the impurities chars
+ *  from the rightmost parts of str
+ */
+char * fi_rtrim(char * str, const char * impurities)
+{
+    if (str == NULL || impurities == NULL)
+        return NULL;
+
+    for (size_t i = strlen(str) - 1; i >= 0; i--) {
+        if (found_char_within(&str[i], impurities)) {
+            str[i] = '\0';
+        } else {
+            // No need to keep checking
+            break;
+        }
+    }
+
+    return str;
+}
+
+/**
+ *  Trims string str removing any occurrence of any of the impurities chars
+ *  from the leftmost parts of str.
+ *  Note, this also tries to move the chars to the left for sanity sake
+ */
+#include <stdio.h>
 char * fi_ltrim(char * str, const char * impurities)
 {
-    char * x = NULL;
-    return x;
+        if (str == NULL || impurities == NULL)
+            return NULL;
+        int last_pos = -1;
+        for (size_t i = 0; i <= strlen(str); i++) {
+            if (found_char_within(&str[i], impurities)) {
+                last_pos = (int)i;
+            } else {
+                // No need to keep checking
+                break;
+            }
+        }
+
+        if (last_pos == -1) {
+                return str;
+        }
+        // Clean up for any potential leading null strings
+        char *x = str;
+        
+        last_pos++;
+        size_t len_x = strlen(&x[last_pos]);
+        char *temp = fi_strndup(&x[last_pos], len_x);
+        strncpy(str, temp, len_x + 1); // Copy over source memory
+        str[len_x] = '\0';
+        free(temp);
+
+        return str;
 }
 
 char * fi_trim(char * str, const char * impurities)
 {
-    char * x = NULL;
-    return x;
+    str = fi_rtrim(str, impurities);
+    str = fi_ltrim(str, impurities);
+
+    return str;
 }
 
 size_t fi_strlen(const char const* s)
 {
     return (! s) ? 0 : strlen(s);
-    
 }
 
 #if defined FI_NO_STRDUP_FOUND
@@ -66,9 +126,6 @@ char *_fi_strdup (const char *src)
 char *_fi_strndup(const char *src, size_t n)
 {
     char *dup = NULL;
-    const char *tmp;
-       
-    tmp = src;
     if (! src)
         return NULL;
     
