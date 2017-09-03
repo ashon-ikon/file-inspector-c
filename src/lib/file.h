@@ -93,10 +93,6 @@ struct FiFileInfo {
     struct FiRef        ref_count;
 };
 
-struct FiFileContainer {
-    struct FiArray *array;
-};
-
 #define FI_FILE_INIT(f) struct FiFileInfo (f); fi_file_init(&(f))
 #define FI_FILE_FREE(f) (f); fi_file_destroy(&(f))
 
@@ -111,31 +107,7 @@ void fi_file_set_props(struct FiFileInfo *file,
                        struct timespec modified_at,
                        void (*free)(const struct FiRef *ref));
 
-// File array
-struct FiFileContainer *fi_file_container_init();
-void fi_file_container_destroy(struct FiFileContainer *container);
-unsigned short fi_file_container_push(struct FiFileContainer *arr,
-                                      struct FiFileInfo  *info);
-
 bool fi_file_copy_proxy(void const *src, void *dst, unsigned n); // Copy method
-
-static inline FI_TYPE_SIZE fi_file_container_size(struct FiFileContainer *con)
-{
-    if (!con)
-        return 0;
-
-    return con->array->len;
-}
-
-struct FiFileInfo *fi_file_container_get_at(struct FiFileContainer *arr, unsigned long i);
-struct FiFileInfo *fi_file_container_get_begin(struct FiFileContainer *con);
-struct FiFileInfo *fi_file_container_get_next(struct FiFileContainer *con);
-struct FiFileInfo *fi_file_container_get_end(struct FiFileContainer *con);
-
-#define fi_container_each(pcon, pfile) for ( \
-                (pfile) = fi_file_container_get_begin((pcon)); \
-                (pfile); \
-                (pfile) = fi_file_container_get_next((con)) ) 
 
 #ifdef __cplusplus
 }
