@@ -29,7 +29,7 @@
 
 #include "array.h"
 #include "lib-common.h"
-#include "file.h"
+#include "file-container.h"
 #include "list.h"
 #include "file-conflict.h"
 
