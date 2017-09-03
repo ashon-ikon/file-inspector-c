@@ -31,7 +31,6 @@
 #include <errno.h>
 
 #include "debug.h"
-#include "file.h"
 #include "file-manager.h"
 #include "util-string.h"
 

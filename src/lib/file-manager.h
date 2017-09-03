@@ -27,7 +27,7 @@
 #include <stdbool.h>
 
 #include "lib-common.h"
-#include "file.h"
+#include "file-container.h"
 
 FI_BEGIN_DECLS
 
