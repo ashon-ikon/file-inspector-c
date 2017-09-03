@@ -65,7 +65,6 @@ char * fi_rtrim(char * str, const char * impurities)
  *  from the leftmost parts of str.
  *  Note, this also tries to move the chars to the left for sanity sake
  */
-#include <stdio.h>
 char * fi_ltrim(char * str, const char * impurities)
 {
         if (str == NULL || impurities == NULL)
