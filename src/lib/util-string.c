@@ -86,7 +86,7 @@ char * fi_ltrim(char * str, const char * impurities)
         char *x = str;
         
         last_pos++;
-        size_t len_x = strlen(&x[last_pos]);
+        size_t len_x = fi_strlen(&x[last_pos]);
         char *temp = fi_strndup(&x[last_pos], len_x);
         strncpy(str, temp, len_x + 1); // Copy over source memory
         str[len_x] = '\0';
