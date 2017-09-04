@@ -39,33 +39,33 @@
 int run_with_params(int argc, char * argv[]);
 void run_inspector();
 
-int main(int argc, char * argv[]) {
-    
-    // Set the default locale
-    setlocale(LC_CTYPE, "");
-    
-    if (argc > 1) {
-        return run_with_params(argc, argv);
-    }
-    
-    
-    run_inspector();
-    
-    return 0;
+int main(int argc, char * argv[])
+{
+
+        // Set the default locale
+        setlocale(LC_CTYPE, "");
+
+        if (argc > 1) {
+                return run_with_params(argc, argv);
+        }
+
+        run_inspector();
+
+        return 0;
 }
 
 int run_with_params(int argc, char * argv[])
 {
-    return 0;
+        return 0;
 }
 
 void run_inspector()
 {
-    struct FiFileContainer *files = fi_file_container_init();
-    
-    fi_file_manager_read_dir("./test", files, true);
-    
-    printf("We got these many files %d\n", fi_file_container_size(files));
-    
-    fi_file_container_destroy(files);
+        struct FiFileContainer *pFiles = fi_file_container_init();
+
+        fi_file_manager_read_dir("./test", pFiles, true);
+
+        printf("We got these many files %d\n", fi_file_container_size(pFiles));
+
+        fi_file_container_destroy(pFiles);
 }
