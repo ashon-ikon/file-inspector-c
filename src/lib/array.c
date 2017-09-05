@@ -46,7 +46,9 @@ static bool fi_array_data_copy(const void const *src, void *dest, unsigned n);
 #define fi_data_get_offset(array, i) ((array)->data + (array)->unit_size * (i))
 
 
-static FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE desired, FI_TYPE_SIZE sz) {
+static
+FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE desired, FI_TYPE_SIZE sz)
+{
     
     FI_TYPE_SIZE best = 0, s = 0;
     s = desired > sz ? desired : sz;
