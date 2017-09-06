@@ -50,12 +50,25 @@ FI_BEGIN_DECLS
  */
 
 struct FiConfFile {
+    /*
+     * The actual file information
+     */
     struct FiFileInfo parent;
-    unsigned char     mapped;
+    /*
+     * If true, it shows this file has been associated with other
+     * conflict groups already.
+     */
+    bool              mapped;
 };
 
+/*
+ * A conflict group contains files deemed as being in conflict
+ */
 struct FiConfGroup {
-    struct FiList *files; /* List of FiConfFile / FiFileInfo */
+    /**
+     *  List of FiConfFile / FiFileInfo 
+     */
+    struct FiList *files;
     unsigned       conflict_type_id;
     bool           common_container;
     struct FiRef   ref;
