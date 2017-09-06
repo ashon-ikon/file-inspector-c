@@ -62,7 +62,7 @@ struct FiConfGroup {
 };
 
 
-struct FiConflictArray {
+struct FiFileConflictArray {
     struct FiArray *file_groups;
 };
 
@@ -72,9 +72,9 @@ void fi_conflict_group_add(struct FiConfGroup *self, struct FiFileInfo *file);
 bool fi_conflict_group_has(struct FiConfGroup *self, struct FiFileInfo *file);
 bool fi_conflict_group_copy(void const *src, void *dst, unsigned n);
 
-void fi_conflict_array_init(struct FiConflictArray *arr);
-void fi_conflict_array_free(struct FiConflictArray *arr);
-void fi_conflict_array_add_group(struct FiConflictArray *arr,
+void fi_conflict_array_init(struct FiFileConflictArray *arr);
+void fi_conflict_array_free(struct FiFileConflictArray *arr);
+void fi_conflict_array_add_group(struct FiFileConflictArray *arr,
                                  struct FiConfGroup *grp);
 
 FI_END_DECLS

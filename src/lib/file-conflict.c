@@ -161,7 +161,7 @@ bool fi_conflict_group_copy(void const *src, void *dst, unsigned n)
 // ------------------------------------------
 // Conflict Group Array
 // ------------------------------------------
-void fi_conflict_array_init(struct FiConflictArray *arr)
+void fi_conflict_array_init(struct FiFileConflictArray *arr)
 {
     if (! arr)
         return;
@@ -170,7 +170,7 @@ void fi_conflict_array_init(struct FiConflictArray *arr)
                                     fi_conflict_group_copy);
 }
 
-void fi_conflict_array_free(struct FiConflictArray *arr)
+void fi_conflict_array_free(struct FiFileConflictArray *arr)
 {
     if (! arr || ! arr->file_groups)
         return;
@@ -184,7 +184,7 @@ void fi_conflict_array_free(struct FiConflictArray *arr)
     fi_array_free(arr->file_groups);
 }
 
-void fi_conflict_array_add_group(struct FiConflictArray *arr,
+void fi_conflict_array_add_group(struct FiFileConflictArray *arr,
                                  struct FiConfGroup *grp)
 {
     if (! arr || ! grp)
