@@ -35,11 +35,10 @@
 
 FI_BEGIN_DECLS
 
-#ifndef FI_MAX_NAME
-#define FI_MAX_NAME        64
-#define FI_MAX_DESC        512
+#ifndef FI_MAX_CONFLICT_NAME
+#define FI_MAX_CONFLICT_NAME        64
+#define FI_MAX_CONFLICT_DESC        512
 #endif
-
 
 /**
  * File Conflict Group

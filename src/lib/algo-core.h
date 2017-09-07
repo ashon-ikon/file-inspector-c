@@ -35,14 +35,9 @@
 
 FI_BEGIN_DECLS
 
-#ifndef FI_MAX_NAME
-#define FI_MAX_NAME        64
-#define FI_MAX_DESC        512
-#endif
-
 struct FiAlgo {
-    char            name[FI_MAX_NAME];
-    char            desc[FI_MAX_DESC];
+    char            name[FI_MAX_CONFLICT_NAME];
+    char            desc[FI_MAX_CONFLICT_DESC];
     unsigned        conflict_type_id;
 
     /* Extracts an array of FiConfGroups */
