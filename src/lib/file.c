@@ -71,6 +71,8 @@ static void fi_file_info_ref_destory(const struct FiRef *ref)
 {
     struct FiFileInfo *file = container_of(ref, struct FiFileInfo, ref_count);
 
+    if (NULL == file)
+            return;
     free(file->filename);
     free(file->path);
     free(file->extension);
