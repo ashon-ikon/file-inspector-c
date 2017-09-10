@@ -145,7 +145,7 @@ static bool fi_array_expand_container(struct FiArray * cur, unsigned n)
     if (NULL != tmp) {
 
         // Empty out the container
-        memset(tmp + cur->capacity, 0, n);
+        memset(tmp + cur->capacity, 0, n * cur->unit_size);
 
         cur->data = tmp;
         cur->capacity  = n;
