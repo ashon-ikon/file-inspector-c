@@ -29,7 +29,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <X11/X.h>
 
 #include "array.h"
 #include "debug.h"
@@ -50,11 +49,11 @@ static
 FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE desired, FI_TYPE_SIZE sz)
 {
     
-    FI_TYPE_SIZE best = 0, s = 0;
+    FI_TYPE_SIZE best = 0, s = 0, bound = 0;
     s = desired > sz ? desired : sz;
 
     do 
-        best = 1 << best;
+        best = 1 << bound++;
     while (best < s);
     
     return best;
