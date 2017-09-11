@@ -35,11 +35,10 @@
 
 FI_BEGIN_DECLS
 
-#ifndef FI_MAX_NAME
-#define FI_MAX_NAME        64
-#define FI_MAX_DESC        512
+#ifndef FI_MAX_CONFLICT_NAME
+#define FI_MAX_CONFLICT_NAME        64
+#define FI_MAX_CONFLICT_DESC        512
 #endif
-
 
 /**
  * File Conflict Group
@@ -50,19 +49,32 @@ FI_BEGIN_DECLS
  */
 
 struct FiConfFile {
+    /*
+     * The actual file information
+     */
     struct FiFileInfo parent;
-    unsigned char     mapped;
+    /*
+     * If true, it shows this file has been associated with other
+     * conflict groups already.
+     */
+    bool              mapped;
 };
 
+/*
+ * A conflict group contains files deemed as being in conflict
+ */
 struct FiConfGroup {
-    struct FiList *files; /* List of FiConfFile / FiFileInfo */
+    /**
+     *  List of FiConfFile / FiFileInfo 
+     */
+    struct FiList *files;
     unsigned       conflict_type_id;
     bool           common_container;
     struct FiRef   ref;
 };
 
 
-struct FiConflictArray {
+struct FiFileConflictArray {
     struct FiArray *file_groups;
 };
 
@@ -72,9 +84,9 @@ void fi_conflict_group_add(struct FiConfGroup *self, struct FiFileInfo *file);
 bool fi_conflict_group_has(struct FiConfGroup *self, struct FiFileInfo *file);
 bool fi_conflict_group_copy(void const *src, void *dst, unsigned n);
 
-void fi_conflict_array_init(struct FiConflictArray *arr);
-void fi_conflict_array_free(struct FiConflictArray *arr);
-void fi_conflict_array_add_group(struct FiConflictArray *arr,
+void fi_conflict_array_init(struct FiFileConflictArray *arr);
+void fi_conflict_array_free(struct FiFileConflictArray *arr);
+void fi_conflict_array_add_group(struct FiFileConflictArray *arr,
                                  struct FiConfGroup *grp);
 
 FI_END_DECLS

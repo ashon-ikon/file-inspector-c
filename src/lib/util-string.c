@@ -20,24 +20,11 @@
  * SOFTWARE.
  * 
  */
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "util-string.h"
-
-static bool found_char_within(const char *c, const char *impurities)
-{
-    while (*impurities != '\0') {
-        if (*c == *impurities) {
-            return true;
-        }
-        impurities++;
-    }
-
-    return false;
-}
 
 /**
  *  Trims string str removing any occurrence of any of the impurities chars
@@ -49,11 +36,11 @@ char * fi_rtrim(char * str, const char * impurities)
         return NULL;
 
     for (size_t i = strlen(str) - 1; i >= 0; i--) {
-        if (found_char_within(&str[i], impurities)) {
+        if (strchr(impurities, str[i]) != NULL) {
             str[i] = '\0';
         } else {
             // No need to keep checking
-            break;
+            return str;
         }
     }
 
@@ -71,7 +58,7 @@ char * fi_ltrim(char * str, const char * impurities)
             return NULL;
         int last_pos = -1;
         for (size_t i = 0; i <= strlen(str); i++) {
-            if (found_char_within(&str[i], impurities)) {
+            if (strchr(impurities, str[i]) != NULL) {
                 last_pos = (int)i;
             } else {
                 // No need to keep checking

@@ -26,7 +26,8 @@
 #include "lib-common.h"
 #include "file-container.h"
 
-
+// Initial size of array
+#define FI_INITIAL_FILES_ARRAY_SIZE (1024 * 1024)
 
 /**
  * Initializes the file array
@@ -39,8 +40,9 @@ struct FiFileContainer *fi_file_container_init()
     if (! container)
         return NULL;
 
-    container->array = fi_array_new(sizeof (struct FiFileInfo),
-                                    fi_file_copy_proxy);
+    container->array = fi_array_new_n(sizeof (struct FiFileInfo),
+                                      fi_file_copy_proxy,
+                                      FI_INITIAL_FILES_ARRAY_SIZE);
     
     if (! container->array) {
         fi_log_message(FI_DEBUG_LEVEL_ERROR,

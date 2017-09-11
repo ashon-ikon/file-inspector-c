@@ -29,7 +29,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <X11/X.h>
 
 #include "array.h"
 #include "debug.h"
@@ -46,13 +45,15 @@ static bool fi_array_data_copy(const void const *src, void *dest, unsigned n);
 #define fi_data_get_offset(array, i) ((array)->data + (array)->unit_size * (i))
 
 
-static FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE desired, FI_TYPE_SIZE sz) {
+static
+FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE desired, FI_TYPE_SIZE sz)
+{
     
-    FI_TYPE_SIZE best = 0, s = 0;
+    FI_TYPE_SIZE best = 0, s = 0, bound = 0;
     s = desired > sz ? desired : sz;
 
     do 
-        best = 1 << best;
+        best = 1 << bound++;
     while (best < s);
     
     return best;
@@ -144,7 +145,7 @@ static bool fi_array_expand_container(struct FiArray * cur, unsigned n)
     if (NULL != tmp) {
 
         // Empty out the container
-        memset(tmp + cur->capacity, 0, n);
+        memset(tmp + cur->capacity, 0, n * cur->unit_size);
 
         cur->data = tmp;
         cur->capacity  = n;

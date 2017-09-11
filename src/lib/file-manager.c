@@ -24,7 +24,6 @@
 #include <dirent.h>
 #include <locale.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -73,27 +72,30 @@ bool fi_file_manager_read_dir(const char const       *path,
 
     DIR* dir;
     struct dirent *dp;
+    char path_sep[] = {path_separator, '\0'};
     
-    if (! (dir = opendir(path))) {
+    char *lpath = fi_strdup(path); // Copy path to local variable
+    fi_rtrim(lpath, path_sep);     // remove any trailing path separator
+
+    if (! (dir = opendir(lpath))) {
         fi_log_message(FI_DEBUG_LEVEL_WARN,
                        "Could not read the specified path %s", path);
         return false;
     }
     
     struct FiFileInfo file;
-    char path_sep[] = {path_separator, '\0'};
     
     while ((dp = readdir(dir)) != NULL) {
         
         if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..")) {
             fi_file_init(&file);
-            if (! read_file_info(path, dp->d_name, &file))
+            if (! read_file_info(lpath, dp->d_name, &file))
                 continue;
 
             fi_file_container_push(con, &file);
             if (recursive && file.type == FI_FILE_TYPE_DIRECTORY) {
                 // Add directory content recursively
-                char *full_filename = fi_strconcat(3, path, path_sep, dp->d_name);
+                char *full_filename = fi_strconcat(3, lpath, path_sep, dp->d_name);
                 fi_file_manager_read_dir(full_filename, con, recursive);
                 free(full_filename);
             }
@@ -101,6 +103,7 @@ bool fi_file_manager_read_dir(const char const       *path,
         }
     }
     closedir(dir);
+    free(lpath);
     
     return true;
 }

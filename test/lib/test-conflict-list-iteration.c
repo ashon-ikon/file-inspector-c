@@ -120,7 +120,7 @@ FI_TEST_RESULT test_checking_group_for_file()
 
 FI_TEST_RESULT test_conflict_groups_array_creation()
 {
-    struct FiConflictArray confl_array;
+    struct FiFileConflictArray confl_array;
     fi_conflict_array_init(&confl_array);
     
     struct FiConfGroup *grp = fi_conflict_group_new();

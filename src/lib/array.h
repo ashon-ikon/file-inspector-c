@@ -33,7 +33,7 @@
 
 FI_BEGIN_DECLS
 
-#define FI_TYPE_SIZE    unsigned
+#define FI_TYPE_SIZE    long unsigned int
 
 
 struct FiArray;
