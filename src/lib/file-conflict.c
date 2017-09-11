@@ -114,7 +114,7 @@ bool fi_conflict_group_has(struct FiConfGroup *self, struct FiFileInfo *file)
 }
 
 /// Conflict group cast macro
-#define CONF_GRP(c) ((struct FiConfGroup *)(c))
+#define CONF_GRP(pGrp) ((struct FiConfGroup *)(pGrp))
 /**
  * Copies struct FiConGroup.
  * 
@@ -130,8 +130,6 @@ bool fi_conflict_group_copy(void const *src, void *dst, unsigned n)
     if (! src || ! dst)
         return false;
 
-
-    
     struct FiList *head = NULL;
     // Rewind to beginning
     for(head = CONF_GRP(src)->files; head->prev; head = head->prev);

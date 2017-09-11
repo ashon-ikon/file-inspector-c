@@ -74,6 +74,9 @@ struct FiConfGroup {
 };
 
 
+/*
+ * This holds an array of list of duplicate files
+ */
 struct FiFileConflictArray {
     struct FiArray *file_groups;
 };
