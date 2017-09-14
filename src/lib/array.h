@@ -46,7 +46,7 @@ struct FiArray {
     FI_TYPE_SIZE   capacity;
     size_t         unit_size;
     FI_TYPE_SIZE   cursor;
-    struct FiRef   ref_count;
+    struct FiRef   ref;
     void         (*cleanup_notify)(struct FiArray* arr);
     fi_array_data_cp_fn copy_func;
 };

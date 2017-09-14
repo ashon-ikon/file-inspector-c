@@ -38,13 +38,22 @@ extern "C" {
 #ifndef container_of
 #define container_of(ptr, type, member) ((type *) \
     ((char *)(1 ? (ptr) : &((type *)0)->member) - offsetof(type, member)))
-#endif    
+#endif
+    
+#define fi_free_ref_object(p_object)        \
+    do {                                    \
+        fi_ref_dec(&((p_object)->ref));     \
+    } while(0)
 
+// ------------------------
+// Reference counter struct
 struct FiRef {
     int  count;
     void (*free)(const struct FiRef *ref);
 };
 
+
+// Inline methods
 static inline int fi_ref_inc(const struct FiRef *ref)
 {
     int t = ((struct FiRef *)ref)->count++;

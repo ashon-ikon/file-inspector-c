@@ -33,8 +33,10 @@ extern "C" {
 #include "debug.h"
 #include "lib-common.h"
 #include "file.h"
+#include "file-container.h"
 #include "file-manager.h"
 #include "util-string.h"
+#include "algo-name-size-type.h"
 
 
 

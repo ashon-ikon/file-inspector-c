@@ -86,24 +86,24 @@ struct FiArray *fi_array_new_n(size_t unit_size,
     arr->capacity  = 0;
     arr->len       = 0;
     arr->cursor    = -1;
-    arr->ref_count.count = 0;
-    arr->ref_count.free  = fi_array_ref_dec;
+    arr->ref.count = 0;
+    arr->ref.free  = fi_array_ref_dec;
     arr->copy_func = cp == NULL ? fi_array_data_copy : cp;
     fi_array_expand_container(arr, fi_mem_best_size(unit_size, n));
     
-    fi_ref_inc(&arr->ref_count);
+    fi_ref_inc(&arr->ref);
 
     return arr;
 }
 
 void fi_array_free(struct FiArray *arr)
 {
-    fi_ref_dec(&arr->ref_count);
+    fi_free_ref_object(arr);
 }
 
 void fi_array_ref_dec(const struct FiRef *ref)
 {
-    struct FiArray *arr = container_of(ref, struct FiArray, ref_count);
+    struct FiArray *arr = container_of(ref, struct FiArray, ref);
     if (! arr) {
         return;
     }
