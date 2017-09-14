@@ -72,28 +72,28 @@ FI_TEST_RESULT test_checking_group_for_file()
     fi_file_init(&file4);
 
     fi_file_set_props(&file2,
-            "IMAGE002",
-            "/lorem/ipsum/",
-            "tiff",
-            (1024 * 63),
-            (struct timespec){200, 300},
-            file2.ref_count.free);
+                      "IMAGE002",
+                      "/lorem/ipsum/",
+                      "tiff",
+                      (1024 * 63),
+                      (struct timespec){200, 300},
+                      file2.ref.free);
             
     fi_file_set_props(&file3,
-            "IMAGE003",
-            "/lorem/ipsum/",
-            "tiff",
-            (1024 * 63),
-            (struct timespec){200, 300},
-            file3.ref_count.free);
+                       "IMAGE003",
+                       "/lorem/ipsum/",
+                       "tiff",
+                       (1024 * 63),
+                       (struct timespec){200, 300},
+                       file3.ref.free);
             
     fi_file_set_props(&file4,
-            "IMAGE004",
-            "/lorem/ipsum/",
-            "tiff",
-            (1024 * 63),
-            (struct timespec){200, 300},
-            file4.ref_count.free);
+                       "IMAGE004",
+                       "/lorem/ipsum/",
+                       "tiff",
+                       (1024 * 63),
+                       (struct timespec){200, 300},
+                       file4.ref.free);
 
     
     fi_conflict_group_add(grp, &file1);
@@ -102,10 +102,10 @@ FI_TEST_RESULT test_checking_group_for_file()
     
     
     fi_return_fail_if_not(fi_conflict_group_has(grp, &file4),
-                        "Failed to find file 4 within group");
+                          "Failed to find file 4 within group");
     
     fi_return_fail_if_not(! fi_conflict_group_has(grp, &file3),
-                        "File 3 should NOT be part of the group");
+                          "File 3 should NOT be part of the group");
 
     fi_file_destroy(&file1);
     fi_file_destroy(&file2);
@@ -131,20 +131,20 @@ FI_TEST_RESULT test_conflict_groups_array_creation()
     fi_file_init(&file2);
     
     fi_file_set_props(&file1,
-            "IMAGE201",
-            "/lorem/ipsum/",
-            "tiff",
-            (1024 * 256),
-            (struct timespec){200, 300},
-            file1.ref_count.free);
+                       "IMAGE201",
+                       "/lorem/ipsum/",
+                       "tiff",
+                       (1024 * 256),
+                       (struct timespec){200, 300},
+                       file1.ref.free);
             
     fi_file_set_props(&file2,
-            "IMAGE202",
-            "/lorem/ipsum/",
-            "tiff",
-            (1024 * 184),
-            (struct timespec){200, 300},
-            file2.ref_count.free);
+                      "IMAGE202",
+                      "/lorem/ipsum/",
+                      "tiff",
+                      (1024 * 184),
+                      (struct timespec){200, 300},
+                      file2.ref.free);
     
     fi_conflict_group_add(grp, &file1);
     fi_conflict_group_add(grp, &file2);
