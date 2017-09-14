@@ -64,7 +64,7 @@ void fi_file_container_destroy(struct FiFileContainer *container)
         fi_file_destroy(file);
     }
 
-    fi_array_ref_dec(&container->array->ref_count);
+    fi_array_ref_dec(&container->array->ref);
 
     free(container);
 }
@@ -96,7 +96,7 @@ unsigned short fi_file_container_push(struct FiFileContainer *arr,
  * @param i
  * @return FileInfo
  */
-struct FiFileInfo *fi_file_container_get_at(struct FiFileContainer *con, unsigned long i)
+struct FiFileInfo *fi_file_container_get_file_at(struct FiFileContainer *con, unsigned long i)
 {
     if (! con)
         return NULL;
@@ -106,38 +106,38 @@ struct FiFileInfo *fi_file_container_get_at(struct FiFileContainer *con, unsigne
 
     struct FiFileInfo *file = fi_array_get_ptr(con->array,
                                                struct FiFileInfo, i);
-    fi_ref_inc(&file->ref_count);
+    fi_ref_inc(&file->ref);
     
     return file;   
 }
 
-struct FiFileInfo *fi_file_container_get_begin(struct FiFileContainer *con)
+struct FiFileInfo *fi_file_container_get_file_begin(struct FiFileContainer *con)
 {    
     struct FiFileInfo *file = fi_array_get_ptr_being(con->array,
                                                      struct FiFileInfo);
     if (file)
-        fi_ref_inc(&file->ref_count);
+        fi_ref_inc(&file->ref);
     
     return file;
 }
 
 
-struct FiFileInfo *fi_file_container_get_next(struct FiFileContainer *con)
+struct FiFileInfo *fi_file_container_get_file_next(struct FiFileContainer *con)
 {
     struct FiFileInfo *file = fi_array_get_ptr_next(con->array,
                                                     struct FiFileInfo);
     if (file)
-        fi_ref_inc(&file->ref_count);
+        fi_ref_inc(&file->ref);
     
     return file;
 }
 
-struct FiFileInfo *fi_file_container_get_end(struct FiFileContainer *con)
+struct FiFileInfo *fi_file_container_get_file_end(struct FiFileContainer *con)
 {
     struct FiFileInfo *file = fi_array_get_ptr_end(con->array,
                                                    struct FiFileInfo);
     if (file)
-        fi_ref_inc(&file->ref_count);
+        fi_ref_inc(&file->ref);
     
     return file;
 }

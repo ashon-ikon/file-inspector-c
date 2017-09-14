@@ -56,15 +56,19 @@ static inline FI_TYPE_SIZE fi_file_container_size(struct FiFileContainer *con)
     return con->array->len;
 }
 
-struct FiFileInfo *fi_file_container_get_at(struct FiFileContainer *arr, unsigned long i);
-struct FiFileInfo *fi_file_container_get_begin(struct FiFileContainer *con);
-struct FiFileInfo *fi_file_container_get_next(struct FiFileContainer *con);
-struct FiFileInfo *fi_file_container_get_end(struct FiFileContainer *con);
+struct FiFileInfo *fi_file_container_get_file_at(struct FiFileContainer *arr, unsigned long i);
+struct FiFileInfo *fi_file_container_get_file_begin(struct FiFileContainer *con);
+struct FiFileInfo *fi_file_container_get_file_next(struct FiFileContainer *con);
+struct FiFileInfo *fi_file_container_get_file_end(struct FiFileContainer *con);
 
-#define fi_container_each(pcon, pfile) for ( \
-                (pfile) = fi_file_container_get_begin((pcon)); \
-                (pfile); \
-                (pfile) = fi_file_container_get_next((con)) ) 
+/*
+ * Custom iterator for files within a container
+ * NOTE: To avoid leakage always destroy pFile fi_ref_dec(pFile)
+ */
+#define fi_file_container_each(pCon, pFile) for ( \
+                (pFile) = fi_file_container_get_file_begin((pCon)); \
+                (pFile); \
+                (pFile) = fi_file_container_get_file_next((pCon)) ) 
 
 
 

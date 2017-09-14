@@ -26,6 +26,7 @@
 
 #include <stdio.h>
 
+#include "./../../src/lib/file-container.h"
 #include "./../../src/lib/util-string.h"
 #include "test-file-container.h"
 
@@ -71,10 +72,10 @@ FI_TEST_RESULT test_file_container_push_data()
     fi_return_fail_if_not(fi_file_container_size(con) == FILE_COUNT,
                       "Wrong number of files added");
     struct FiFileInfo *file = NULL;
-    fi_container_each(con, file) {
+    fi_file_container_each(con, file) {
         fi_return_fail_if_not(strcmp(file->extension, ".docx") == 0,
                         fi_make_msg("We got %s", file->extension));
-        fi_ref_dec(&file->ref_count);
+        fi_ref_dec(&file->ref);
     }
     
     // Free the 

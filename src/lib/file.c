@@ -51,8 +51,8 @@ void fi_file_init(struct FiFileInfo  *file)
         return;
 
     *file = EMPTY_FILE;
-    file->ref_count.free = fi_file_info_ref_destory;
-    fi_ref_inc(&file->ref_count);
+    file->ref.free = fi_file_info_ref_destory;
+    fi_ref_inc(&file->ref);
 }
 
 /**
@@ -64,12 +64,12 @@ void fi_file_destroy(struct FiFileInfo * file)
     if (! file)
         return;
 
-    fi_ref_dec(&file->ref_count);
+    fi_ref_dec(&file->ref);
 }
 
 static void fi_file_info_ref_destory(const struct FiRef *ref)
 {
-    struct FiFileInfo *file = container_of(ref, struct FiFileInfo, ref_count);
+    struct FiFileInfo *file = container_of(ref, struct FiFileInfo, ref);
 
     if (NULL == file)
             return;
@@ -113,7 +113,7 @@ bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
             src->extension,
             src->size_byte,
             src->modified_at,
-            src->ref_count.free);
+            src->ref.free);
 
     return true;
 }
@@ -126,13 +126,12 @@ void fi_file_set_props(struct FiFileInfo *file,
                        struct timespec modified_at,
                        void (*free)(const struct FiRef *ref))
 {
-    file->filename        = fi_strndup(filename, fi_strlen(filename));
-    file->path            = fi_strndup(path, fi_strlen(path));
-    file->extension       = fi_strndup(extension, fi_strlen(extension));
-    file->size_byte       = size;
-    file->modified_at     = modified_at;
-    file->ref_count.free  = free;
-    file->ref_count.count = 0;
-    fi_ref_inc(&file->ref_count);
-
+        file->filename = fi_strndup(filename, fi_strlen(filename));
+        file->path = fi_strndup(path, fi_strlen(path));
+        file->extension = fi_strndup(extension, fi_strlen(extension));
+        file->size_byte = size;
+        file->modified_at = modified_at;
+        file->ref.free = free;
+        file->ref.count = 0;
+        fi_ref_inc(&file->ref);
 }

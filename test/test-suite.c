@@ -34,7 +34,6 @@
 #define FI_REASON_MAX   65
 
 char reason_buff[FI_REASON_MAX];
-extern char *fi_make_msg(char *fmt, ...) fi_checkprintf;
 
 void print_test_outcome(char *test_name, char *result)
 {

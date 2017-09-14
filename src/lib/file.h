@@ -90,7 +90,7 @@ struct FiFileInfo {
     bool                free_container;
     FiFileType          type;
     struct timespec     modified_at;
-    struct FiRef        ref_count;
+    struct FiRef        ref;
 };
 
 #define FI_FILE_INIT(f) struct FiFileInfo (f); fi_file_init(&(f))

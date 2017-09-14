@@ -41,8 +41,9 @@ const char path_separator =
 #endif
 
 // Prototypes ...
-static bool read_file_info(const char const *path,
-                         const char const  *filename, struct FiFileInfo *file);
+static bool read_file_info(const char const  *path,
+                           const char const  *filename,
+                           struct FiFileInfo *file);
 static char *file_extension(const char const *filename);
 static FiFileType get_file_type(const mode_t d_type);
 
