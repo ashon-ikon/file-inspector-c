@@ -206,7 +206,7 @@ short fi_array_insert(struct FiArray *arr, void const *data, FI_TYPE_SIZE i)
         // Set the cursor
         arr->cursor = i;
 
-        return FI_FUNC_SUCCEED;    
+        return FI_FUNC_SUCCESS;
     }
 
     return FI_FUNC_FAIL;
