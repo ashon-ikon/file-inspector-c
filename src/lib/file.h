@@ -37,9 +37,7 @@
 #include "debug.h"
 #include "ref.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+FI_BEGIN_DECLS
 
 #ifndef PATH_MAX
 #ifdef _POSIX_VERSION
@@ -109,9 +107,12 @@ void fi_file_set_props(struct FiFileInfo *file,
 
 bool fi_file_copy_proxy(void const *src, void *dst, unsigned n); // Copy method
 
-#ifdef __cplusplus
+inline bool fi_file_is_directory(const struct FiFileInfo *file)
+{
+    return file->type == FI_FILE_TYPE_DIRECTORY;
 }
-#endif
+
+FI_END_DECLS
 
 #endif /* FINSPECTOR_FILE_ARRAY_H */
 
