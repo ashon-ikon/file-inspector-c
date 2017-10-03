@@ -90,11 +90,6 @@ char * fi_trim(char * str, const char * impurities)
     return str;
 }
 
-size_t fi_strlen(const char const* s)
-{
-    return (! s) ? 0 : strlen(s);
-}
-
 #if defined FI_NO_STRDUP_FOUND
 /* Platform appears not to have support for strdup and strndup
  */
