@@ -28,14 +28,14 @@
 #include "util-string.h"
 
 const struct FiFileInfo EMPTY_FILE = {  
-    NULL,      /* filename */
-    NULL,      /* file_path */
-    NULL,      /* file_extension */
-    0L,        /* size */
-    false,     /* free_container */
-    0,         /* file_type */
-   {0, 0},     /* struct timespec */
-   {0, NULL}   /* struct FiRef */
+   {0, 0},              /* struct timespec */
+   {0, NULL},           /* struct FiRef */
+    NULL,               /* filename */
+    NULL,               /* file_path */
+    NULL,               /* file_extension */
+    0L,                 /* size */
+    false,              /* free_container */
+    0,                  /* file_type */
 };
 
 /* Prototypes */
@@ -73,6 +73,7 @@ static void fi_file_info_ref_destory(const struct FiRef *ref)
 
     if (NULL == file)
             return;
+
     free(file->filename);
     free(file->path);
     free(file->extension);

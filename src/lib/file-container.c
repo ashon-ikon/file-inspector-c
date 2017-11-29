@@ -115,9 +115,6 @@ struct FiFileInfo *fi_file_container_get_file_begin(struct FiFileContainer *con)
 {    
     struct FiFileInfo *file = fi_array_get_ptr_being(con->array,
                                                      struct FiFileInfo);
-    if (file)
-        fi_ref_inc(&file->ref);
-    
     return file;
 }
 
@@ -125,10 +122,7 @@ struct FiFileInfo *fi_file_container_get_file_begin(struct FiFileContainer *con)
 struct FiFileInfo *fi_file_container_get_file_next(struct FiFileContainer *con)
 {
     struct FiFileInfo *file = fi_array_get_ptr_next(con->array,
-                                                    struct FiFileInfo);
-    if (file)
-        fi_ref_inc(&file->ref);
-    
+                                                    struct FiFileInfo);    
     return file;
 }
 

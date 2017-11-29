@@ -81,14 +81,14 @@ typedef struct FiFileInfo FiFileInfo_st;
 #endif
 
 struct FiFileInfo {
+    struct timespec     modified_at;
+    struct FiRef        ref;
     char               *filename;
     char               *path;
     char               *extension;
     off_t               size_byte;
     bool                free_container;
     FiFileType          type;
-    struct timespec     modified_at;
-    struct FiRef        ref;
 };
 
 #define FI_FILE_INIT(f) struct FiFileInfo (f); fi_file_init(&(f))

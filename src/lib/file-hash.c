@@ -44,19 +44,6 @@ fi_hash_string (const char *key, size_t len)
     return hash;
 }
 
-/*
- 
-struct FiFileInfo {
-    char               *filename;
-    char               *path;
-    char               *extension;
-    off_t               size_byte;
-    bool                free_container;
-    FiFileType          type;
-    struct timespec     modified_at;
-    struct FiRef        ref;
-};*/
-
 /**
  * We combine the filename and extension to create a hash
  * @param file
@@ -67,6 +54,7 @@ size_t fi_file_get_hash(struct FiFileInfo *file)
         // Overflow is gracefully acceptable
         size_t v = fi_hash_string(file->filename, fi_strlen(file->filename));
         v += fi_hash_string(file->extension, fi_strlen(file->extension));
+        v += file->type;
 
         return v;
 }
