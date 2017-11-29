@@ -9,6 +9,7 @@ __top_builddir__lib_libdetector_la_SOURCES = \
 	util-string.c			     \
 	file.c				     \
 	file-container.c		     \
+	file-hash.c			     \
 	file-manager.c			     \
 	algo.c				     \
 	algo-name-size-type.c		     \

@@ -44,7 +44,7 @@ typedef enum {
 
 #ifndef FI_FUNC_RESPONSES
 #define FI_FUNC_FAIL            -1
-#define FI_FUNC_SUCCEED          0
+#define FI_FUNC_SUCCESS          0
 #define FI_FUNC_RESPONSES       0x1200
 #endif
 

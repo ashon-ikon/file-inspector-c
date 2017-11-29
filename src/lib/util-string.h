@@ -34,25 +34,24 @@
 FI_BEGIN_DECLS
 
 
-// #if defined (_XOPEN_SOURCE) \ -
-//    || /* Since glibc 2.12: */ defined _POSIX_C_SOURCE \ -
-//    || /* Glibc versions <= 2.19: */ defined _BSD_SOURCE \ -
-//    || defined _SVID_SOURCE
-//
-//    #define fi_strdup(s)   strdup( (s) )
-//    #define fi_strndup(s, n)  strndup( (s), (n) )
-// #else
+ #if (defined _XOPEN_SOURCE) \
+    || /* Since glibc 2.12: */ (defined _POSIX_C_SOURCE) \
+    || /* Glibc versions <= 2.19: */ (defined _BSD_SOURCE) \
+    || (defined _SVID_SOURCE)
+
+    #define fi_strdup(s)   strdup( (s) )
+    #define fi_strndup(s, n)  strndup( (s), (n) )
+ #else
     // Probably windows or some sort
     #define FI_NO_STRDUP_FOUND
     #define fi_strdup(s)      _fi_strdup( (s) )
     #define fi_strndup(s, n)  _fi_strndup( (s), (n) )
-// #endif
+ #endif
 
 char *fi_rtrim(char * str, const char * impurities);
 char *fi_ltrim(char * str, const char * impurities);
 char *fi_trim(char * str, const char * impurities);
 char *fi_strconcat(const unsigned char num, ...);
-size_t fi_strlen(const char const* s);
 int fi_strcmp0(const char const *s1, const char const *s2);
 char *itoa(const int i, char *str, unsigned base);
 
@@ -63,6 +62,10 @@ char *_fi_strdup (const char *src);
 char *_fi_strndup(const char *src, size_t n);
 #endif
 
+inline size_t fi_strlen(const char const* s)
+{
+    return (! s) ? 0 : strlen(s);
+}
 
 FI_END_DECLS
 

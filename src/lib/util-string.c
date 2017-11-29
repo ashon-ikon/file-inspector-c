@@ -56,6 +56,7 @@ char * fi_ltrim(char * str, const char * impurities)
 {
         if (str == NULL || impurities == NULL)
             return NULL;
+
         int last_pos = -1;
         for (size_t i = 0; i <= strlen(str); i++) {
             if (strchr(impurities, str[i]) != NULL) {
@@ -90,11 +91,6 @@ char * fi_trim(char * str, const char * impurities)
     return str;
 }
 
-size_t fi_strlen(const char const* s)
-{
-    return (! s) ? 0 : strlen(s);
-}
-
 #if defined FI_NO_STRDUP_FOUND
 /* Platform appears not to have support for strdup and strndup
  */
@@ -126,7 +122,7 @@ char *_fi_strndup(const char *src, size_t n)
 }
 #endif
 
-char * fi_strconcat(const unsigned char num, ...)
+char* fi_strconcat(const unsigned char num, ...)
 {
     if (num < 1)
         return NULL;
@@ -134,12 +130,14 @@ char * fi_strconcat(const unsigned char num, ...)
     unsigned int  len = 0;
     unsigned char i = 0;
     char          *words[num];
+    size_t         lengths[num];
 
     va_list ap;
     va_start(ap, num);
     for (i = 0; i < num; i++) {
         words[i] = va_arg(ap, char*);
-        len += strlen(words[i]);
+        lengths[i] = fi_strlen(words[i]);
+        len += lengths[i];
     }
     va_end(ap);
     
@@ -147,10 +145,11 @@ char * fi_strconcat(const unsigned char num, ...)
     char *str = malloc(len + 1);
     if (! str)
         return NULL;
+
     str[0] = '\0';
 
     for (i = 0; i < num; i++)
-        strncat(str, words[i], strlen(words[i]));
+        strncat(str, words[i], lengths[i]);
 
     return str;
 }
@@ -171,10 +170,10 @@ int fi_strcmp0(const char const *s1, const char const *s2)
 char *itoa(const int i, char *str, unsigned base)
 {
     char const digit[] = "0123456789ABCDEF";
-    char* p = str;
+    char *p = str;
     int n = i;
 
-    if (base < 2 || base > 16){
+    if (base < 2 || base > 16) {
         *p = '\0';
         return str;
     }
