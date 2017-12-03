@@ -35,21 +35,20 @@
 
 /* This is the minimum items in list to start with 
  */
-#define FI_INITIAL_ARRAY_ALLOC_SIZE 1 << 4
+#define FI_INITIAL_ARRAY_ALLOC_SIZE (1 << 4)
 
 /* Prototypes */
-static bool fi_array_expand_container(struct FiArray *cur, unsigned n);
+static bool fi_array_expand_container(struct FiArray *cur, size_t n);
 static bool fi_array_data_copy(const void const *src, void *dest, unsigned n);
 
 /* Helper macros */
 #define fi_data_get_offset(array, i) ((array)->data + (array)->unit_size * (i))
 
 
-static
-FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE desired, FI_TYPE_SIZE sz)
+static size_t fi_mem_best_size(size_t desired, size_t sz)
 {
     
-    FI_TYPE_SIZE best = 0, s = 0, bound = 0;
+    size_t best = 0, s = 0, bound = 0;
     s = desired > sz ? desired : sz;
 
     do 
@@ -71,7 +70,7 @@ struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp)
 
 struct FiArray *fi_array_new_n(size_t unit_size,
                                fi_array_data_cp_fn cp,
-                               FI_TYPE_SIZE n)
+                               size_t n)
 {
     struct FiArray *arr = malloc(sizeof *arr);
     if (! arr) {
@@ -138,7 +137,7 @@ void fi_array_set_cleanup_notifier(struct FiArray *arr,
  * @param n
  * @return 
  */
-static bool fi_array_expand_container(struct FiArray * cur, unsigned n)
+static bool fi_array_expand_container(struct FiArray * cur, size_t n)
 {
     void *tmp = realloc(cur->data, n * cur->unit_size);
     
@@ -194,7 +193,7 @@ void *_fi_array_pop(struct FiArray *arr)
 }
 
 
-short fi_array_insert(struct FiArray *arr, void const *data, FI_TYPE_SIZE i)
+short fi_array_insert(struct FiArray *arr, void const *data, size_t i)
 {
     if (! data || ! arr)
         return FI_FUNC_FAIL;
@@ -222,7 +221,7 @@ void  fi_array_copy(const struct FiArray *src, struct FiArray *dst)
     if (! src->len)
         return;
 
-    for (FI_TYPE_SIZE i = 0; i < src->capacity; i++)
+    for (size_t i = 0; i < src->capacity; i++)
         fi_array_insert(dst, fi_array_get_ptr(src, void, i), i);
 
     dst->len = src->len;

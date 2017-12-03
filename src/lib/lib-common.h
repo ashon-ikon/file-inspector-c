@@ -54,6 +54,14 @@ typedef enum {
 #define fi_checkprintf
 #endif
 
+#ifndef MAX
+    #define MAX(a, b)       ((a) > (b) ? (a) : (b))
+#endif
+
+#ifndef MIN
+    #define MIN(a, b)       ((a) < (b) ? (a) : (b))
+#endif
+
 FI_END_DECLS
 
 #endif /* LIB_COMMON_H */

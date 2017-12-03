@@ -47,9 +47,9 @@ FI_BEGIN_DECLS
 #define PATH_MAX MAXPATHLEN
 #else
 #define PATH_MAX 1024
-#endif
-#endif
-#endif
+#endif // MAXPATHLEN
+#endif // _POSIX_VERSION
+#endif // PATH_MAX
     
 #ifndef FI_FUNC_RESPONSES
 #define FI_FUNC_FAIL            -1
