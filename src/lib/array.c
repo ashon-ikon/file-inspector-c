@@ -50,7 +50,7 @@ static size_t fi_mem_best_size(size_t desired, size_t sz)
     
     size_t best = 0, s = 0, bound = 0;
     s = desired > sz ? desired : sz;
-
+    
     do 
         best = 1 << bound++;
     while (best < s);
@@ -165,8 +165,11 @@ short fi_array_push (struct FiArray *arr, void const *data)
         return FI_FUNC_FAIL;
 
     if ((arr->capacity < (1 + arr->len)) 
-    && ! fi_array_expand_container(arr, fi_mem_best_size(1, arr->capacity * 2)))
+    && ! fi_array_expand_container(arr,
+                                   fi_mem_best_size(sizeof(void *),
+                                   arr->capacity * 2))) {
             return FI_FUNC_FAIL;
+    }
 
     return fi_array_insert(arr, data, arr->len++);
 

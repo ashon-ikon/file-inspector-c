@@ -74,7 +74,8 @@ FI_TEST_RESULT test_checking_group_for_file()
     fi_file_set_props(&file2,
                       "IMAGE002",
                       "/lorem/ipsum/",
-                      "tiff",
+                      "/lorem/ipsum/IMAGE002.tiff",
+                      FI_FILE_TYPE_REGULAR,
                       (1024 * 63),
                       (struct timespec){200, 300},
                       file2.ref.free);
@@ -83,6 +84,7 @@ FI_TEST_RESULT test_checking_group_for_file()
                        "IMAGE003",
                        "/lorem/ipsum/",
                        "tiff",
+                       FI_FILE_TYPE_REGULAR,
                        (1024 * 63),
                        (struct timespec){200, 300},
                        file3.ref.free);
@@ -91,6 +93,7 @@ FI_TEST_RESULT test_checking_group_for_file()
                        "IMAGE004",
                        "/lorem/ipsum/",
                        "tiff",
+                       FI_FILE_TYPE_REGULAR,
                        (1024 * 63),
                        (struct timespec){200, 300},
                        file4.ref.free);
@@ -134,6 +137,7 @@ FI_TEST_RESULT test_conflict_groups_array_creation()
                        "IMAGE201",
                        "/lorem/ipsum/",
                        "tiff",
+                       FI_FILE_TYPE_REGULAR,
                        (1024 * 256),
                        (struct timespec){200, 300},
                        file1.ref.free);
@@ -142,6 +146,7 @@ FI_TEST_RESULT test_conflict_groups_array_creation()
                       "IMAGE202",
                       "/lorem/ipsum/",
                       "tiff",
+                      FI_FILE_TYPE_REGULAR,
                       (1024 * 184),
                       (struct timespec){200, 300},
                       file2.ref.free);
