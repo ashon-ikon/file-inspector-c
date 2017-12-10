@@ -25,11 +25,12 @@
 #ifndef FINSPECTOR_UTIL_STRING_H
 #define FINSPECTOR_UTIL_STRING_H
 
+#include "lib-common.h"
+
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
 
-#include "lib-common.h"
 
 FI_BEGIN_DECLS
 
