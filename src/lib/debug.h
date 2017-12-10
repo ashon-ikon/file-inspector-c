@@ -51,7 +51,9 @@ typedef enum {
     FI_DEBUG_LEVEL_WARN,
     FI_DEBUG_LEVEL_ERROR,
     FI_DEBUG_LEVEL_ASSERT,
+} FiDebugLevel;
 
+typedef enum {
     FI_MSG_TYPE_CRITICAL,
     FI_MSG_TYPE_ERROR,
     FI_MSG_TYPE_FATAL,
@@ -64,7 +66,7 @@ typedef enum {
 #define FI_DEBUG_LEVEL  FI_DEBUG_LEVEL_INFO
 #endif
 
-void _fi_log_message(FiMessageType level,
+void _fi_log_message(FiDebugLevel level,
                     const char * fn, const int line, const char *file,
                     const char * err, ...) fmt_printf;
 

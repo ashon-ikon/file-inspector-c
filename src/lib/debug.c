@@ -40,7 +40,7 @@
  * @param err
  * @param ...
  */
-void _fi_log_message(FiMessageType type,
+void _fi_log_message(FiDebugLevel type,
                     const char * fn, const int line, const char *file,
                     const char * err, ...)
 {
@@ -62,6 +62,7 @@ void _fi_log_message(FiMessageType type,
         case FI_DEBUG_LEVEL_INFO:   t = 'I'; break;
         case FI_DEBUG_LEVEL_WARN:   t = 'W'; break;
         case FI_DEBUG_LEVEL_VERB:   t = 'V'; break;
+        default: break;
     }
 
     fprintf(stderr, "(%c%c) %s%s\n", t, t, fname, msg);
