@@ -21,6 +21,8 @@
  * SOFTWARE.
  * 
  */
+#include "lib-common.h"
+
 #include <stdlib.h>
 #include <malloc.h>
 
@@ -32,7 +34,7 @@ const struct FiFileInfo EMPTY_FILE = {
    {0, NULL},           /* struct FiRef */
     NULL,               /* filename */
     NULL,               /* file_path */
-    NULL,               /* file_extension */
+    NULL,               /* full_filename */
     0L,                 /* size */
     false,              /* free_container */
     0,                  /* file_type */
@@ -74,12 +76,12 @@ static void fi_file_info_ref_destory(const struct FiRef *ref)
     if (NULL == file)
             return;
 
-    free(file->filename);
-    free(file->path);
-    free(file->extension);
+    fi_free(file->filename);
+    fi_free(file->path);
+    fi_free(file->full_filename);
 
     if (file->free_container)
-        free(file);
+        fi_free(file);
 }
 
 bool fi_file_copy_proxy(void const *src, void *dst, unsigned n)
@@ -89,7 +91,7 @@ bool fi_file_copy_proxy(void const *src, void *dst, unsigned n)
     
     if (n != sizeof(struct FiFileInfo)) {
         fi_log_message(FI_DEBUG_LEVEL_WARN,
-            "Failed to copy data. Size mismatch. Expected %u, got %d",
+            "Failed to copy data. Size mismatch. Expected %zu, got %d",
             sizeof (struct FiFileInfo), n);
         return false;
     }
@@ -111,7 +113,7 @@ bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
     fi_file_set_props(dest,
             src->filename,
             src->path,
-            src->extension,
+            src->type,
             src->size_byte,
             src->modified_at,
             src->ref.free);
@@ -119,17 +121,26 @@ bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest)
     return true;
 }
 
+char *fi_file_get_extension(struct FiFileInfo *file)
+{
+        char *h = strrchr(file->filename, '.');
+
+        // Move one past the '.'
+        return h ? (h + 1) : h;
+}
+
 void fi_file_set_props(struct FiFileInfo *file,
                        const char *filename,
                        const char *path,
-                       const char *extension,
+                       unsigned int type,
                        off_t size,
                        struct timespec modified_at,
                        void (*free)(const struct FiRef *ref))
 {
         file->filename = fi_strndup(filename, fi_strlen(filename));
         file->path = fi_strndup(path, fi_strlen(path));
-        file->extension = fi_strndup(extension, fi_strlen(extension));
+        file->full_filename = fi_strconcat(2, path, ) fi_strndup(full_filename, fi_strlen(full_filename));
+        file->type = type;
         file->size_byte = size;
         file->modified_at = modified_at;
         file->ref.free = free;

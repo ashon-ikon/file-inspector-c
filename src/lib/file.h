@@ -25,13 +25,14 @@
 #ifndef FINSPECTOR_FILE_ARRAY_H
 #define FINSPECTOR_FILE_ARRAY_H
 
+#include "lib-common.h"
+
 #include <time.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <sys/types.h>
 
-#include "lib-common.h"
 
 #include "array.h"
 #include "debug.h"
@@ -85,7 +86,7 @@ struct FiFileInfo {
     struct FiRef        ref;
     char               *filename;
     char               *path;
-    char               *extension;
+    char               *full_filename;
     off_t               size_byte;
     bool                free_container;
     FiFileType          type;
@@ -100,12 +101,13 @@ bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest);
 void fi_file_set_props(struct FiFileInfo *file,
                        const char *filename,
                        const char *path,
-                       const char *extension,
+                       unsigned int type,
                        off_t size,
                        struct timespec modified_at,
                        void (*free)(const struct FiRef *ref));
 
 bool fi_file_copy_proxy(void const *src, void *dst, unsigned n); // Copy method
+char *fi_file_get_extension(struct FiFileInfo *file);
 
 inline bool fi_file_is_directory(const struct FiFileInfo *file)
 {

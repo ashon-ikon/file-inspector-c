@@ -21,16 +21,20 @@
  * SOFTWARE.
  *
  */
+#include "lib-common.h"
+
 #include <dirent.h>
 #include <locale.h>
 #include <stdbool.h>
-#include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
 
 #include "debug.h"
 #include "file-manager.h"
+#include "file-hash.h"
 #include "util-string.h"
 
 const char path_separator =
@@ -41,11 +45,10 @@ const char path_separator =
 #endif
 
 // Prototypes ...
+static FiFileType get_file_type(const mode_t d_type);
 static bool read_file_info(const char const  *path,
                            const char const  *filename,
                            struct FiFileInfo *file);
-static char *file_extension(const char const *filename);
-static FiFileType get_file_type(const mode_t d_type);
 
 /**
  * Method responsible for reading contents of a directory
@@ -126,9 +129,6 @@ static bool read_file_info(const char const  *path,
     }
     free (fullpath);
 
-    char *ext = file_extension(filename);
-    
-    file->extension   = fi_strdup(ext ? ext : "");
     file->path        = fi_strndup(path,     strlen(path));
     file->filename    = fi_strndup(filename, strlen(filename));
     file->size_byte   = st_buff.st_size;
@@ -159,14 +159,6 @@ static FiFileType get_file_type(const mode_t st_mode)
 }
 
 
-static char *file_extension(const char const *filename)
-{
-    char *h = strrchr(filename, '.');
-    
-    // Move one past the '.'
-    return h ? (h + 1) : h;
-}
-
 bool fi_file_manager_copy_file(const char const *filepath,
                                bool              remove_source)
 {
@@ -175,4 +167,6 @@ bool fi_file_manager_copy_file(const char const *filepath,
     
     if (remove_source)
         ;
+    
+    return false;
 }
