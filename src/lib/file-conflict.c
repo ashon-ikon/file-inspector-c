@@ -77,6 +77,8 @@ static bool fi_conflict_group_free_cb(struct FiList *node)
 {
     struct FiFileInfo *info = fi_list_data_ptr(node, struct FiFileInfo);
     fi_ref_dec(&info->ref);
+    
+    return true;
 }
 
 void fi_conflict_group_add(struct FiConfGroup *self, struct FiFileInfo *file)
@@ -154,6 +156,7 @@ bool fi_conflict_group_copy(void const *src, void *dst, unsigned n)
     CONF_GRP(dst)->ref.free         = CONF_GRP(src)->ref.free;
     fi_ref_inc( &(CONF_GRP(dst)->ref) );
     
+    return true;    
 }
 
 // ------------------------------------------
@@ -175,7 +178,7 @@ void fi_conflict_array_free(struct FiFileConflictArray *arr)
 
     struct FiConfGroup *grp;
     
-    while(grp = fi_array_pop(arr->file_groups, struct FiConfGroup)) {
+    while((grp = fi_array_pop(arr->file_groups, struct FiConfGroup))) {
         fi_ref_dec(&grp->ref);  
     }
     
