@@ -62,6 +62,11 @@ typedef enum {
     #define MIN(a, b)       ((a) < (b) ? (a) : (b))
 #endif
 
+inline void fi_free(const void *p)
+{
+    if (p) free(p);
+}
+
 FI_END_DECLS
 
 #endif /* LIB_COMMON_H */
