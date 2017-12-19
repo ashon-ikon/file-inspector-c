@@ -21,12 +21,19 @@
  * SOFTWARE.
  *
  */
+#include "lib-common.h"
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "file-hash.h"
-#include "util-string.h" // Include <string.h>
+#include "util-string.h"
+
+/* How many bytes into a file should we read
+ */
+#define FI_FILE_CONTENT_HASH_MAX_READ   1024
 
 size_t fi_hash_data (const void *data, size_t len)
 {
@@ -62,8 +69,7 @@ size_t fi_file_get_hash(struct FiFileInfo *file)
 {
         // Overflow is gracefully acceptable
         size_t v = fi_hash_data(file->filename, fi_strlen(file->filename));
-//        v += fi_hash_data(file->extension, fi_strlen(file->extension));
-        v += file->type;
+        v += (size_t) file->type;
 
         return v;
 }
