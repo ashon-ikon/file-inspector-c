@@ -26,10 +26,10 @@
 
 #include "algo-core.h"
 
-static bool fi_algo_copy_proxy(void const *src, void *dst, unsigned n);
-static bool fi_algo_copy(const struct FiAlgo const *src, struct FiAlgo *dst);
-static char fi_algo_collection_add(struct FiAlgoCollection *self,
-                                   struct FiAlgo *algo);
+//static bool fi_algo_copy_proxy(void const *src, void *dst, unsigned n);
+//static bool fi_algo_copy(const struct FiAlgo const *src, struct FiAlgo *dst);
+//static char fi_algo_collection_add(struct FiAlgoCollection *self,
+//                                   struct FiAlgo *algo);
 
 void fi_algo_collection_init(struct FiAlgoCollection *coll)
 {
@@ -41,21 +41,22 @@ void fi_algo_collection_init(struct FiAlgoCollection *coll)
 //    coll->get_conflicts = NULL;
 }
 
-static char fi_algo_collection_add(struct FiAlgoCollection *self, struct FiAlgo *algo)
-{
-    if (! self || ! algo)
-        return FI_FUNC_FAIL;
-    
-    // Check that we don't have algorithm yet
-    
-}
-
-static bool fi_algo_copy_proxy(void const *src, void *dst, unsigned n)
-{
-    
-}
-
-static bool fi_algo_copy(const struct FiAlgo const *src, struct FiAlgo *dst)
-{
-    
-}
+//static char fi_algo_collection_add(struct FiAlgoCollection *self, struct FiAlgo *algo)
+//{
+//    if (! self || ! algo)
+//        return FI_FUNC_FAIL;
+//    
+//    // Check that we don't have algorithm yet
+//    return '\0';
+//    
+//}
+//
+//static bool fi_algo_copy_proxy(void const *src, void *dst, unsigned n)
+//{
+//    return false;
+//}
+//
+//static bool fi_algo_copy(const struct FiAlgo const *src, struct FiAlgo *dst)
+//{
+//    return false;
+//}
