@@ -8,6 +8,7 @@ __top_builddir__lib_libdetector_la_SOURCES = \
 	debug.c				     \
 	array.c				     \
 	list.c				     \
+	conjoined-string.c		     \
 	util-string.c			     \
 	file.c				     \
 	file-container.c		     \

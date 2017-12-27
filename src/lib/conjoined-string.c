@@ -1,0 +1,119 @@
+/* 
+ * File:   conjoined-string.h
+ * Author: Yinka Ashon
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ * 
+ */
+
+#include <malloc.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "conjoined-string.h"
+#include "util-string.h"
+
+#define INITIAL_STRING_BUFFER_LENGTH    (1 << 8)
+
+struct FiHiStringBank *fi_conj_string_new()
+{
+        struct FiHiStringBank *b = malloc(sizeof(*b));
+        
+        if (!b) return NULL;
+        
+        b->size = 0;
+        b->tip = 0;
+        b->wiped = 1;
+        b->strings = NULL;
+        
+        return b;
+}
+
+void fi_conj_string_free(struct FiHiStringBank *bank)
+{
+        bank->size = 0;
+        bank->tip = 0;
+        bank->wiped = 1;
+        fi_free(bank->strings);
+        fi_free(bank);
+}
+
+static int fi_conj_string_ensure_length(struct FiHiStringBank *b, size_t l)
+{
+        size_t new_len = l + 1;
+        if (b->size > (b->tip + new_len)) return FI_FUNC_SUCCESS;
+        
+        size_t size = fi_mem_best_size(
+                                MAX(b->size * 2, INITIAL_STRING_BUFFER_LENGTH),
+                                new_len);
+        char *tmp = realloc(b->strings, size * sizeof b->strings[0]);
+        if (!tmp) return FI_FUNC_FAIL;
+
+        b->strings = tmp;
+        memset(b->strings + b->size, 0, size); // Clear new memory area
+        b->size = size;
+        
+        return FI_FUNC_SUCCESS;
+}
+
+/**
+ * Inserts a new string into bank
+ * @param b
+ * @param s
+ * @return FiHiString
+ */
+struct FiHiString fi_conj_string_add(struct FiHiStringBank *b, const char *str)
+{
+        size_t len = fi_strlen(str);
+        fi_conj_string_ensure_length(b, len);
+        
+        memcpy(FI_STR_BANK_AT(b, b->tip), str, len);
+        
+        if (FI_STR_BANK_IS_WIPED(b)) b->wiped = 0;
+        
+        struct FiHiString c;
+        c.length = len;
+        c.offset = b->tip;
+        c.root = b;
+        b->tip += len + 1;
+
+        return c;
+}
+
+/**
+ * This wipes the data content and resets tip
+ * !!!! NOTE Caller should ensure all linked
+ * !!!! values are no longer referenced
+ * @param b
+ */
+void fi_conj_string_wipe_content(struct FiHiStringBank *b)
+{
+        if (!b) return;
+        
+        fi_conj_string_wipe_content_quick(b);
+        
+        memset(b->strings, 0, sizeof(b->strings[0]) * b->size);
+}
+
+void fi_conj_string_wipe_content_quick(struct FiHiStringBank *b)
+{
+        if (!b) return;
+        
+        b->wiped = 1;
+}

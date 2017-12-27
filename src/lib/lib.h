@@ -30,6 +30,7 @@ extern "C" {
 #endif
 
 #include "array.h"
+#include "conjoined-string.h"
 #include "debug.h"
 #include "lib-common.h"
 #include "file.h"

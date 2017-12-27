@@ -67,6 +67,19 @@ static inline void fi_free(const void *p)
     free((void *)p);
 }
 
+static inline size_t fi_mem_best_size(size_t desired, size_t sz)
+{
+    
+    size_t best = 0, s = 0, bound = 0;
+    s = desired > sz ? desired : sz;
+    
+    do 
+        best = 1 << bound++;
+    while (best < s);
+    
+    return best;
+}
+
 FI_END_DECLS
 
 #endif /* LIB_COMMON_H */

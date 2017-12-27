@@ -44,20 +44,6 @@ static bool fi_array_data_copy(const void const *src, void *dest, unsigned n);
 /* Helper macros */
 #define fi_data_get_offset(array, i) ((array)->data + (array)->unit_size * (i))
 
-
-static size_t fi_mem_best_size(size_t desired, size_t sz)
-{
-    
-    size_t best = 0, s = 0, bound = 0;
-    s = desired > sz ? desired : sz;
-    
-    do 
-        best = 1 << bound++;
-    while (best < s);
-    
-    return best;
-}
-
 /**
  * Creates the array holder
  * @return struct FiArray *
