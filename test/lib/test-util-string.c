@@ -22,6 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "./../tests-common.h"
+
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -91,10 +93,10 @@ FI_TEST_RESULT test_string_concatenation()
 int main()
 {
     FiTestFunc fi_tests [] = {
-        {"test_string_concatenation", test_string_concatenation},
+//        {"test_string_concatenation", test_string_concatenation},
         {"test_string_empty",         test_string_empty},
-        {"test_string_duplication",   test_string_duplication},
-        {"test_string_duplication_with_length", test_string_duplication_with_length},
+//        {"test_string_duplication",   test_string_duplication},
+//        {"test_string_duplication_with_length", test_string_duplication_with_length},
         {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
     };
     

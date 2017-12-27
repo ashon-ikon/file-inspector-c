@@ -22,6 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "./../tests-common.h"
+
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>

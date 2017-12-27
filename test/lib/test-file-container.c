@@ -23,6 +23,7 @@
  * SOFTWARE.
  * 
  */
+#include "./../tests-common.h"
 
 #include <stdio.h>
 
@@ -50,7 +51,7 @@ static void add_files_to_create_outside(struct FiFileContainer *con)
         
         file.full_filename  = fi_strdup("/home/lorem/ipsum/oh_praise_him.docx");
         file.path           = fi_strdup("/home/lorem/ipsum/");
-        file.filename       = fi_strdup("oh_praise_him");
+        file.filename       = fi_strdup("oh_praise_him.docx");
         file.type           = FI_FILE_TYPE_REGULAR;
     
         fi_file_container_push(con, &file);

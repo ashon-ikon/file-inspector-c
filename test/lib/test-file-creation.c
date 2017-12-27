@@ -23,6 +23,7 @@
  * SOFTWARE.
  * 
  */
+#include "./../tests-common.h"
 
 #include <stdio.h>
 #include <locale.h>
@@ -47,13 +48,13 @@ FI_TEST_RESULT test_file_info_creation()
     fi_file_init(&file2);
     fi_file_copy(&file, &file2);
    
-    fi_return_fail_if_not(strcmp(file2.full_filename, test_full_filename) == 0,
+    fi_return_fail_if_not(fi_strcmp0(file2.full_filename, test_full_filename),
                         fi_make_msg("We got %s", file2.full_filename));
 
-    fi_return_fail_if_not(strcmp(file2.path, test_path) == 0,
+    fi_return_fail_if_not(fi_strcmp0(file2.path, test_path),
                         fi_make_msg("We got %s", file2.path));
     
-    fi_return_fail_if_not(strcmp(file2.filename, test_filename) == 0,
+    fi_return_fail_if_not(fi_strcmp0(file2.filename, test_filename),
                         fi_make_msg("We got %s", file2.filename));
     
     fi_file_destroy(&file);

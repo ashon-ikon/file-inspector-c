@@ -35,19 +35,19 @@
 FI_BEGIN_DECLS
 
 
- #if (defined _XOPEN_SOURCE) \
+#if (defined _XOPEN_SOURCE) \
     || /* Since glibc 2.12: */ (defined _POSIX_C_SOURCE) \
     || /* Glibc versions <= 2.19: */ (defined _BSD_SOURCE) \
     || (defined _SVID_SOURCE)
 
-    #define fi_strdup(s)   strdup( (s) )
-    #define fi_strndup(s, n)  strndup( (s), (n) )
- #else
+    #define fi_strdup(s)      ((s) == NULL ? NULL : strdup( (s) ) )
+    #define fi_strndup(s, n)  ( (s) == NULL ? NULL : strndup( (s), (n) ) )
+#else
     // Probably windows or some sort
     #define FI_NO_STRDUP_FOUND
     #define fi_strdup(s)      _fi_strdup( (s) )
     #define fi_strndup(s, n)  _fi_strndup( (s), (n) )
- #endif
+#endif
 
 char *fi_rtrim(char * str, const char * impurities);
 char *fi_ltrim(char * str, const char * impurities);
@@ -63,7 +63,7 @@ char *_fi_strdup (const char *src);
 char *_fi_strndup(const char *src, size_t n);
 #endif
 
-inline size_t fi_strlen(const char const* s)
+static inline size_t fi_strlen(const char const* s)
 {
     return (! s) ? 0 : strlen(s);
 }

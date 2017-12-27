@@ -22,6 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "./../tests-common.h"
 
 #include "test-conflict-list-iteration.h"
 
@@ -74,7 +75,6 @@ FI_TEST_RESULT test_checking_group_for_file()
     fi_file_set_props(&file2,
                       "IMAGE002",
                       "/lorem/ipsum/",
-                      "/lorem/ipsum/IMAGE002.tiff",
                       FI_FILE_TYPE_REGULAR,
                       (1024 * 63),
                       (struct timespec){200, 300},
@@ -83,7 +83,6 @@ FI_TEST_RESULT test_checking_group_for_file()
     fi_file_set_props(&file3,
                        "IMAGE003",
                        "/lorem/ipsum/",
-                       "tiff",
                        FI_FILE_TYPE_REGULAR,
                        (1024 * 63),
                        (struct timespec){200, 300},
@@ -92,7 +91,6 @@ FI_TEST_RESULT test_checking_group_for_file()
     fi_file_set_props(&file4,
                        "IMAGE004",
                        "/lorem/ipsum/",
-                       "tiff",
                        FI_FILE_TYPE_REGULAR,
                        (1024 * 63),
                        (struct timespec){200, 300},
@@ -136,7 +134,6 @@ FI_TEST_RESULT test_conflict_groups_array_creation()
     fi_file_set_props(&file1,
                        "IMAGE201",
                        "/lorem/ipsum/",
-                       "tiff",
                        FI_FILE_TYPE_REGULAR,
                        (1024 * 256),
                        (struct timespec){200, 300},
@@ -145,7 +142,6 @@ FI_TEST_RESULT test_conflict_groups_array_creation()
     fi_file_set_props(&file2,
                       "IMAGE202",
                       "/lorem/ipsum/",
-                      "tiff",
                       FI_FILE_TYPE_REGULAR,
                       (1024 * 184),
                       (struct timespec){200, 300},

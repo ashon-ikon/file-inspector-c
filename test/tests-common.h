@@ -26,6 +26,8 @@
 #ifndef FINSPECTOR_TESTS_COMMON_H
 #define FINSPECTOR_TESTS_COMMON_H
 
+#include "./../src/lib/lib-common.h"
+
 #include <stdbool.h>
 #include <stdarg.h>
 
