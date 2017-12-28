@@ -31,14 +31,17 @@
 
 FI_BEGIN_DECLS
 
+struct FiHiString;
+
 /* This bank holds all related strings separated by 
  * 'NUL' character
  */
 struct FiHiStringBank {
-	size_t		size;
-	size_t		tip;
-	unsigned char	wiped;
-	char	       *strings;
+	size_t			size;
+	size_t			tip;
+	struct FiHiString      *last_string;
+	char		       *strings;
+	unsigned char		wiped;
 };
 
 /* This represent a fraction / bucket of string
@@ -47,7 +50,10 @@ struct FiHiStringBank {
 struct FiHiString {
 	size_t			offset;
 	size_t			length;
+
 	struct FiHiStringBank  *root;
+	struct FiHiString      *prev;
+	struct FiHiString      *next;
 };
 
 #define FI_STR_BANK_AT(b, i)	((b)->strings + i)
@@ -65,7 +71,9 @@ struct FiHiString {
 
 struct FiHiStringBank *fi_conj_string_new();
 void fi_conj_string_free(struct FiHiStringBank *bank);
-struct FiHiString fi_conj_string_add(struct FiHiStringBank *b, const char *str);
+void fi_conj_string_add(struct FiHiStringBank *b,
+			const char *str,
+			struct FiHiString *s);
 void fi_conj_string_wipe_content(struct FiHiStringBank *b);
 void fi_conj_string_wipe_content_quick(struct FiHiStringBank *b);
 

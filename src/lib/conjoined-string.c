@@ -41,6 +41,7 @@ struct FiHiStringBank *fi_conj_string_new()
         b->tip = 0;
         b->wiped = 1;
         b->strings = NULL;
+        b->last_string = NULL;
         
         return b;
 }
@@ -76,9 +77,11 @@ static int fi_conj_string_ensure_length(struct FiHiStringBank *b, size_t l)
  * Inserts a new string into bank
  * @param b
  * @param s
- * @return FiHiString
+ * @return
  */
-struct FiHiString fi_conj_string_add(struct FiHiStringBank *b, const char *str)
+void fi_conj_string_add(struct FiHiStringBank *b,
+                       const char *str,
+                       struct FiHiString *s)
 {
         size_t len = fi_strlen(str);
         fi_conj_string_ensure_length(b, len);
@@ -87,19 +90,34 @@ struct FiHiString fi_conj_string_add(struct FiHiStringBank *b, const char *str)
         
         if (FI_STR_BANK_IS_WIPED(b)) b->wiped = 0;
         
-        struct FiHiString c;
-        c.length = len;
-        c.offset = b->tip;
-        c.root = b;
+        s->length = len;
+        s->offset = b->tip;
+        s->root = b;
+        if (b->last_string) {
+                s->prev = b->last_string;
+                b->last_string->next = s;
+        } else {
+                s->prev = NULL;
+        }
+        s->next = NULL;
         b->tip += len + 1;
+        b->last_string = s;
 
-        return c;
+        return;
+}
+
+static void fi_conj_string_unlink(struct FiHiString *s)
+{
+       if (s->next) s->next->prev = s->prev;
+       if (s->prev) s->prev->next = s->next;
+       s->length = 0;
+       s->offset = 0;
+       s->next = NULL;
+       s->prev = NULL;
 }
 
 /**
  * This wipes the data content and resets tip
- * !!!! NOTE Caller should ensure all linked
- * !!!! values are no longer referenced
  * @param b
  */
 void fi_conj_string_wipe_content(struct FiHiStringBank *b)
@@ -114,6 +132,14 @@ void fi_conj_string_wipe_content(struct FiHiStringBank *b)
 void fi_conj_string_wipe_content_quick(struct FiHiStringBank *b)
 {
         if (!b) return;
+        
+        struct FiHiString *tail = b->last_string, *p;
+
+        while (tail) {
+                p = tail->prev;
+                fi_conj_string_unlink(tail);
+                tail = p;
+        }
         
         b->wiped = 1;
 }
