@@ -1,8 +1,8 @@
 /* 
  * File:   test-util-string.c
- * Author: yasonibare
+ * Author: Yinka Asonibare
  * 
- * Copyright (c) 2016 Yinka Asonibare
+ * Copyright (c) 2016-2018 Yinka Ashon
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -93,11 +93,11 @@ FI_TEST_RESULT test_string_concatenation()
 int main()
 {
     FiTestFunc fi_tests [] = {
-//        {"test_string_concatenation", test_string_concatenation},
+        {"test_string_concatenation", test_string_concatenation},
         {"test_string_empty",         test_string_empty},
-//        {"test_string_duplication",   test_string_duplication},
-//        {"test_string_duplication_with_length", test_string_duplication_with_length},
-        {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
+        {"test_string_duplication",   test_string_duplication},
+        {"test_string_duplication_with_length", test_string_duplication_with_length},
+        FI_TEST_ENTRY_END
     };
     
     return run(fi_tests);

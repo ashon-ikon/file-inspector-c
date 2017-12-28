@@ -112,8 +112,28 @@ static void fi_conj_string_unlink(struct FiHiString *s)
        if (s->prev) s->prev->next = s->next;
        s->length = 0;
        s->offset = 0;
+       *FI_STR_ADDR(s) = '\0';
        s->next = NULL;
        s->prev = NULL;
+}
+
+void fi_conj_string_remove_last(struct FiHiStringBank *b)
+{
+        if (!b)
+                return;
+        if (!b->last_string)
+                return;
+        
+        struct FiHiString *s = b->last_string;
+
+        b->tip -= s->length;
+        b->last_string = s->prev ? s->prev: NULL;
+        b->last_string->next = NULL;
+        s->length = 0;
+        s->offset= 0;
+        *FI_STR_ADDR(s) = '\0';
+
+        return;
 }
 
 /**

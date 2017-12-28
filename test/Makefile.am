@@ -8,6 +8,7 @@ check_PROGRAMS=test-inspector-lib-array \
 	       test-inspector-lib-file-manager \
 	       test-inspector-lib-list-traversing \
 	       test-inspector-lib-conflict-list-iteration \
+	       test-inspector-lib-conjoined-string \
 	       test-inspector-lib-util-string
 
 TESTS=$(check_PROGRAMS)
@@ -55,6 +56,15 @@ test_inspector_lib_util_string_SOURCES=  \
 test_inspector_lib_util_string_LDADD= $(top_builddir)/lib/libdetector.la
 test_inspector_lib_util_string_CPPFLAGS=$(FI_DEPS_CFLAGS)
 test_inspector_lib_util_string_CFLAGS=$(TEST_CFLAGS)
+
+## Extended Strings function unit tests
+test_inspector_lib_conjoined_string_SOURCES=  \
+	test-suite.c     \
+	lib/test-conjoined-string.c 
+
+test_inspector_lib_conjoined_string_LDADD= $(top_builddir)/lib/libdetector.la
+test_inspector_lib_conjoined_string_CPPFLAGS=$(FI_DEPS_CFLAGS)
+test_inspector_lib_conjoined_string_CFLAGS=$(TEST_CFLAGS)
 
 ## File manager
 test_inspector_lib_file_manager_SOURCES=  \

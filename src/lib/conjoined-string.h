@@ -74,6 +74,7 @@ void fi_conj_string_free(struct FiHiStringBank *bank);
 void fi_conj_string_add(struct FiHiStringBank *b,
 			const char *str,
 			struct FiHiString *s);
+void fi_conj_string_remove_last(struct FiHiStringBank *b);
 void fi_conj_string_wipe_content(struct FiHiStringBank *b);
 void fi_conj_string_wipe_content_quick(struct FiHiStringBank *b);
 

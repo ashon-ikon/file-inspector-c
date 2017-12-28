@@ -1,8 +1,8 @@
 /* 
- * File:   test-file-manager.c
+ * File:   test-conjoined-string.h
  * Author: Yinka Ashon
  * 
- * Copyright (c) 2017-2018 Yinka Ashon
+ * Copyright (c) 2016-2018 Yinka Ashon
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -22,45 +22,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#ifndef FINSPECTOR_TEST_CONJOINED_STRING_H
+#define FINSPECTOR_TEST_CONJOINED_STRING_H
+
 #include "./../tests-common.h"
+#include "./../../src/lib/conjoined-string.h"
+#include "./../../src/lib/util-string.h"
 
-#include <limits.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <unistd.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include "test-file-manager.h"
-#include "../../src/lib/util-string.h"
 
-#define DIR_PATH_MAX  10240
 
-FI_TEST_RESULT test_init()
-{
-    
-    struct FiFileContainer *con = fi_file_container_init();
-    
-    char pwd[DIR_PATH_MAX];
-    char *test_path = NULL;
-    
-    getcwd(pwd, DIR_PATH_MAX);
-    test_path = fi_strconcat(2, pwd, "/test/fs/");
-    
-    fi_file_manager_read_dir(test_path, con, true);
-    fi_return_fail_if_not(NULL != con, "Failed to create new container");
 
-    fi_file_container_destroy(con);
-    free(test_path);
-    
-    return FI_TEST_OKAY;
+#ifdef __cplusplus
 }
+#endif
 
+#endif /* FINSPECTOR_TEST_CONJOINED_STRING_H */
 
-int main()
-{
-    FiTestFunc fi_tests [] = {
-        {"test_init", test_init},
-        FI_TEST_ENTRY_END
-    };
-    
-    return run(fi_tests);
-}
