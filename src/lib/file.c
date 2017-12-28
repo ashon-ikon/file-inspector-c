@@ -36,8 +36,8 @@ const struct FiFileInfo EMPTY_FILE = {
     NULL,               /* file_path */
     NULL,               /* full_filename */
     0L,                 /* size */
-    false,              /* free_container */
     0,                  /* file_type */
+    false,              /* free_container */
 };
 
 /* Prototypes */

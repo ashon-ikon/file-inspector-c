@@ -50,8 +50,10 @@ typedef enum {
 
 #ifdef __GNUC__
 #define fi_checkprintf  __attribute__ (( format(printf, 1, 2) ))
+#define fi_packed	__attribute__ ((__packed__))
 #else
 #define fi_checkprintf
+#define fi_packed
 #endif
 
 #ifndef MAX

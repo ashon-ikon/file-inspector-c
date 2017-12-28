@@ -58,7 +58,7 @@ FI_BEGIN_DECLS
 #define FI_FUNC_RESPONSES       0x1200
 #endif
 
-typedef enum {
+typedef enum fi_packed {
     FI_FILE_TYPE_UNKNOWN,
     FI_FILE_TYPE_REGULAR,
     FI_FILE_TYPE_DIRECTORY,
@@ -88,8 +88,8 @@ struct FiFileInfo {
     char               *path;
     char               *full_filename;
     off_t               size_byte;
-    bool                free_container;
     FiFileType          type;
+    bool                free_container;
 };
 
 #define FI_FILE_INIT(f) struct FiFileInfo (f); fi_file_init(&(f))
