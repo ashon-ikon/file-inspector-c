@@ -41,8 +41,8 @@ const char path_separator =
 #endif
 
 // Prototypes ...
-static bool read_file_info(const char const  *path,
-                           const char const  *filename,
+static bool read_file_info(const char *const path,
+                           const char *const filename,
                            struct FiFileInfo *file);
 static char *file_extension(const char const *filename);
 static FiFileType get_file_type(const mode_t d_type);
@@ -64,7 +64,7 @@ static FiFileType get_file_type(const mode_t d_type);
  * @param recursive
  * @return 
  */
-bool fi_file_manager_read_dir(const char const       *path,
+bool fi_file_manager_read_dir(const char        *const path,
                               struct FiFileContainer *con,
                               bool                    recursive)
 {
@@ -109,8 +109,8 @@ bool fi_file_manager_read_dir(const char const       *path,
     return true;
 }
 
-static bool read_file_info(const char const  *path,
-                           const char const  *filename,
+static bool read_file_info(const char *const path,
+                           const char *const filename,
                            struct FiFileInfo *file)
 {
     // Read the file information by lstat
@@ -159,7 +159,7 @@ static FiFileType get_file_type(const mode_t st_mode)
 }
 
 
-static char *file_extension(const char const *filename)
+static char *file_extension(const char *const filename)
 {
     char *h = strrchr(filename, '.');
     
@@ -167,7 +167,7 @@ static char *file_extension(const char const *filename)
     return h ? (h + 1) : h;
 }
 
-bool fi_file_manager_copy_file(const char const *filepath,
+bool fi_file_manager_copy_file(const char *const filepath,
                                bool              remove_source)
 {
     if (! filepath)
