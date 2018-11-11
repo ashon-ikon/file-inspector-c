@@ -90,7 +90,7 @@ bool fi_file_manager_read_dir(const char       *const path,
     struct FiFileInfo file;
     
     while ((dp = readdir(dir)) != NULL) {
-        
+
         if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..")) {
             fi_file_init(&file);
             if (! read_file_info(lpath, dp->d_name, &file))
