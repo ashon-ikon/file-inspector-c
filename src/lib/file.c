@@ -142,7 +142,7 @@ void fi_file_set_props(struct FiFileInfo *file,
         file->full_filename = fi_strconcat(
                        2,
                        path,
-                       fi_strndup(file->filename, fi_strlen(file->filename)));
+                       file->filename);
         file->type = type;
         file->size_byte = size;
         file->modified_at = modified_at;
