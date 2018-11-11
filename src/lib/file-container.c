@@ -89,9 +89,8 @@ unsigned short fi_file_container_push(struct FiFileContainer *arr,
  */
 
 /**
- * Returns File Info structure
+ * Returns File Info
  * 
- * return value must be freed with "fi_file_info_value_cleanup" !
  * @param arr
  * @param i
  * @return FileInfo
@@ -106,6 +105,23 @@ struct FiFileInfo *fi_file_container_get_file_at(struct FiFileContainer *con, un
 
     struct FiFileInfo *file = fi_array_get_ptr(con->array,
                                                struct FiFileInfo, i);
+    return file;   
+}
+
+/**
+ * Returns a copy of File Info (ref counter incremented)
+ * 
+ * return value must be freed with "fi_file_destroy()" !
+ * @param arr
+ * @param i
+ * @return FileInfo
+ */
+struct FiFileInfo *fi_file_container_get_file_at_copy(struct FiFileContainer *con, unsigned long i)
+{
+    struct FiFileInfo *file = fi_file_container_get_file_at(con, i);
+    if (! file)
+            return NULL;
+
     fi_ref_inc(&file->ref);
     
     return file;   

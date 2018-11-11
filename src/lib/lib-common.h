@@ -50,9 +50,37 @@ typedef enum {
 
 #ifdef __GNUC__
 #define fi_checkprintf  __attribute__ (( format(printf, 1, 2) ))
+#define fi_packed	__attribute__ ((__packed__))
 #else
 #define fi_checkprintf
+#define fi_packed
 #endif
+
+#ifndef MAX
+    #define MAX(a, b)       ((a) > (b) ? (a) : (b))
+#endif
+
+#ifndef MIN
+    #define MIN(a, b)       ((a) < (b) ? (a) : (b))
+#endif
+
+static inline void fi_free(const void *p)
+{
+    free((void *)p);
+}
+
+static inline size_t fi_mem_best_size(size_t desired, size_t sz)
+{
+    
+    size_t best = 0, s = 0, bound = 0;
+    s = desired > sz ? desired : sz;
+    
+    do 
+        best = 1 << bound++;
+    while (best < s);
+    
+    return best;
+}
 
 FI_END_DECLS
 

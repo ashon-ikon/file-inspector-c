@@ -26,6 +26,8 @@
 #ifndef FINSPECTOR_TESTS_COMMON_H
 #define FINSPECTOR_TESTS_COMMON_H
 
+#include "./../src/lib/lib-common.h"
+
 #include <stdbool.h>
 #include <stdarg.h>
 
@@ -52,6 +54,9 @@ typedef struct {
     test_func test;
 } FiTestFunc;
 
+#define FI_TEST_ENTRY_END	{NULL, NULL},
+#define FI_TEST_ENTRY(t)	{#t, t}
+	
 extern char *fi_make_msg(char *fmt, ...) fi_checkprintf;
 
 #define fi_assert_true(con) ( (con) == true ? FI_TEST_OKAY : FI_TEST_FAIL)

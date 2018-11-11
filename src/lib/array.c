@@ -35,29 +35,14 @@
 
 /* This is the minimum items in list to start with 
  */
-#define FI_INITIAL_ARRAY_ALLOC_SIZE 1 << 4
+#define FI_INITIAL_ARRAY_ALLOC_SIZE (1 << 4)
 
 /* Prototypes */
-static bool fi_array_expand_container(struct FiArray *cur, unsigned n);
-static bool fi_array_data_copy(const void const *src, void *dest, unsigned n);
+static bool fi_array_expand_container(struct FiArray *cur, size_t n);
+static bool fi_array_data_copy(const void *const src, void *dest, unsigned n);
 
 /* Helper macros */
 #define fi_data_get_offset(array, i) ((array)->data + (array)->unit_size * (i))
-
-
-static
-FI_TYPE_SIZE fi_mem_best_size(FI_TYPE_SIZE desired, FI_TYPE_SIZE sz)
-{
-    
-    FI_TYPE_SIZE best = 0, s = 0, bound = 0;
-    s = desired > sz ? desired : sz;
-
-    do 
-        best = 1 << bound++;
-    while (best < s);
-    
-    return best;
-}
 
 /**
  * Creates the array holder
@@ -71,7 +56,7 @@ struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp)
 
 struct FiArray *fi_array_new_n(size_t unit_size,
                                fi_array_data_cp_fn cp,
-                               FI_TYPE_SIZE n)
+                               size_t n)
 {
     struct FiArray *arr = malloc(sizeof *arr);
     if (! arr) {
@@ -115,7 +100,7 @@ void fi_array_ref_dec(const struct FiRef *ref)
     free(arr);
 }
 
-static bool fi_array_data_copy(const void const *src, void* dest, unsigned n)
+static bool fi_array_data_copy(const void *const src, void* dest, unsigned n)
 {
     if (src && dest) {
         memcpy(dest, src, n);
@@ -138,7 +123,7 @@ void fi_array_set_cleanup_notifier(struct FiArray *arr,
  * @param n
  * @return 
  */
-static bool fi_array_expand_container(struct FiArray * cur, unsigned n)
+static bool fi_array_expand_container(struct FiArray * cur, size_t n)
 {
     void *tmp = realloc(cur->data, n * cur->unit_size);
     
@@ -166,8 +151,11 @@ short fi_array_push (struct FiArray *arr, void const *data)
         return FI_FUNC_FAIL;
 
     if ((arr->capacity < (1 + arr->len)) 
-    && ! fi_array_expand_container(arr, fi_mem_best_size(1, arr->capacity * 2)))
+    && ! fi_array_expand_container(arr,
+                                   fi_mem_best_size(sizeof(void *),
+                                   arr->capacity * 2))) {
             return FI_FUNC_FAIL;
+    }
 
     return fi_array_insert(arr, data, arr->len++);
 
@@ -194,7 +182,7 @@ void *_fi_array_pop(struct FiArray *arr)
 }
 
 
-short fi_array_insert(struct FiArray *arr, void const *data, FI_TYPE_SIZE i)
+short fi_array_insert(struct FiArray *arr, void const *data, size_t i)
 {
     if (! data || ! arr)
         return FI_FUNC_FAIL;
@@ -222,7 +210,7 @@ void  fi_array_copy(const struct FiArray *src, struct FiArray *dst)
     if (! src->len)
         return;
 
-    for (FI_TYPE_SIZE i = 0; i < src->capacity; i++)
+    for (size_t i = 0; i < src->capacity; i++)
         fi_array_insert(dst, fi_array_get_ptr(src, void, i), i);
 
     dst->len = src->len;

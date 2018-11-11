@@ -20,6 +20,8 @@
  * SOFTWARE.
  * 
  */
+#include "lib-common.h"
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -156,7 +158,7 @@ char* fi_strconcat(const unsigned char num, ...)
 
 int fi_strcmp0(const char *const s1, const char *const s2)
 {
-    return strcmp(s1, s2) == 0;
+        return s1 && s2 && strcmp(s1, s2) == 0;
 }
 
 /**

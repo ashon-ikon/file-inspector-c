@@ -1,8 +1,8 @@
 /* 
  * File:   test-file-container.c
- * Author: yasonibare
+ * Author: Yinka Ashon
  * 
- * Copyright (c) 2016 Yinka Asonibare
+ * Copyright (c) 2016-2018 Yinka Ashon
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -23,6 +23,7 @@
  * SOFTWARE.
  * 
  */
+#include "./../tests-common.h"
 
 #include <stdio.h>
 
@@ -48,10 +49,10 @@ static void add_files_to_create_outside(struct FiFileContainer *con)
         struct FiFileInfo file;
         fi_file_init(&file);
         
-        file.extension = fi_strdup(".docx");
-        file.path      = fi_strdup("/home/lorem/ipsum/");
-        file.filename       = fi_strdup("oh_praise_him");
-        file.type      = FI_FILE_TYPE_REGULAR;
+        file.full_filename  = fi_strdup("/home/lorem/ipsum/oh_praise_him.docx");
+        file.path           = fi_strdup("/home/lorem/ipsum/");
+        file.filename       = fi_strdup("oh_praise_him.docx");
+        file.type           = FI_FILE_TYPE_REGULAR;
     
         fi_file_container_push(con, &file);
         
@@ -73,8 +74,12 @@ FI_TEST_RESULT test_file_container_push_data()
                       "Wrong number of files added");
     struct FiFileInfo *file = NULL;
     fi_file_container_each(con, file) {
-        fi_return_fail_if_not(strcmp(file->extension, ".docx") == 0,
-                        fi_make_msg("We got %s", file->extension));
+        fi_return_fail_if_not(
+                        strcmp(
+                                file->full_filename,
+                                "/home/lorem/ipsum/oh_praise_him.docx"
+                        ) == 0,
+                        fi_make_msg("We got %s", file->full_filename));
         fi_ref_dec(&file->ref);
     }
     
@@ -89,7 +94,7 @@ int main()
     FiTestFunc fi_tests [] = {
         {"test_file_container_creation", test_file_container_creation},
         {"test_file_container_push_data", test_file_container_push_data},
-        {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
+        FI_TEST_ENTRY_END
     };
     
     return run(fi_tests);

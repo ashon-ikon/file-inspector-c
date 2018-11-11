@@ -30,6 +30,8 @@
 FI_BEGIN_DECLS
         
 size_t fi_file_get_hash(struct FiFileInfo *file);
+size_t fi_file_get_content_hash(struct FiFileInfo *file);
+size_t fi_hash_data(const void *data, size_t len);
 
 
 

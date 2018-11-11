@@ -48,7 +48,7 @@ void fi_file_container_destroy(struct FiFileContainer *container);
 unsigned short fi_file_container_push(struct FiFileContainer *arr,
                                       struct FiFileInfo  *info);
 
-static inline FI_TYPE_SIZE fi_file_container_size(struct FiFileContainer *con)
+static inline size_t fi_file_container_size(struct FiFileContainer *con)
 {
     if (!con)
         return 0;

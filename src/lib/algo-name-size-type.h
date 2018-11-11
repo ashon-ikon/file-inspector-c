@@ -26,17 +26,16 @@
 #define FINSPECTOR_ALGO_NAME_SIZE_TYPE_H
 
 #include "lib-common.h"
+#include "file-conflict.h"
+#include "file-container.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
+FI_BEGIN_DECLS
 
 
-#ifdef __cplusplus
-}
-#endif
+int fi_algo_extract_duplicate(struct FiFileContainer     *files,
+                              struct FiFileConflictArray *conflicts);
+
+FI_END_DECLS
 
 #endif /* FINSPECTOR_ALGO_NAME_SIZE_TYPE_H */
 

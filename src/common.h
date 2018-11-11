@@ -32,8 +32,5 @@
 #endif
 
 
-//#include "lib/string-helper.h"
-
-
 #endif /* FINSPECTOR_COMMON_H__ */
 

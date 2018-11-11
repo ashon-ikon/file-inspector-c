@@ -25,13 +25,14 @@
 #ifndef FINSPECTOR_FILE_ARRAY_H
 #define FINSPECTOR_FILE_ARRAY_H
 
+#include "lib-common.h"
+
 #include <time.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <sys/types.h>
 
-#include "lib-common.h"
 
 #include "array.h"
 #include "debug.h"
@@ -47,9 +48,9 @@ FI_BEGIN_DECLS
 #define PATH_MAX MAXPATHLEN
 #else
 #define PATH_MAX 1024
-#endif
-#endif
-#endif
+#endif // MAXPATHLEN
+#endif // _POSIX_VERSION
+#endif // PATH_MAX
     
 #ifndef FI_FUNC_RESPONSES
 #define FI_FUNC_FAIL            -1
@@ -57,7 +58,7 @@ FI_BEGIN_DECLS
 #define FI_FUNC_RESPONSES       0x1200
 #endif
 
-typedef enum {
+typedef enum fi_packed {
     FI_FILE_TYPE_UNKNOWN,
     FI_FILE_TYPE_REGULAR,
     FI_FILE_TYPE_DIRECTORY,
@@ -85,10 +86,10 @@ struct FiFileInfo {
     struct FiRef        ref;
     char               *filename;
     char               *path;
-    char               *extension;
+    char               *full_filename;
     off_t               size_byte;
-    bool                free_container;
     FiFileType          type;
+    bool                free_container;
 };
 
 #define FI_FILE_INIT(f) struct FiFileInfo (f); fi_file_init(&(f))
@@ -100,12 +101,13 @@ bool fi_file_copy(const FiFileInfo_st *src, FiFileInfo_st *dest);
 void fi_file_set_props(struct FiFileInfo *file,
                        const char *filename,
                        const char *path,
-                       const char *extension,
+                       unsigned int type,
                        off_t size,
                        struct timespec modified_at,
                        void (*free)(const struct FiRef *ref));
 
 bool fi_file_copy_proxy(void const *src, void *dst, unsigned n); // Copy method
+char *fi_file_get_extension(struct FiFileInfo *file);
 
 inline bool fi_file_is_directory(const struct FiFileInfo *file)
 {

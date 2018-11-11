@@ -125,7 +125,7 @@ unsigned fi_list_count(struct FiList *list)
         struct FiList *cur = _fi_list_head(list);
         do
             c++;
-        while(cur = cur->next);
+        while((cur = cur->next));
     }
 
     return c;

@@ -1,8 +1,8 @@
 /* 
  * File:   test-array.c
- * Author: yasonibare
+ * Author: Yinka Ashon
  * 
- * Copyright (c) 2016 Yinka Asonibare
+ * Copyright (c) 2016-2018 Yinka Asonibare
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -15,7 +15,7 @@
  * all copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * IMPLIED, INCLUDING BUT NOT LIMITssssssED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
@@ -23,6 +23,7 @@
  * SOFTWARE.
  * 
  */
+#include "./../tests-common.h"
 
 #include <stdio.h>
 #include <locale.h>
@@ -95,9 +96,9 @@ FI_TEST_RESULT test_array_each_loop()
 int main()
 {
     FiTestFunc fi_tests [] = {
-        {"test_array_simple_allocation", test_array_simple_allocation},
-        {"test_array_each_loop",         test_array_each_loop},
-        {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
+        FI_TEST_ENTRY(test_array_simple_allocation),
+        FI_TEST_ENTRY(test_array_each_loop),
+        FI_TEST_ENTRY_END
     };
     
     return run(fi_tests);

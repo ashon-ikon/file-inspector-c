@@ -1,8 +1,8 @@
 /* 
  * File:   test-file-manager.c
- * Author: y
+ * Author: Yinka Ashon
  * 
- * Copyright (c) 2017 Yinka 
+ * Copyright (c) 2017-2018 Yinka Ashon
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -22,6 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "./../tests-common.h"
+
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -57,7 +59,7 @@ int main()
 {
     FiTestFunc fi_tests [] = {
         {"test_init", test_init},
-        {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
+        FI_TEST_ENTRY_END
     };
     
     return run(fi_tests);

@@ -1,8 +1,8 @@
 /* 
  * File:   test-file-creation.c
- * Author: yasonibare
+ * Author: Yinka Ashon
  * 
- * Copyright (c) 2016 Yinka Asonibare
+ * Copyright (c) 2016-2018 Yinka Ashon
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -23,6 +23,7 @@
  * SOFTWARE.
  * 
  */
+#include "./../tests-common.h"
 
 #include <stdio.h>
 #include <locale.h>
@@ -35,25 +36,25 @@ FI_TEST_RESULT test_file_info_creation()
     struct FiFileInfo file, file2;
     fi_file_init(&file);
     
-    const char test_filename[]  =  "freak-zone";
-    const char test_extension[] =  ".jpeg";
+    const char test_filename[]  =  "freak-zone.jpeg";
     const char test_path[]      =  "/home/lorem/workspace/";
+    const char test_full_filename[] =  "/home/lorem/workspace/freak-zone.jpeg";
     
-    file.extension = fi_strdup(test_extension);
-    file.path      = fi_strdup(test_path);
+    file.full_filename  = fi_strdup(test_full_filename);
+    file.path           = fi_strdup(test_path);
     file.filename       = fi_strdup(test_filename);
-    file.type      = FI_FILE_TYPE_LINK;
+    file.type           = FI_FILE_TYPE_LINK;
     
     fi_file_init(&file2);
     fi_file_copy(&file, &file2);
    
-    fi_return_fail_if_not(strcmp(file2.extension, test_extension) == 0,
-                        fi_make_msg("We got %s", file2.extension));
+    fi_return_fail_if_not(fi_strcmp0(file2.full_filename, test_full_filename),
+                        fi_make_msg("We got %s", file2.full_filename));
 
-    fi_return_fail_if_not(strcmp(file2.path, test_path) == 0,
+    fi_return_fail_if_not(fi_strcmp0(file2.path, test_path),
                         fi_make_msg("We got %s", file2.path));
     
-    fi_return_fail_if_not(strcmp(file2.filename, test_filename) == 0,
+    fi_return_fail_if_not(fi_strcmp0(file2.filename, test_filename),
                         fi_make_msg("We got %s", file2.filename));
     
     fi_file_destroy(&file);
@@ -66,7 +67,7 @@ int main()
 {
     FiTestFunc fi_tests [] = {
         {"test_file_info_creation", test_file_info_creation},
-        {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
+        FI_TEST_ENTRY_END
     };
     
     return run(fi_tests);

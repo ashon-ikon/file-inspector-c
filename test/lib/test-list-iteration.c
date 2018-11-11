@@ -1,8 +1,8 @@
 /* 
  * File:   test-list-iteration.c
- * Author: yasonibare
+ * Author: Yinka Ashon
  * 
- * Copyright (c) 2016 Yinka Asonibare
+ * Copyright (c) 2016-2018 Yinka Ashon
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -22,6 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "./../tests-common.h"
 
 #include <string.h>
 
@@ -149,7 +150,7 @@ int main()
         {"test_list_append", test_list_append},
         {"test_list_prepend", test_list_prepend},
         {"test_list_iteration", test_list_iteration},
-        {NULL, NULL} // THIS SHOULD ALWAYS BE THE LAST
+        FI_TEST_ENTRY_END
     };
     
     return run(fi_tests);
