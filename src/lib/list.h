@@ -55,12 +55,12 @@ unsigned fi_list_count(struct FiList *list);
 struct FiList *fi_list_head(struct FiList *list);
 struct FiList *fi_list_tail(struct FiList *list);
 
-static inline struct FiList *fi_list_prev(const struct FiList const *list)
+static inline struct FiList *fi_list_prev(const struct FiList *const list)
 {
     return (list && list->prev) ? list->prev : NULL;
 }
 
-static inline struct FiList *fi_list_next(const struct FiList const *list)
+static inline struct FiList *fi_list_next(const struct FiList *const list)
 {
     return (list && list->next) ? list->next : NULL;    
 }

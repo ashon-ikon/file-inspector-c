@@ -65,7 +65,7 @@ void run_inspector()
 
         fi_file_manager_read_dir("./test", pFiles, true);
 
-        printf("We got these many files %d\n", fi_file_container_size(pFiles));
+        printf("We got these many files %zu\n", fi_file_container_size(pFiles));
 
         fi_file_container_destroy(pFiles);
 }

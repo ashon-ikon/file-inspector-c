@@ -46,8 +46,8 @@ const char path_separator =
 
 // Prototypes ...
 static FiFileType get_file_type(const mode_t d_type);
-static bool read_file_info(const char const  *path,
-                           const char const  *filename,
+static bool read_file_info(const char *const path,
+                           const char *const filename,
                            struct FiFileInfo *file);
 
 /**
@@ -67,7 +67,7 @@ static bool read_file_info(const char const  *path,
  * @param recursive
  * @return 
  */
-bool fi_file_manager_read_dir(const char const       *path,
+bool fi_file_manager_read_dir(const char        *const path,
                               struct FiFileContainer *con,
                               bool                    recursive)
 {
@@ -112,8 +112,8 @@ bool fi_file_manager_read_dir(const char const       *path,
     return true;
 }
 
-static bool read_file_info(const char const  *path,
-                           const char const  *filename,
+static bool read_file_info(const char *const path,
+                           const char *const filename,
                            struct FiFileInfo *file)
 {
     // Read the file information by lstat
@@ -158,8 +158,7 @@ static FiFileType get_file_type(const mode_t st_mode)
     return ftype;
 }
 
-
-bool fi_file_manager_copy_file(const char const *filepath,
+bool fi_file_manager_copy_file(const char *const filepath,
                                bool              remove_source)
 {
     if (! filepath)

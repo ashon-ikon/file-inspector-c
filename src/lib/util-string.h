@@ -53,7 +53,7 @@ char *fi_rtrim(char * str, const char * impurities);
 char *fi_ltrim(char * str, const char * impurities);
 char *fi_trim(char * str, const char * impurities);
 char *fi_strconcat(const unsigned char num, ...);
-int fi_strcmp0(const char const *s1, const char const *s2);
+int fi_strcmp0(const char *const s1, const char *const s2);
 char *itoa(const int i, char *str, unsigned base);
 
 #ifdef FI_NO_STRDUP_FOUND
@@ -63,7 +63,7 @@ char *_fi_strdup (const char *src);
 char *_fi_strndup(const char *src, size_t n);
 #endif
 
-static inline size_t fi_strlen(const char const* s)
+static inline size_t fi_strlen(const char *const s)
 {
     return (! s) ? 0 : strlen(s);
 }

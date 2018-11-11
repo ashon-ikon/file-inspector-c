@@ -156,7 +156,7 @@ char* fi_strconcat(const unsigned char num, ...)
     return str;
 }
 
-int fi_strcmp0(const char const *s1, const char const *s2)
+int fi_strcmp0(const char *const s1, const char *const s2)
 {
         return s1 && s2 && strcmp(s1, s2) == 0;
 }

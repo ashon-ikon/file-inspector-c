@@ -70,8 +70,8 @@ typedef enum fi_packed {
 typedef struct FiFileInfo FiFileInfo_st;
 
 
-#if (! defined(__timespec_defined))
-    #define __timespec_defined 1
+#if (! defined(_STRUCT_TIMESPEC))
+    #define _STRUCT_TIMESPEC 1
     // Following lines are copied from <time.h>
     # include <bits/types.h>	/* This defines time_t for us.  */
 

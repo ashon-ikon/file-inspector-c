@@ -39,7 +39,7 @@
 
 /* Prototypes */
 static bool fi_array_expand_container(struct FiArray *cur, size_t n);
-static bool fi_array_data_copy(const void const *src, void *dest, unsigned n);
+static bool fi_array_data_copy(const void *const src, void *dest, unsigned n);
 
 /* Helper macros */
 #define fi_data_get_offset(array, i) ((array)->data + (array)->unit_size * (i))
@@ -100,7 +100,7 @@ void fi_array_ref_dec(const struct FiRef *ref)
     free(arr);
 }
 
-static bool fi_array_data_copy(const void const *src, void* dest, unsigned n)
+static bool fi_array_data_copy(const void *const src, void* dest, unsigned n)
 {
     if (src && dest) {
         memcpy(dest, src, n);

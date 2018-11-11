@@ -31,11 +31,11 @@
 
 FI_BEGIN_DECLS
 
-bool fi_file_manager_read_dir(const char const *path,
+bool fi_file_manager_read_dir(const char *const path,
                               struct FiFileContainer *con,
                               bool recursive);
 
-bool fi_file_manager_copy_file(const char const *filepath,
+bool fi_file_manager_copy_file(const char *const filepath,
                                bool remove_source);
 
 FI_END_DECLS
