@@ -37,7 +37,7 @@ extern "C" {
  */
 #ifndef container_of
 #define container_of(ptr, type, member) ((type *) \
-    ((unsigned long *)(1 ? (ptr) : &((type *)0)->member) - offsetof(type, member)))
+    ((char *)(1 ? (ptr) : &((type *)0)->member) - offsetof(type, member)))
 #endif
     
 #define fi_free_ref_object(p_object)        \

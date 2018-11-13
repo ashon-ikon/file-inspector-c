@@ -68,8 +68,8 @@ void *_fi_array_get_prev(struct FiArray *arr);
 void *_fi_array_get_end(struct FiArray *arr);
 
 #define fi_array_pop(arr, t)    ((t *)_fi_array_pop((arr)))
-#define fi_array_get_ptr(a, t, i) ((t*)( (unsigned int *)((a)->data) \
-                                     + ( (a)->unit_size * (i) )) )
+#define fi_array_get_ptr(a, t, i) ((t*)( (unsigned char*)((a)->data) \
+                                  + ( (a)->unit_size * (i) )) )
 #define fi_array_get(a, t, i) ( ((t*)(void *)(a)->data) [(i)] )
 
 #define fi_array_get_ptr_being(a, t)    ( (t*) _fi_array_get_begin((a)) )

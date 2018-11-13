@@ -38,6 +38,7 @@ nbproject*
 .cproject
 .project
 .settings*
+.vscode*
 
 src/Helper/*.dirstamp
 *.dirstamp

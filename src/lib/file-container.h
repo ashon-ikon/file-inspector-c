@@ -68,7 +68,8 @@ struct FiFileInfo *fi_file_container_get_file_end(struct FiFileContainer *con);
 #define fi_file_container_each(pCon, pFile) for ( \
                 (pFile) = fi_file_container_get_file_begin((pCon)); \
                 (pFile); \
-                (pFile) = fi_file_container_get_file_next((pCon)) ) 
+                (pFile) = fi_file_container_get_file_next((pCon)) \
+             ) 
 
 
 
