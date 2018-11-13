@@ -90,7 +90,7 @@ bool fi_file_copy_proxy(void const *src, void *dst, unsigned n)
         return false;
     
     if (n != sizeof(struct FiFileInfo)) {
-        fi_log_message(FI_DEBUG_LEVEL_WARN,
+        fi_log_vmessage(FI_DEBUG_LEVEL_WARN,
             "Failed to copy data. Size mismatch. Expected %zu, got %d",
             sizeof (struct FiFileInfo), n);
         return false;

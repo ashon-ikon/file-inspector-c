@@ -47,7 +47,7 @@ struct FiFileContainer *fi_file_container_init()
     if (! container->array) {
         fi_log_message(FI_DEBUG_LEVEL_ERROR,
                        "Failed to allocate container array memory");
-        free(container);
+
         return NULL;
     }
 
@@ -66,7 +66,7 @@ void fi_file_container_destroy(struct FiFileContainer *container)
 
     fi_array_ref_dec(&container->array->ref);
 
-    free(container);
+    fi_free(container);
 }
 
 /**
@@ -105,6 +105,7 @@ struct FiFileInfo *fi_file_container_get_file_at(struct FiFileContainer *con, un
 
     struct FiFileInfo *file = fi_array_get_ptr(con->array,
                                                struct FiFileInfo, i);
+
     return file;   
 }
 

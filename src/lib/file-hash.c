@@ -38,9 +38,9 @@
 size_t fi_hash_data (const void *data, size_t len)
 {
     size_t hash, i;
-    for(hash = i = 0; (*((char *)(data + i)) != '\0') && i < len; ++i)
+    for(hash = i = 0; (*(((char *)data + i)) != '\0') && i < len; ++i)
     {
-        hash += *((unsigned char*)(data + i));
+        hash += *(((unsigned char*)data + i));
         hash += (hash << 10);
         hash ^= (hash >> 6);
     }

@@ -42,7 +42,8 @@ static bool fi_array_expand_container(struct FiArray *cur, size_t n);
 static bool fi_array_data_copy(const void *const src, void *dest, unsigned n);
 
 /* Helper macros */
-#define fi_data_get_offset(array, i) ((array)->data + (array)->unit_size * (i))
+#define fi_data_get_offset(array, i) ((unsigned char*)((array)->data) \
+                                     + (array)->unit_size * (i))
 
 /**
  * Creates the array holder
@@ -130,7 +131,7 @@ static bool fi_array_expand_container(struct FiArray * cur, size_t n)
     if (NULL != tmp) {
 
         // Empty out the container
-        memset(tmp + cur->capacity, 0, n * cur->unit_size);
+        memset((unsigned char*)tmp + cur->capacity, 0, n * cur->unit_size);
 
         cur->data = tmp;
         cur->capacity  = n;

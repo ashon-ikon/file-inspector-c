@@ -63,7 +63,7 @@ extern char *fi_make_msg(char *fmt, ...) fi_checkprintf;
 #define fi_assert_fail(con) fi_assert_true(! (con) )
 #define fi_return_fail_if_not(con, msg) do {FI_TEST_RESULT r = 0; \
         if (FI_TEST_OKAY != (r = fi_assert_true( (con) ) )) { \
-        fi_log_message(FI_DEBUG_LEVEL_ERROR,                  \
+        fi_log_vmessage(FI_DEBUG_LEVEL_ERROR,                  \
                        "Failed. %s (%u)", msg, r); \
     return r; } } while(0)
 

@@ -67,7 +67,7 @@ static bool read_file_info(const char *const path,
  * @param recursive
  * @return 
  */
-bool fi_file_manager_read_dir(const char        *const path,
+bool fi_file_manager_read_dir(const char       *const path,
                               struct FiFileContainer *con,
                               bool                    recursive)
 {
@@ -82,7 +82,7 @@ bool fi_file_manager_read_dir(const char        *const path,
     fi_rtrim(lpath, path_sep);     // remove any trailing path separator
 
     if (! (dir = opendir(lpath))) {
-        fi_log_message(FI_DEBUG_LEVEL_WARN,
+        fi_log_vmessage(FI_DEBUG_LEVEL_WARN,
                        "Could not read the specified path %s", path);
         return false;
     }
@@ -90,7 +90,7 @@ bool fi_file_manager_read_dir(const char        *const path,
     struct FiFileInfo file;
     
     while ((dp = readdir(dir)) != NULL) {
-        
+
         if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..")) {
             fi_file_init(&file);
             if (! read_file_info(lpath, dp->d_name, &file))
@@ -133,7 +133,7 @@ static bool read_file_info(const char *const path,
     file->filename    = fi_strndup(filename, strlen(filename));
     file->size_byte   = st_buff.st_size;
     file->type        = get_file_type(st_buff.st_mode);
-    file->modified_at = (struct timespec) st_buff.st_mtim;
+    file->modified_at = st_buff.st_mtim;
 
     return true;
 }

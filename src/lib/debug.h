@@ -70,10 +70,16 @@ void _fi_log_message(FiDebugLevel level,
                     const char * fn, const int line, const char *file,
                     const char * err, ...) fmt_printf;
 
-#define fi_log_message(lv, fmt, ...) do {                   \
+#define fi_log_vmessage(lv, fmt, ...) do {                   \
                 if (FI_DEBUG_LEVEL <= (lv))                 \
                     _fi_log_message((lv),                   \
                     __FUNC__, __LINE__, __FILENAME__, (fmt) , ##__VA_ARGS__); \
+            } while(0)
+
+#define fi_log_message(lv, fmt) do {                   \
+                if (FI_DEBUG_LEVEL <= (lv))                 \
+                    _fi_log_message((lv),                   \
+                    __FUNC__, __LINE__, __FILENAME__, fmt); \
             } while(0)
 
 FI_END_DECLS

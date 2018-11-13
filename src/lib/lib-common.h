@@ -66,7 +66,8 @@ typedef enum {
 
 static inline void fi_free(const void *p)
 {
-    free((void *)p);
+        if (NULL != p)
+                free((void *)p);
 }
 
 static inline size_t fi_mem_best_size(size_t desired, size_t sz)
