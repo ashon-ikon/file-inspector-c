@@ -52,7 +52,7 @@ FI_BEGIN_DECLS
 char *fi_rtrim(char * str, const char * impurities);
 char *fi_ltrim(char * str, const char * impurities);
 char *fi_trim(char * str, const char * impurities);
-char *fi_strconcat(const unsigned char num, ...);
+char *fi_strnconcat(const unsigned char num, ...);
 int fi_strcmp0(const char *const s1, const char *const s2);
 char *itoa(const int i, char *str, unsigned base);
 

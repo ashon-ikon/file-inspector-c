@@ -79,7 +79,7 @@ void _fi_log_message(FiDebugLevel level,
 #define fi_log_message(lv, fmt) do {                   \
                 if (FI_DEBUG_LEVEL <= (lv))                 \
                     _fi_log_message((lv),                   \
-                    __FUNC__, __LINE__, __FILENAME__, fmt); \
+                    __FUNC__, __LINE__, __FILENAME__, (fmt)); \
             } while(0)
 
 FI_END_DECLS

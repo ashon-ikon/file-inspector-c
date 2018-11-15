@@ -82,7 +82,7 @@ FI_TEST_RESULT test_string_concatenation()
     const char word2[] = "sed do eiusmod tempor incididunt ut labore et dolore ";
     const char word3[] = "Sed ut perspiciatis unde omnis iste natus ";
 
-    char * new_string = fi_strconcat(3, word1, word2, word3);
+    char * new_string = fi_strnconcat(3, word1, word2, word3);
     fi_return_fail_if_not(NULL != new_string, "Failed to create string");
 
     free (new_string);
