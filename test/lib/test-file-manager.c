@@ -43,7 +43,7 @@ FI_TEST_RESULT test_init()
     char *test_path = NULL;
     
     getcwd(pwd, DIR_PATH_MAX);
-    test_path = fi_strconcat(2, pwd, "/test/fs/");
+    test_path = fi_strnconcat(2, pwd, "/test/fs/");
     
     fi_file_manager_read_dir(test_path, con, true);
     fi_return_fail_if_not(NULL != con, "Failed to create new container");

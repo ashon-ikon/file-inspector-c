@@ -124,7 +124,7 @@ char *_fi_strndup(const char *src, size_t n)
 }
 #endif
 
-char* fi_strconcat(const unsigned char num, ...)
+char* fi_strnconcat(const unsigned char num, ...)
 {
     if (num < 1)
         return NULL;

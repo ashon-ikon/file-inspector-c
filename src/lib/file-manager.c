@@ -99,7 +99,7 @@ bool fi_file_manager_read_dir(const char       *const path,
             fi_file_container_push(con, &file);
             if (recursive && file.type == FI_FILE_TYPE_DIRECTORY) {
                 // Add directory content recursively
-                char *full_filename = fi_strconcat(3, lpath, path_sep, dp->d_name);
+                char *full_filename = fi_strnconcat(3, lpath, path_sep, dp->d_name);
                 fi_file_manager_read_dir(full_filename, con, recursive);
                 free(full_filename);
             }
@@ -119,7 +119,7 @@ static bool read_file_info(const char *const path,
     // Read the file information by lstat
     struct stat st_buff;
     char path_sep[] = {path_separator, '\0'};
-    char *fullpath = fi_strconcat(3, path, path_sep, filename);
+    char *fullpath = fi_strnconcat(3, path, path_sep, filename);
     if (! fullpath)
         return false;
 

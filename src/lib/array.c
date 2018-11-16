@@ -38,6 +38,7 @@
 #define FI_INITIAL_ARRAY_ALLOC_SIZE (1 << 4)
 
 /* Prototypes */
+
 static bool fi_array_expand_container(struct FiArray *cur, size_t n);
 static bool fi_array_data_copy(const void *const src, void *dest, unsigned n);
 

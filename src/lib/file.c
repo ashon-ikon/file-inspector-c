@@ -139,7 +139,7 @@ void fi_file_set_props(struct FiFileInfo *file,
 {
         file->filename = fi_strndup(filename, fi_strlen(filename));
         file->path = fi_strndup(path, fi_strlen(path));
-        file->full_filename = fi_strconcat(
+        file->full_filename = fi_strnconcat(
                        2,
                        path,
                        file->filename);
