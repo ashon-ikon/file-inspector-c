@@ -19,4 +19,4 @@ $ make
 $ make check
 ```
 
-For more information on Library API please refer to [docs](./src/lib)
+For more information on Library API please refer to [docs](./src/lib/README.md)
