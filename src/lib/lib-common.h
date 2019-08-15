@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   lib-common.h
  * Author: yasonibare
  *
@@ -56,6 +56,11 @@ typedef enum {
 #define fi_packed
 #endif
 
+#ifndef ARRAY_SIZE
+/* https://stackoverflow.com/a/2089263 */
+#define ARRAY_SIZE(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
+#endif // ARRAY_SIZE
+
 #ifndef MAX
     #define MAX(a, b)       ((a) > (b) ? (a) : (b))
 #endif
@@ -72,18 +77,16 @@ static inline void fi_free(const void *p)
 
 static inline size_t fi_mem_best_size(size_t desired, size_t sz)
 {
-    
     size_t best = 0, s = 0, bound = 0;
     s = desired > sz ? desired : sz;
-    
-    do 
+
+    do
         best = 1 << bound++;
     while (best < s);
-    
+
     return best;
 }
 
 FI_END_DECLS
 
 #endif /* LIB_COMMON_H */
-

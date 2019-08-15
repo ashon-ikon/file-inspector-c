@@ -41,4 +41,3 @@ bool fi_file_manager_copy_file(const char *const filepath,
 FI_END_DECLS
 
 #endif /* FINSPECTOR_LIB_FILE_MANAGER_H */
-

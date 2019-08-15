@@ -25,6 +25,8 @@
  * Created on 28 August 2016, 10:42 PM
  */
 
+#include "./../common.h"
+
 #include <locale.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -41,7 +43,6 @@ void run_inspector();
 
 int main(int argc, char * argv[])
 {
-
         // Set the default locale
         setlocale(LC_CTYPE, "");
 
@@ -61,11 +62,16 @@ int run_with_params(int argc, char * argv[])
 
 void run_inspector()
 {
-        struct FiFileContainer *pFiles = fi_file_container_init();
+        struct FiFileContainer *files = fi_file_container_init();
 
-        fi_file_manager_read_dir("./test", pFiles, true);
+        fi_file_manager_read_dir("/home/yasonibare/Workspace/C-C++/", files, true);
+ 
+//        struct FiFileConflictArray *pConflicts = NULL;
+//        fi_algo_extract_duplicate(files, pConflicts);
 
-        printf("We got these many files %zu\n", fi_file_container_size(pFiles));
+        size_t c = fi_file_container_size(files);
+        printf("We got %s many %s %zu\n", (c > 1 ? "these" : "this"), (c > 1 ? "files" : "file"), c);
 
-        fi_file_container_destroy(pFiles);
+//        fi_conflict_array_free(pConflicts);
+        fi_file_container_destroy(files);
 }

@@ -7,7 +7,7 @@ Standard arrays can be used to in a flexible manner.
 For simple applications where shallow coping is just enough:
 ```C
 // An array of simple floats
-struct FiArray *arr = fi_array_new(sizeof(float), NULL);
+struct FiArray *arr = fi_array_new(sizeof(float), NULL, NULL);
 
 float t = 0.0L;
 
@@ -51,9 +51,7 @@ void cleanup_notify (struct FiArray *arr)
 Person student;
 student.name = fi_strdup("James");
 
-struct FiArray *arr = fi_array_new(sizeof(Person), person_copy);
-
-fi_array_set_cleanup_notifier(arr, cleanup_notify);
+struct FiArray *arr = fi_array_new(sizeof(Person), person_copy, cleanup_notify);
 
 fi_array_push(arr, &student);
 

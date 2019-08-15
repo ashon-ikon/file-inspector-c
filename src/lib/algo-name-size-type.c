@@ -57,8 +57,9 @@ int fi_algo_extract_duplicate(struct FiFileContainer *files,
                                 continue;
                         check = fi_file_container_get_file_at(files, j);
                         if (check_file_matches(file, check)) {
-                                // Add to the duplicates for `file`
-                                printf("%s/%s (%zu) duplicate found in %s/%s (%zu)\n", file->path, file->filename, file->size_byte, check->path, check->filename, check->size_byte);
+//                                // Add to the duplicates for `file`
+//                                printf("%s/%s (%zu) duplicate found in %s/%s (%zu)\n", file->path, file->filename, file->size_byte, check->path, check->filename, check->size_byte);
+//                                
                         }
                 }
         }
@@ -90,7 +91,7 @@ static bool check_file_matches(struct FiFileInfo *file_a, struct FiFileInfo *fil
                 return true;
         } else {
                 // Handle possibly similar filename
-                printf("A: %lu, B: %lu\n", fi_hash_data("First value", 11), fi_hash_data("Second long value", 17));
+//                printf("A: %lu, B: %lu\n", fi_hash_data("First value", 11), fi_hash_data("Second long value", 17));
         }
         
         return true;

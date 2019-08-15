@@ -43,7 +43,7 @@ FI_BEGIN_DECLS
 #define __FILENAME__    (strrchr(__FILE__, '/') ? \
                         strrchr(__FILE__, '/') + 1 : __FILE__)
 
-#define fmt_printf __attribute__((format(printf, 5, 6)))
+#define log_fmt_printf __attribute__((format(printf, 5,6)))
 
 typedef enum {
     FI_DEBUG_LEVEL_VERB  =   0x01,
@@ -68,13 +68,19 @@ typedef enum {
 #endif
 
 void _fi_log_message(FiDebugLevel level,
-                    const char * fn, const int line, const char *file,
-                    const char * err, ...) fmt_printf;
+                    const char *fn, const int line, const char *file,
+                    const char *err, ...) log_fmt_printf;
 
 #define fi_log_vmessage(lv, fmt, ...) do {                  \
                 if (FI_DEBUG_LEVEL <= (lv))                 \
                     _fi_log_message((lv),                   \
-                    __FUNC__, __LINE__, __FILENAME__, (fmt) , ##__VA_ARGS__); \
+                    __FUNC__, __LINE__, __FILENAME__, fmt , ##__VA_ARGS__); \
+            } while(0)
+
+#define fi_log_message(lv, fmt) do {                   \
+                if (FI_DEBUG_LEVEL <= (lv))                 \
+                    _fi_log_message((lv),                   \
+                    __FUNC__, __LINE__, __FILENAME__, fmt); \
             } while(0)
 
 #define fi_log_message(lv, fmt) do {                          \
