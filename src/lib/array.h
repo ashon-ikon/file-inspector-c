@@ -35,23 +35,26 @@ FI_BEGIN_DECLS
 
 struct FiArray;
 
+typedef void (*fi_array_data_cln_up_notify_fn) (struct FiArray *arr);
 typedef bool (*fi_array_data_cp_fn) (void const *src, void *dst, unsigned n);
 
 struct FiArray {
-    size_t                len;
-    size_t                capacity;
-    size_t                unit_size;
-    size_t                cursor;
-    void                 *data;
-    struct FiRef          ref;
-    void                (*cleanup_notify)(struct FiArray* arr);
-    fi_array_data_cp_fn   copy_func;
+    size_t                          len;
+    size_t                          capacity;
+    size_t                          unit_size;
+    size_t                          cursor;
+    void                           *data;
+    struct FiRef                    ref;
+    fi_array_data_cln_up_notify_fn  cleanup_notify;
+    fi_array_data_cp_fn             copy_func;
 };
 
 struct FiArray *fi_array_new_n(size_t unit_size,
                                fi_array_data_cp_fn cp,
-                               size_t n);
-struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp);
+                               size_t n,
+                               fi_array_data_cln_up_notify_fn cln);
+struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp,
+                             fi_array_data_cln_up_notify_fn cln);
 void  fi_array_free(struct FiArray *arr);
 void  fi_array_ref_dec(const struct FiRef *ref);
 void  fi_array_destroy(struct FiArray *arr);

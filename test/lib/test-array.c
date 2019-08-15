@@ -33,8 +33,8 @@
 
 FI_TEST_RESULT test_array_simple_allocation()
 {
-    struct FiArray *arr = fi_array_new(sizeof(int), NULL);
-    struct FiArray *arr_cpy = fi_array_new(sizeof(int), NULL);
+    struct FiArray *arr = fi_array_new(sizeof(int), NULL, NULL);
+    struct FiArray *arr_cpy = fi_array_new(sizeof(int), NULL, NULL);
     int t = 0;
     
     fi_array_push(arr, &t); t++;
@@ -74,7 +74,7 @@ FI_TEST_RESULT test_array_simple_allocation()
 
 FI_TEST_RESULT test_array_each_loop()
 {
-    struct FiArray *arr = fi_array_new(sizeof(int), NULL);
+    struct FiArray *arr = fi_array_new(sizeof(int), NULL, NULL);
     int t = 0;
     
     for (t = 200; t < 203; t++)

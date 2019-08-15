@@ -37,17 +37,18 @@ struct FiFileContainer *fi_file_container_init()
 {
     struct FiFileContainer *container = malloc(sizeof *container);
     
-    if (! container)
+    if (! container) {
+        fi_log_message(FI_DEBUG_LEVEL_ASSERT, "Failed to allocate memory for files container");
         return NULL;
+    }
 
     container->array = fi_array_new_n(sizeof (struct FiFileInfo),
                                       fi_file_copy_proxy,
-                                      FI_INITIAL_FILES_ARRAY_SIZE);
+                                      FI_INITIAL_FILES_ARRAY_SIZE, NULL);
     
     if (! container->array) {
         fi_log_message(FI_DEBUG_LEVEL_ERROR,
                        "Failed to allocate container array memory");
-
         return NULL;
     }
 

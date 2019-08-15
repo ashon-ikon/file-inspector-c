@@ -74,13 +74,7 @@ void _fi_log_message(FiDebugLevel level,
 #define fi_log_vmessage(lv, fmt, ...) do {                  \
                 if (FI_DEBUG_LEVEL <= (lv))                 \
                     _fi_log_message((lv),                   \
-                    __FUNC__, __LINE__, __FILENAME__, fmt , ##__VA_ARGS__); \
-            } while(0)
-
-#define fi_log_message(lv, fmt) do {                   \
-                if (FI_DEBUG_LEVEL <= (lv))                 \
-                    _fi_log_message((lv),                   \
-                    __FUNC__, __LINE__, __FILENAME__, fmt); \
+                    __FUNC__, __LINE__, __FILENAME__, (fmt) , ##__VA_ARGS__); \
             } while(0)
 
 #define fi_log_message(lv, fmt) do {                          \

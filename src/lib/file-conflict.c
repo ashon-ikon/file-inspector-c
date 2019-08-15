@@ -168,7 +168,7 @@ void fi_conflict_array_init(struct FiFileConflictArray *arr)
         return;
     
     arr->file_groups = fi_array_new(sizeof *(arr->file_groups),
-                                    fi_conflict_group_copy);
+                                    fi_conflict_group_copy, NULL);
 }
 
 void fi_conflict_array_free(struct FiFileConflictArray *arr)
