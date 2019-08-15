@@ -50,15 +50,16 @@ static bool fi_array_data_copy(const void *const src, void *dest, unsigned n);
  * Creates the array holder
  * @return struct FiArray *
  */
-struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp)
+struct FiArray *fi_array_new(size_t unit_size, fi_array_data_cp_fn cp, fi_array_data_cln_up_notify_fn cln)
 {
     // Create the minimum elements
-    return fi_array_new_n(unit_size, cp, FI_INITIAL_ARRAY_ALLOC_SIZE);    
+    return fi_array_new_n(unit_size, cp, FI_INITIAL_ARRAY_ALLOC_SIZE, cln);
 }
 
 struct FiArray *fi_array_new_n(size_t unit_size,
                                fi_array_data_cp_fn cp,
-                               size_t n)
+                               size_t n,
+                               fi_array_data_cln_up_notify_fn cln)
 {
     struct FiArray *arr = malloc(sizeof *arr);
     if (! arr) {
@@ -67,7 +68,7 @@ struct FiArray *fi_array_new_n(size_t unit_size,
         return NULL;
     }
 
-    arr->cleanup_notify = NULL;
+    arr->cleanup_notify = cln;
     arr->data      = NULL;
     arr->unit_size = unit_size;
     arr->capacity  = 0;

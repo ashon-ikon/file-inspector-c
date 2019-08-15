@@ -32,6 +32,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include "conjoined-string.h"
 #include "debug.h"
 #include "file-manager.h"
 #include "file-hash.h"
@@ -49,6 +50,85 @@ static FiFileType get_file_type(const mode_t d_type);
 static bool read_file_info(const char *const path,
                            const char *const filename,
                            struct FiFileInfo *file);
+
+
+static struct FiHiStringBank *parent_folders;
+static bool init_parent_bank = false;
+static void init_parent_folders()
+{
+        parent_folders = fi_conj_string_new();
+        init_parent_bank = true;
+}
+
+static void free_parent_folders()
+{
+        if (!parent_folders)
+                return;
+        fi_conj_string_free(parent_folders);
+        init_parent_bank = false;
+}
+
+/**
+ * Read the content of path and storing the content within container `con´
+ * It does this recursively if `recursive´ is specified
+ *
+ * @param path
+ * @param con
+ * @param recursive
+ * @return 
+ */
+static bool read_folder_content(char                   *path,
+                                struct FiFileContainer *con,
+                                bool                    recursive)
+{
+        DIR *dir;
+        struct dirent *dp;
+        // char path_sep[] = {path_separator, '\0'};
+
+        if (!(dir = opendir(path))) {
+                fi_log_message_vf(FI_DEBUG_LEVEL_WARN,
+                               "Could not read the specified path `%s´", path);
+                return false;
+        }
+
+        struct FiFileInfo file;
+
+        while ((dp = readdir(dir)) != NULL) {
+                if (fi_strcmp0(dp->d_name, ".")
+                || fi_strcmp0(dp->d_name, "..")) {
+                        continue;
+                }
+
+                fi_file_init(&file);
+                if (!read_file_info(path, dp->d_name, &file)) {
+                        fi_file_destroy(&file);
+                        continue;
+                }
+
+                // fi_file_container_push(con, &file);
+                // Add directory content recursively if requested
+                if (recursive && file.type == FI_FILE_TYPE_DIRECTORY) {
+                        // if (!init_parent_bank) init_parent_folders();
+                        // char *sp = NULL, *old_holder = parent_folders->data;
+                        // struct FiHiString *s = fi_conj_string_add_concat(
+                        //     parent_folders, 3, path, path_sep, dp->d_name
+                        // );
+
+                        // sp = FI_STR_ADDR(s);
+                        // if (old_holder != parent_folders->data) {
+                        //         sp = FI_STR_ADDR(s);
+                        // }
+                        // char *full_filename = fi_strndup(sp, s->str_length);
+                        // read_folder_content(full_filename, con, recursive);
+                        // fi_free(full_filename);
+//                        fi_conj_string_remove_last(parent_folders);
+                }
+                fi_file_destroy(&file);
+        }
+        closedir(dir);
+        
+        return true;
+}
 
 /**
  * Method responsible for reading contents of a directory
@@ -109,7 +189,7 @@ bool fi_file_manager_read_dir(const char       *const path,
     closedir(dir);
     free(lpath);
     
-    return true;
+        return true;
 }
 
 static bool read_file_info(const char *const path,

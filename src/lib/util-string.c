@@ -37,7 +37,7 @@ char * fi_rtrim(char * str, const char * impurities)
     if (str == NULL || impurities == NULL)
         return NULL;
 
-    for (size_t i = strlen(str) - 1; i >= 0; i--) {
+    for (size_t i = fi_strlen(str) - 1; i >= 0; i--) {
         if (strchr(impurities, str[i]) != NULL) {
             str[i] = '\0';
         } else {
@@ -129,7 +129,7 @@ char* fi_strnconcat(const unsigned char num, ...)
     if (num < 1)
         return NULL;
 
-    unsigned int  len = 0;
+    size_t        len = 0;
     unsigned char i = 0;
     char          *words[num];
     size_t         lengths[num];

@@ -6,7 +6,7 @@
 ##
 ## ============================================================
 AC_PREREQ([2.69])
-AC_INIT([file-inspector], [0.0.2], [gigalimit20@yahoo.com])
+AC_INIT([file-inspector], [0.0.4], [gigalimit20@yahoo.com])
 
 AM_PROG_AR
 LT_INIT

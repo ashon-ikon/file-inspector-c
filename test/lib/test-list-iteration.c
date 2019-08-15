@@ -114,7 +114,11 @@ static void each_callback(void *data)
 {
     char num[3];
     itoa(*(int *)data, num, 10);
+    // Some freaky GCC 8 > hack
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wstringop-truncation"
     strncat(data_buff, num, 2);
+    #pragma GCC diagnostic pop
 }
 
 FI_TEST_RESULT test_list_each_func()

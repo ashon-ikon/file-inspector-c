@@ -1,6 +1,6 @@
 # Test suite for library
 
-TEST_CFLAGS= -g -Wall -Werror -std=c99
+TEST_CFLAGS= -g -Wall -Werror -std=c99 -pedantic-errors
 
 check_PROGRAMS=test-inspector-lib-array \
 	       test-inspector-lib-file-creation \

@@ -37,7 +37,7 @@ void fi_algo_collection_init(struct FiAlgoCollection *coll)
         return;
     
 //    coll->add       = fi_algo_collection_add;
-//    coll->algos     = fi_array_new(sizeof (struct FiAlgo), fi_algo_copy_proxy);
+//    coll->algos     = fi_array_new(sizeof (struct FiAlgo), fi_algo_copy_proxy, NULL);
 //    coll->get_conflicts = NULL;
 }
 

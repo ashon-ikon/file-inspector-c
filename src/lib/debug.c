@@ -37,6 +37,9 @@
 
 /**
  * Handy method to print error messages
+ * 
+ * Note: Adds trailing `\n`
+ * 
  * @param err
  * @param ...
  */
